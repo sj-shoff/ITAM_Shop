@@ -1,8 +1,23 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tsconfigPaths from 'vite-tsconfig-paths'
+/* eslint-disable import/no-default-export */
+import path from "path"
+
+import react from "@vitejs/plugin-react"
+import { defineConfig } from "vite"
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react(), tsconfigPaths()],
+export default defineConfig(() => {
+    return {
+        plugins: [react()],
+        resolve: {
+            alias: {
+                "@scss": path.resolve("src/shared/scss"),
+                "@app": path.resolve("src/app"),
+                "@pages": path.resolve("src/pages"),
+                "@widgets": path.resolve("src/widgets"),
+                "@entities": path.resolve("src/entities"),
+                "@features": path.resolve("src/features"),
+                "@shared": path.resolve("src/shared"),
+            },
+        },
+    }
 })
