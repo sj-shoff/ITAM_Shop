@@ -1,0 +1,9 @@
+{
+    "prettier.enable": true,
+    "prettier.endOfLine": "lf",
+    "prettier.ignorePath": ".prettierignore",
+    "prettier.jsxSingleQuote": true,
+    "prettier.printWidth": 80,
+    "prettier.requireConfig": true,
+    "eslint.enable": true
+}
