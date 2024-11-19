@@ -1,5 +1,4 @@
 import { HTMLAttributes, ReactNode } from "react"
-import classes from "./button.module.scss"
 
 type ButtonProps = {
     children: ReactNode
@@ -8,7 +7,7 @@ type ButtonProps = {
 
 export function Button(props: ButtonProps & HTMLAttributes<HTMLButtonElement>) {
     return (
-        <button className={classes.button} onClick={props.onClick}>
+        <button onClick={props.onClick}>
             {props.children}
         </button>
     )
