@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	storage "myapp/internal"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -20,15 +21,25 @@ func init() {
 func main() {
 
 	r := gin.Default()
-	// , _ - под функции из server
-	r.GET("/")         // главная страница
-	r.GET("/register") // регистрация
-	r.POST("/register")
-	r.GET("/login") // авторизация
-	r.POST("/login")
 
-	r.GET("/catalog")       // каталог
-	r.POST("/add_item/:id") // добавление айтема в корзину
+	r.GET("/", storage.ShowHomePage)
+	r.GET("/catalog")
+
+	r.GET("/register", storage.ShowRegistrationForm)
+	r.POST("/register")
+	r.GET("/login", storage.ShowLoginForm)
+	r.POST("/login")
+	r.GET("/login/:id/acc")
+
+	r.POST("/catalog/filter")
+	r.GET("/catalog/fav_items")
+	r.POST("/catalog/fav_items/:id")
+
+	r.POST("/add_item/:id")
+	r.DELETE("/delete_item/:id")
+
+	r.GET("/analytics")
+	r.GET("/admin_panel")
 
 	if err := r.Run(":8080"); err != nil {
 		log.Fatal("Ошибка при запуске сервера: ", err)
