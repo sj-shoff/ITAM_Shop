@@ -36,7 +36,7 @@ func main() {
 	r.POST("/catalog/fav_items/:id")
 
 	r.POST("/add_item/:id")
-	r.DELETE("/delete_item/:id")
+	r.DELETE("/cart/:id")
 
 	r.GET("/analytics")
 	r.GET("/admin_panel")
