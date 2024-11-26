@@ -11,13 +11,16 @@ type User struct {
 	//
 
 }
-
 type Product struct {
-	ProductID   uint    `json:"product_id"`
-	Name        string  `json:"product_name"`
-	Price       float64 `json:"product_price"`
-	Description string  `json:"product_discription"`
-	//
+	ProductID        uint     `json:"product_id"`
+	Name             string   `json:"product_name"`
+	Price            float64  `json:"product_price"`
+	ImageURL         string   `json:"image_url"`
+	AdditionalImages []string `json:"additional_images"`
+	Description      string   `json:"product_description"`
+	Category         string   `json:"category"`
+	StockQuantity    int      `json:"stock_quantity"`
+	Specifications   string   `json:"specifications"`
 }
 
 type Filter struct {
