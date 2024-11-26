@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	entity "myapp/internal/structures"
 	"net/http"
 	"net/smtp"
 	"time"
@@ -17,23 +18,19 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type User struct {
-	Login    string `json:"login"`
-	Mail     string `json:"mail"`
-	Password string `json:"password"`
-}
+var (
+	db    *sql.DB
+	store cookie.Store
+	s     *gin.Engine
+)
 
-type verifyUser struct {
-	login string
-	code  string
-}
+func userExists(login string) bool {
+	var exists bool = false
+	query := "SELECT EXISTS(SELECT 1 FROM users WHERE user_login = ?)"
 
-func userExists(db *sql.DB, username string) bool {
-	var exists bool
-	query := "SELECT EXISTS(SELECT 1 FROM users WHERE username = ?)"
-
-	err := db.QueryRow(query, username).Scan(&exists)
+	err := db.QueryRow(query, login).Scan(&exists)
 	if err != nil {
+		log.Print(err)
 		return false
 	}
 	return exists
@@ -45,7 +42,7 @@ func generateCode() string {
 	return fmt.Sprintf("%06d", code)
 }
 
-func confirmEmail(email string) string {
+func ConfirmEmail(email string) string {
 	// Данные SMTP сервера
 	smtpHost := "smtp.gmail.com"
 	smtpPort := "465"
@@ -114,26 +111,27 @@ func confirmEmail(email string) string {
 	return code
 }
 
-func registerUSER(db *sql.DB) gin.HandlerFunc {
+func RegisterUSER() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var user User
+		var user entity.User
 		if err := ctx.ShouldBindJSON(&user); err != nil {
 			log.Print("Failed bind JSON ", err)
 			return
 		}
 
-		if userExists(db, user.Login) {
+		if userExists(user.Login) {
 			ctx.JSON(204, gin.H{"message": "User with this login is already exists"})
 			return
 		}
 
-		_, err := db.Exec("INSERT into users (login, email, password) VALUES (?, ?, ?)", user.Login, user.Mail, user.Password)
+		_, err := db.Exec("INSERT into users (user_login, user_email, user_password) VALUES (?, ?, ?)", user.Login, user.Email, user.Password)
 		if err != nil {
 			log.Print("Failed insert user ", err)
+			ctx.JSON(400, gin.H{"message": "Error"})
 			return
 		}
 
-		code := confirmEmail(user.Mail)
+		code := ConfirmEmail(user.Email)
 
 		sessions := sessions.Default(ctx)
 		sessions.Set("login", user.Login)
@@ -141,21 +139,18 @@ func registerUSER(db *sql.DB) gin.HandlerFunc {
 
 		if err := sessions.Save(); err != nil {
 			log.Print("Failed to save session: ", err)
+			ctx.JSON(400, gin.H{"message": "Error"})
+			return
 		}
-
-		login := sessions.Get("login")
-		code1 := sessions.Get("code")
-
-		log.Print(login, code1, code)
 
 		ctx.JSON(200, gin.H{"message": "Please check your email"})
 	}
 }
 
-func checkemail() gin.HandlerFunc {
+func Checkemail() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var request struct {
-			Code string `json:"message"`
+			Code string `json:"code"`
 		}
 		if err := ctx.ShouldBindJSON(&request); err != nil {
 			ctx.JSON(400, gin.H{"message": "Invalid request"})
@@ -166,37 +161,39 @@ func checkemail() gin.HandlerFunc {
 		login := sessions.Get("login")
 		code := sessions.Get("code")
 
-		log.Printf("Login: %s, Code: %s, Provided Code: %s", login, code, request.Code)
+		var v bool = true
 
 		if code == request.Code {
-			ctx.JSON(200, gin.H{"message": "Successful verified email"})
-			query := "UPDATE users SET verified_email = ? WHERE login = ?"
-			_, err := db.Exec(query, true, login)
+			query := "UPDATE users SET user_verified_email = ? WHERE user_login = ?"
+			_, err := db.Exec(query, v, login)
 			if err != nil {
 				log.Print("Failed to update verified_email: ", err)
 				ctx.JSON(500, gin.H{"message": "Internal server error"})
 				return
 			}
+
+			ctx.JSON(200, gin.H{"message": "Successful verified email"})
+
 		} else {
-			log.Printf("fghjkl")
+			log.Print("wrong code")
 			ctx.JSON(204, gin.H{"message": "wrong code"})
 			return
 		}
 	}
 }
 
-func loginUser(db *sql.DB) gin.HandlerFunc {
+func LoginUser() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var user User
+		var user entity.User
 		if err := ctx.ShouldBindJSON(&user); err != nil {
 			log.Print("Failed bind json ", err)
+			return
 		}
 
-		var userOK User
-		query := "SELECT password, mail FROM users WHERE login = ?"
+		var userOK entity.User
+		query := "SELECT user_password, user_email FROM users WHERE user_login = ?"
 
-		// Выполняем запрос
-		err := db.QueryRow(query, user.Login).Scan(&userOK.Password, &userOK.Mail)
+		err := db.QueryRow(query, user.Login).Scan(&userOK.Password, &userOK.Email)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				log.Print("No such user", err)
@@ -218,21 +215,24 @@ func loginUser(db *sql.DB) gin.HandlerFunc {
 			log.Print("Failed to save session: ", err)
 		}
 
-		ctx.JSON(200, gin.H{"message": "user logged", "mail": userOK.Mail})
+		ctx.JSON(200, gin.H{"message": "user logged", "mail": userOK.Email})
 	}
 }
 
-func recoverUserPassword() gin.HandlerFunc {
+func RecoverUserPassword() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		login, ok := ctx.Get("login")
-		if !ok {
-			ctx.JSON(400, gin.H{"message": "wrong login"})
+		var request struct {
+			Login string `json:"user_login"`
+		}
+		if err := ctx.ShouldBindJSON(&request); err != nil {
+			ctx.JSON(400, gin.H{"message": "Invalid request"})
+			return
 		}
 
-		var userOK User
-		query := "SELECT password, mail FROM users WHERE login = ?"
+		var userOK entity.User
+		query := "SELECT user_password, user_email FROM users WHERE user_login = ?"
 
-		err := db.QueryRow(query, login).Scan(&userOK.Password, &userOK.Mail)
+		err := db.QueryRow(query, request.Login).Scan(&userOK.Password, &userOK.Email)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				ctx.JSON(400, gin.H{"message": "no such user"})
@@ -242,10 +242,12 @@ func recoverUserPassword() gin.HandlerFunc {
 			return
 		}
 
-		query = "UPDATE users SET verified_email = ? WHERE login = ?"
-		db.Exec(query, login, false)
+		var v bool = false
 
-		code := confirmEmail(userOK.Mail)
+		query = "UPDATE users SET user_verified_email = ? WHERE user_login = ?"
+		db.Exec(query, v, request.Login)
+
+		code := ConfirmEmail(userOK.Email)
 
 		sessions := sessions.Default(ctx)
 		sessions.Set("login", userOK.Login)
@@ -259,27 +261,36 @@ func recoverUserPassword() gin.HandlerFunc {
 	}
 }
 
-func newpassword() gin.HandlerFunc {
+func Newpassword() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		var request struct {
+			New_password string `json:"user_password"`
+		}
+		if err := ctx.ShouldBindJSON(&request); err != nil {
+			ctx.JSON(400, gin.H{"message": "Invalid request"})
+			return
+		}
+
 		sessions := sessions.Default(ctx)
 		login := sessions.Get("login")
 
-		query := "UPDATE users SET password = ? WHERE login = ?"
-		db.Exec(query, login, true)
+		query := "UPDATE users SET user_password = ? WHERE user_login = ?"
+		_, err := db.Exec(query, request.New_password, login)
+		if err != nil {
+			ctx.JSON(400, gin.H{"message": "Error"})
+			log.Print("BD error")
+			return
+		}
 
+		ctx.JSON(200, gin.H{"message": "Password updated"})
 	}
 }
 
-var (
-	db    *sql.DB
-	store cookie.Store
-	s     *gin.Engine
-)
-
 func main() {
 	fmt.Println("Starting server!")
+	var err error
 
-	db, err := sql.Open("mysql", "admin_for_itam_store:your_password@tcp(147.45.163.58:3306)/itam_store")
+	db, err = sql.Open("mysql", "admin_for_itam_store:your_password@tcp(147.45.163.58:3306)/itam_store")
 	if err != nil {
 		log.Fatal("Failed open DB ", err)
 	}
@@ -294,14 +305,13 @@ func main() {
 	s.GET("/health", func(ctx *gin.Context) {
 		ctx.AbortWithStatus(http.StatusOK)
 	})
-	s.POST("/register", registerUSER(db))
-	s.POST("/login", loginUser(db))
-	s.POST("/checkemail", checkemail())
-	s.POST("/recoverpassword", recoverUserPassword())
-	//s.POST("/newpassword", newpassword())
+	s.POST("/register", RegisterUSER())
+	s.POST("/login", LoginUser())
+	s.POST("/checkemail", Checkemail())
+	s.POST("/recoverpassword", RecoverUserPassword())
+	s.POST("/newpassword", Newpassword())
 
 	s.Run(":8090")
 
 	fmt.Println("Server is running on :8090")
-
 }
