@@ -22,7 +22,7 @@ func main() {
 
 	r := gin.Default()
 
-	r.GET("/", storage.ShowHomePage)
+	r.GET("/front_page", storage.ShowHomePage)
 	r.GET("/catalog")
 
 	r.GET("/register", storage.ShowRegistrationForm)
@@ -35,8 +35,9 @@ func main() {
 	r.GET("/catalog/fav_items")
 	r.POST("/catalog/fav_items/:id")
 
-	r.POST("/add_item/:id")
-	r.DELETE("/cart/:id")
+	r.POST("/cart/item/:id")
+	r.DELETE("/cart/item/:id")
+	r.GET("/cart")
 
 	r.GET("/analytics")
 	r.GET("/admin_panel")
