@@ -5,20 +5,24 @@ import (
 	storage "myapp/internal"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
-func init() {
+var db *gorm.DB
+
+func initDB() {
 	var err error
-	var db *gorm.DB
-	dsn := "postgresql://user:password@localhost/database_name?sslmode=disable" // Настроим потом
-	db, err = gorm.Open("postgres", dsn)
+	dsn := "admin_for_itam_store:your_password@tcp(147.45.163.58:3306)/itam_store?charset=utf8mb4&parseTime=True&loc=Local"
+	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		panic("Ошибка подключения к базе данных")
+		log.Fatal("Ошибка при подключении к базе данных:", err)
 	}
 	db.Debug()
 }
 func main() {
+
+	initDB()
 
 	r := gin.Default()
 
@@ -35,9 +39,9 @@ func main() {
 	r.GET("/catalog/fav_items")
 	r.POST("/catalog/fav_items/:id")
 
-	r.POST("/cart/item/:id")
-	r.DELETE("/cart/item/:id")
-	r.GET("/cart")
+	r.POST("/cart/item/:id", storage.AddToCart(db))
+	r.DELETE("/cart/item/:id", storage.RemoveFromCart(db))
+	r.GET("/cart", storage.ShowCart)
 
 	r.GET("/analytics")
 	r.GET("/admin_panel")

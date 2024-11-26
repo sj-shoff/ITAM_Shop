@@ -26,6 +26,10 @@ func ShowLoginForm(c *gin.Context) {
 	c.HTML(http.StatusOK, "login.html", nil)
 }
 
+func ShowCart(c *gin.Context) {
+	c.HTML(http.StatusOK, "cart.html", nil)
+}
+
 func Add(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var product entity.Product
