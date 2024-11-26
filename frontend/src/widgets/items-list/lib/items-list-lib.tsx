@@ -1,15 +1,16 @@
-import { getItems, Product } from "@entities/product"
-import { ReactElement } from "react"
+import { item } from "@entities/product"
+import { UsableProduct } from "@widgets/usable-product"
+import { Dispatch, ReactElement, SetStateAction } from "react"
 
-export async function itemsMapper(): Promise<ReactElement[]> {
-    const data = await getItems()
-
+export function itemsMapper(
+    data: item[],
+    globalConnector: Dispatch<SetStateAction<item[]>>
+): ReactElement[] {
     const res = data.map((el) => (
-        <Product
+        <UsableProduct
             key={el.id}
-            name={el.name}
-            price={el.price}
-            onClick={() => {}}
+            product={el}
+            globalConnector={globalConnector}
         />
     ))
 

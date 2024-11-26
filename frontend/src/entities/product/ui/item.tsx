@@ -1,14 +1,14 @@
-import { MouseEventHandler } from "react"
+import { ReactNode } from "react"
 import classes from "./item.module.scss"
-import { Button, Card, CardBody, Skeleton } from "@nextui-org/react"
+import { Card, CardBody, Skeleton } from "@nextui-org/react"
 
 type itemProps = {
     name: string
-    price: number,
-    onClick: MouseEventHandler<HTMLButtonElement>
+    price: number
+    children: ReactNode
 }
 
-export function Product({ name, price, onClick }: itemProps) {
+export function Product({ name, price, children }: itemProps) {
     return (
         <Card>
             <CardBody>
@@ -27,7 +27,8 @@ export function Product({ name, price, onClick }: itemProps) {
                     <p>{name}</p>
                     <p>{price}₽</p>
                 </div>
-                <Button onClick={onClick}>В корзину</Button>
+                {/* Здесь будут все фичи */}
+                {children}
             </CardBody>
         </Card>
     )
