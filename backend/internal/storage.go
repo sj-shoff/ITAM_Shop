@@ -1,11 +1,11 @@
 package server
 
 import (
-	"database/sql"
-	"strconv"
-
-	//"encoding/json"
 	entity "myapp/internal/structures"
+	//config "myapp/internal/data_base"
+	"strconv"
+	//"encoding/json"
+
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -30,37 +30,7 @@ func ShowCart(c *gin.Context) {
 	c.HTML(http.StatusOK, "cart.html", nil)
 }
 
-func Add(db *sql.DB) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var product entity.Product
-		if err := c.ShouldBindJSON(&product); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
-			return
-		}
-
-		// Преобразуем данные в JSON
-		// productJSON, err := json.Marshal(product)
-		// if err != nil {
-		// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to marshal data"})
-		// 	return
-		// }
-
-		// Сохраняем данные в базу данных
-		// query := `
-		// 	INSERT INTO products (name, start_date, end_date, update_date, version_description, series_prefix, series_postfix, number_prefix, number_postfix, numerator, custom_number_method, individual_parameters, cost_formula)
-		// 	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-		// `
-		// _, err = db.Exec(query, product.Name, product.StartDate, product.EndDate, product.UpdateDate, product.VersionDescription, product.MandatoryParams, productJSON, product.CostFormula)
-		// if err != nil {
-		// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save data"})
-		// 	return
-		// }
-
-		c.JSON(http.StatusOK, gin.H{"message": "Данные успешно отправлены"})
-	}
-}
-
-func AddToCart(db *gorm.DB) gin.HandlerFunc {
+func AddToCart(db *gorm.DB, item entity.CartItem) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var item entity.CartItem
 		if err := c.ShouldBindJSON(&item); err != nil {
@@ -79,6 +49,31 @@ func AddToCart(db *gorm.DB) gin.HandlerFunc {
 	}
 
 }
+
+// func AddToCart(db *gorm.DB, jsonFilePath string) error {
+//     // Чтение JSON-файла
+//     jsonFile, err := ioutil.ReadFile(jsonFilePath)
+//     if err != nil {
+//         return fmt.Errorf("Failed to read JSON file: %v", err)
+//     }
+
+//     // Десериализация JSON-файла в структуру CartItem
+//     var item entity.CartItem
+//     if err := json.Unmarshal(jsonFile, &item); err != nil {
+//         return fmt.Errorf("Failed to unmarshal JSON: %v", err)
+//     }
+
+//     // Поиск продукта в базе данных
+//     var product entity.Product
+//     if err := db.First(&product, item.ProductID_cart).Error; err != nil {
+//         return fmt.Errorf("Product not found: %v", err)
+//     }
+
+//     // Добавление продукта в корзину
+//     item.Product = product
+//     cart.Items = append(cart.Items, item)
+//     return nil
+// }
 
 func RemoveFromCart(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {

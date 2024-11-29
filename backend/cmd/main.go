@@ -3,26 +3,17 @@ package main
 import (
 	"log"
 	storage "myapp/internal"
+	config "myapp/internal/data_base"
+	controllers "myapp/internal/personal_account/controllers"
+	entity "myapp/internal/structures"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 )
 
-var db *gorm.DB
-
-func initDB() {
-	var err error
-	dsn := "admin_for_itam_store:your_password@tcp(147.45.163.58:3306)/itam_store?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Fatal("Ошибка при подключении к базе данных:", err)
-	}
-	db.Debug()
-}
 func main() {
 
-	initDB()
+	config.InitDB()
+	config.DB.AutoMigrate(&entity.User{}, &entity.Order{}, &entity.Favorite{})
 
 	r := gin.Default()
 
@@ -36,15 +27,24 @@ func main() {
 	r.GET("/login/:id/acc")
 
 	r.POST("/catalog/filter")
-	r.GET("/catalog/fav_items")
-	r.POST("/catalog/fav_items/:id")
 
-	r.POST("/cart/item/:id", storage.AddToCart(db))
-	r.DELETE("/cart/item/:id", storage.RemoveFromCart(db))
+	r.GET("/favorites/:id", controllers.GetFavorites)
+
+	r.POST("/cart/item/:id", storage.AddToCart(config.DB, entity.CartItem{}))
+	r.DELETE("/cart/item/:id", storage.RemoveFromCart(config.DB))
 	r.GET("/cart", storage.ShowCart)
 
 	r.GET("/analytics")
 	r.GET("/admin_panel")
+
+	// логика лк
+	r.GET("/favorites/:id", controllers.GetFavorites)
+	r.PUT("/users/:id/avatar", controllers.UpdateAvatar)
+	r.PUT("/users/:id/password", controllers.UpdatePassword)
+	r.POST("/logout", controllers.Logout)
+	r.GET("/orders/:id", controllers.GetOrders)
+	r.GET("/orders/:id/status", controllers.GetOrderStatus)
+	r.GET("/favorites/:id", controllers.GetFavorites)
 
 	if err := r.Run(":8080"); err != nil {
 		log.Fatal("Ошибка при запуске сервера: ", err)
