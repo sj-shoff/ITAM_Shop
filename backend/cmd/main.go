@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 	storage "myapp/internal"
+	catalog "myapp/internal/catalog"
 	config "myapp/internal/data_base"
 	controllers "myapp/internal/personal_account/controllers"
-	entity "myapp/internal/structures"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,27 +13,19 @@ import (
 func main() {
 
 	config.InitDB()
-	config.DB.AutoMigrate(&entity.User{}, &entity.Order{}, &entity.Favorite{})
-
 	r := gin.Default()
 
+	//главная страница
 	r.GET("/front_page", storage.ShowHomePage)
-	r.GET("/catalog")
 
+	//регистрация-авторизация
 	r.GET("/register", storage.ShowRegistrationForm)
 	r.POST("/register")
 	r.GET("/login", storage.ShowLoginForm)
 	r.POST("/login")
 	r.GET("/login/:id/acc")
 
-	r.POST("/catalog/filter")
-
-	r.GET("/favorites/:id", controllers.GetFavorites)
-
-	r.POST("/cart/item/:id", storage.AddToCart(config.DB, entity.CartItem{}))
-	r.DELETE("/cart/item/:id", storage.RemoveFromCart(config.DB))
-	r.GET("/cart", storage.ShowCart)
-
+	//аналитика-админка
 	r.GET("/analytics")
 	r.GET("/admin_panel")
 
@@ -46,9 +38,18 @@ func main() {
 	r.GET("/orders/:id/status", controllers.GetOrderStatus)
 	r.GET("/favorites/:id", controllers.GetFavorites)
 
+	//логика каталога
+	r.GET("/products", catalog.GetProducts)
+	r.GET("/products/:id", catalog.GetProduct)
+	r.POST("/products/filter", catalog.ProductFilter)
+	r.POST("/cart/item/:id", catalog.AddToCart)
+	r.DELETE("/cart/item/:id", catalog.RemoveFromCart)
+	r.GET("/cart", storage.ShowCart)
+	r.POST("/favorites", catalog.AddToFavorites)
+
 	if err := r.Run(":8080"); err != nil {
 		log.Fatal("Ошибка при запуске сервера: ", err)
 	}
-	log.Println("Сервер запущен на http://localhost:8080")
+	log.Println("Сервер запущен на http://localhost:8089")
 
 }

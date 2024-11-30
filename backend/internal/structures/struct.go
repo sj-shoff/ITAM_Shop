@@ -14,8 +14,11 @@ type User struct {
 	//
 
 }
-type Filter struct {
-	//
+
+type FilterParams struct {
+	Category string  `json:"category"`
+	MinPrice float64 `json:"minPrice"`
+	MaxPrice float64 `json:"maxPrice"`
 }
 
 type Product struct {
