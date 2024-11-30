@@ -1,10 +1,14 @@
-import { HTMLAttributes, ReactNode } from "react"
+import { HTMLAttributes, HTMLProps, ReactNode } from "react"
+import classes from "./button.module.scss"
 
-type ButtonProps = {
-    children: ReactNode
-    onClick?: () => void
+type ButtonProps = HTMLProps<HTMLButtonElement> & {
+    children?: ReactNode
 }
 
 export function Button(props: ButtonProps & HTMLAttributes<HTMLButtonElement>) {
-    return <button onClick={props.onClick}>{props.children}</button>
+    return (
+        <button className={classes.button} onClick={props.onClick}>
+            {props.children}
+        </button>
+    )
 }
