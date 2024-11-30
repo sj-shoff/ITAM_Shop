@@ -5,10 +5,14 @@ type ButtonProps = HTMLProps<HTMLButtonElement> & {
     children?: ReactNode
 }
 
-export function Button(props: ButtonProps & HTMLAttributes<HTMLButtonElement>) {
+export function Button({
+    children,
+    onClick,
+    ...rest
+}: ButtonProps & HTMLAttributes<HTMLButtonElement>) {
     return (
-        <button className={classes.button} onClick={props.onClick}>
-            {props.children}
+        <button className={classes.button} onClick={onClick} {...rest}>
+            {children}
         </button>
     )
 }
