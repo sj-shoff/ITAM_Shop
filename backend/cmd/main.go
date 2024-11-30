@@ -2,21 +2,41 @@ package main
 
 import (
 	"log"
+//	"fmt"
 	storage "myapp/internal"
 	catalog "myapp/internal/catalog"
 	config "myapp/internal/data_base"
 	controllers "myapp/internal/personal_account/controllers"
 
 	"github.com/gin-gonic/gin"
+
+//	"github.com/jinzhu/gorm"
+//"database/sql"
+
+//    "github.com/go-sql-driver/mysql"
 )
+
+
+func init() {
+
+}
+=======
 
 func main() {
 
 	config.InitDB()
 	r := gin.Default()
 
-	//главная страница
-	r.GET("/front_page", storage.ShowHomePage)
+	//r.Static("/templates", "./f")
+	r.LoadHTMLFiles("../f/index.html")
+	r.LoadHTMLFiles("../f/add_new_product.html")
+	r.GET("/", storage.ShowHomePage)
+
+
+
+
+	r.GET("/catalog")
+
 
 	//регистрация-авторизация
 	r.GET("/register", storage.ShowRegistrationForm)
@@ -25,7 +45,15 @@ func main() {
 	r.POST("/login")
 	r.GET("/login/:id/acc")
 
-	//аналитика-админка
+
+	r.POST("/catalog/filter")
+	r.GET("/catalog/fav_items")
+	r.POST("/catalog/fav_items/:id")
+
+	r.POST("/add_item", storage.CreateNewProduct)
+	r.DELETE("/cart/:id")
+
+
 	r.GET("/analytics")
 	r.GET("/admin_panel")
 

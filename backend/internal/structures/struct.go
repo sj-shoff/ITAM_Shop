@@ -15,10 +15,20 @@ type User struct {
 
 }
 
+
+type Product struct {
+	ProductID   uint    `json:"product_id"`
+	Name        string  `json:"product_name"`
+	Price       float64 `json:"product_price"`
+	Description string  `json:"product_discription"`
+	Quantity int  		`json:"product_quantity"`
+	//
+
 type FilterParams struct {
 	Category string  `json:"category"`
 	MinPrice float64 `json:"minPrice"`
 	MaxPrice float64 `json:"maxPrice"`
+
 }
 
 type Product struct {
