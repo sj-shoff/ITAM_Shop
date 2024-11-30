@@ -1,8 +1,8 @@
 #root {
     width: 100%;
     height: 100%;
-    font-family: monospace;
     color: var(--color-text-main);
+    @include font-main;
 }
 
 body {

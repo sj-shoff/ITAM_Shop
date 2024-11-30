@@ -41,8 +41,13 @@
     z-index: -100;
     @content;
 }
-// TODO: add font mixins
+
 @mixin font-ui($weight: 400) {
     font-family: 'American Captain';
+    font-weight: #{$weight};
+}
+
+@mixin font-main($weight: 400) {
+    font-family: 'Caviar Dreams';
     font-weight: #{$weight};
 }
