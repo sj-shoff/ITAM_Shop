@@ -1,16 +1,14 @@
-import { Header } from "@widgets/header"
+import { ItemsList } from "@widgets/items-list"
 import { Main } from "@widgets/main"
-import { Footer } from "@widgets/footer"
-import classes from "./home-page.module.scss"
 
 export function Homepage() {
     return (
         <>
-            <div className={classes.background} />
-            <div className={classes.homepage}>
-                <Header />
-                <Main>Hello world!</Main>
-                <Footer />
+            <div className='w-dvw h-dvh bg-slate-950 absolute -z-50' />
+            <div className='h-full main text-white flex items-center justify-center'>
+                <Main>
+                    <ItemsList />
+                </Main>
             </div>
         </>
     )

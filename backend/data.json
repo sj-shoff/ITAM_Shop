@@ -1,0 +1,14 @@
+{
+    "product_id": 1,
+    "product_name": "Айтем",
+    "product_price": 99.99,
+    "image_url": "http://itam_shop.com/image.jpg",
+    "additional_images": [
+        "http://itam_shop.com/image1.jpg",
+        "http://itam_shop.com/image2.jpg"
+    ],
+    "product_description": "Описание",
+    "category": "Категория",
+    "stock_quantity": 50,
+    "specifications": "Характеристики"
+}

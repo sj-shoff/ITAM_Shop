@@ -1,4 +1,4 @@
-interface Props {
+type Props = {
     children?: React.ReactNode
 }
 

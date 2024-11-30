@@ -2,18 +2,20 @@ package server
 
 import (
 
+
 	"strconv"
 //	"log"
 	"fmt"
 	//"encoding/json"
 
 	entity "myapp/internal/structures"
+
 	"net/http"
 	"database/sql"
   _ "github.com/go-sql-driver/mysql"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
+
 
 var adress_data_base_test = "admin_for_itam_store:your_password@tcp(147.45.163.58:3306)/itam_store"
 
@@ -55,6 +57,7 @@ func ShowRegistrationForm(c *gin.Context) {
 func ShowLoginForm(c *gin.Context) {
 	c.HTML(http.StatusOK, "login.html", nil)
 }
+
 
 func AddToCart(c *gin.Context) {
 	c.HTML(http.StatusOK, "login.html", nil)
@@ -137,24 +140,9 @@ func sk(db *gorm.DB) gin.HandlerFunc {
 		c.JSON(http.StatusOK, cart)
 	}
 
+
 }
 
-func RemoveFromCart(db *gorm.DB) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		productID_fromURL := c.Param("id")
-
-		productID, err := strconv.ParseUint(productID_fromURL, 10, 32)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"Ошибка": "Неправильный ID продукта"})
-		}
-		for i, cartItem := range cart.Items {
-			if cartItem.ProductID_cart == uint(productID) {
-				cart.Items = append(cart.Items[:i], cart.Items[i+1:]...)
-				c.JSON(http.StatusOK, cart)
-				return
-			}
-		}
-
-		c.JSON(http.StatusNotFound, gin.H{"Ошибка": "Продукт не найден в корзине"})
-	}
+func ShowFavourites(c *gin.Context) {
+	c.HTML(http.StatusOK, "favourites.html", nil)
 }

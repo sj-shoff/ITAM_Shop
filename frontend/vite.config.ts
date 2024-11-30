@@ -19,5 +19,16 @@ export default defineConfig(() => {
                 "@shared": path.resolve("src/shared"),
             },
         },
+        css: {
+            preprocessorOptions: {
+                scss: {
+                    additionalData: `
+                        @import "@scss/_mixins.scss";
+                        @import "@scss/_media.scss";
+                        // @import "@scss/_scss-properties.scss";
+                    `,
+                },
+            },
+        },
     }
 })

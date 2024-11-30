@@ -6,9 +6,5 @@ type ButtonProps = {
 }
 
 export function Button(props: ButtonProps & HTMLAttributes<HTMLButtonElement>) {
-    return (
-        <button onClick={props.onClick}>
-            {props.children}
-        </button>
-    )
+    return <button onClick={props.onClick}>{props.children}</button>
 }
