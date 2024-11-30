@@ -2,27 +2,31 @@ package main
 
 import (
 	"log"
+//	"fmt"
 	storage "myapp/internal"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
+//	"github.com/jinzhu/gorm"
+//"database/sql"
+
+//    "github.com/go-sql-driver/mysql"
 )
 
+
 func init() {
-	var err error
-	var db *gorm.DB
-	dsn := "postgresql://user:password@localhost/database_name?sslmode=disable" // Настроим потом
-	db, err = gorm.Open("postgres", dsn)
-	if err != nil {
-		panic("Ошибка подключения к базе данных")
-	}
-	db.Debug()
+
 }
 func main() {
 
 	r := gin.Default()
-
+	//r.Static("/templates", "./f")
+	r.LoadHTMLFiles("../f/index.html")
+	r.LoadHTMLFiles("../f/add_new_product.html")
 	r.GET("/", storage.ShowHomePage)
+
+
+
+
 	r.GET("/catalog")
 
 	r.GET("/register", storage.ShowRegistrationForm)
@@ -35,7 +39,7 @@ func main() {
 	r.GET("/catalog/fav_items")
 	r.POST("/catalog/fav_items/:id")
 
-	r.POST("/add_item/:id")
+	r.POST("/add_item", storage.CreateNewProduct)
 	r.DELETE("/cart/:id")
 
 	r.GET("/analytics")

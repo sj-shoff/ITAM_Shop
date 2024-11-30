@@ -7,6 +7,8 @@ require (
 	github.com/jinzhu/gorm v1.9.16
 )
 
+require filippo.io/edwards25519 v1.1.0 // indirect
+
 require (
 	github.com/bytedance/sonic v1.12.4 // indirect
 	github.com/bytedance/sonic/loader v0.2.1 // indirect

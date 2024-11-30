@@ -1,29 +1,92 @@
 package server
 
 import (
-	"database/sql"
-	"strconv"
 
+	"strconv"
+//	"log"
+	"fmt"
 	//"encoding/json"
+
 	entity "myapp/internal/structures"
 	"net/http"
-
+	"database/sql"
+  _ "github.com/go-sql-driver/mysql"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
+var adress_data_base_test = "admin_for_itam_store:your_password@tcp(147.45.163.58:3306)/itam_store"
+
 var cart entity.Cart
 
+
 func ShowHomePage(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.html", nil)
+	fmt.Println("good")
+	var err error
+
+
+	db, err := sql.Open("mysql", "admin_for_itam_store:your_password@tcp(147.45.163.58:3306)/itam_store")
+	if err != nil{
+		panic(err)
+	}
+
+	defer db.Close()
+	fmt.Printf("Подключено")
+	//Установка данных
+ //insert, err := db.Query(fmt.Sprintf("INSERT INTO test.articles (`title`, `anons`, `full_text`) VALUES ('%s', '%s', '%s')", title, anons, full_text))
+// var zapros = fmt.Sprintf("SELEC T* FROM `users`")
+// _,err = db.Query(zapros)
+ //fmt.Println(zapros)
+
+
+ c.HTML(200, "index.html", gin.H{
+ 		"title": "Main website", //IGNORE THIS
+ })
+
+
+
 }
 
 func ShowRegistrationForm(c *gin.Context) {
+
 	c.HTML(http.StatusOK, "register.html", nil)
 }
 
 func ShowLoginForm(c *gin.Context) {
 	c.HTML(http.StatusOK, "login.html", nil)
+}
+
+func AddToCart(c *gin.Context) {
+	c.HTML(http.StatusOK, "login.html", nil)
+}
+
+func CreateNewProduct(c *gin.Context) {
+	fmt.Println("Strart")
+	var newItem entity.Product
+	if err := c.ShouldBindJSON(&newItem); err == nil {
+            // Здесь .вы можете добавить логику для обработки нового элемента
+            c.JSON(http.StatusCreated, newItem)
+  } else {
+            // Если произошла ошибка, возвращаем статус 400 с сообщением об ошибке
+            c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+  }
+	fmt.Println(newItem.Name)
+	fmt.Println(newItem.Price)
+	fmt.Println(newItem.Description)
+	db, err := sql.Open("mysql", adress_data_base_test)
+  if err != nil{
+    panic(err)
+  }
+  defer db.Close()
+
+	result, err := db.Exec("insert into itam_store.products_in_store ( `name`, `price`, `description`, `quantity`) values (?, ?,?, ?)",newItem.Name ,newItem.Price ,newItem.Description, newItem.,newItem.Quantity)
+
+	fmt.Println(result)
+	if(err != nil){
+		fmt.Println(err)
+	}
+
+
 }
 
 func Add(db *sql.DB) gin.HandlerFunc {
@@ -56,7 +119,7 @@ func Add(db *sql.DB) gin.HandlerFunc {
 	}
 }
 
-func AddToCart(db *gorm.DB) gin.HandlerFunc {
+func sk(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var item entity.CartItem
 		if err := c.ShouldBindJSON(&item); err != nil {
