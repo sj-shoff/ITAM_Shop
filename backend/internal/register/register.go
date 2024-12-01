@@ -1,13 +1,9 @@
 package register
 
 import (
-	"crypto/tls"
-	"fmt"
 	"log"
-	"math/rand"
+	emailalerts "myapp/internal/email_alerts"
 	entity "myapp/internal/structures"
-	"net/smtp"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -42,81 +38,6 @@ func userExists(login string) bool {
 	return exists
 }
 
-func generateCode() string {
-	rand.Seed(time.Now().UnixNano())
-	code := rand.Intn(1000000)
-	return fmt.Sprintf("%06d", code)
-}
-
-func ConfirmEmail(email string) string {
-	// Данные SMTP сервера
-	smtpHost := "smtp.gmail.com"
-	smtpPort := "465"
-	smtpUser := "itamshophelp@gmail.com"
-	smtpPass := "jdazutaivdfequqh"
-
-	// Формирование письма
-	code := generateCode()
-	subject := "Подтверждение электронной почты"
-	body := fmt.Sprintf("Пожалуйста, подтвердите вашу почту. Код для подтверждения: %s", code)
-	msg := []byte("To: " + email + "\r\n" +
-		"Subject: " + subject + "\r\n" +
-		"\r\n" +
-		body)
-
-	// Установка соединения с SMTP сервером
-	tlsConfig := &tls.Config{
-		InsecureSkipVerify: true,
-		ServerName:         smtpHost,
-	}
-	conn, err := tls.Dial("tcp", smtpHost+":"+smtpPort, tlsConfig)
-	if err != nil {
-		fmt.Println("Ошибка при подключении к SMTP серверу:", err)
-		return ""
-	}
-	c, err := smtp.NewClient(conn, smtpHost)
-	if err != nil {
-		fmt.Println("Ошибка при создании клиента SMTP:", err)
-		return ""
-	}
-
-	// Аутентификация
-	auth := smtp.PlainAuth("", smtpUser, smtpPass, smtpHost)
-	if err = c.Auth(auth); err != nil {
-		fmt.Println("Ошибка аутентификации:", err)
-		return ""
-	}
-
-	// Отправка письма
-	if err = c.Mail(smtpUser); err != nil {
-		fmt.Println("Ошибка при указании отправителя:", err)
-		return ""
-	}
-	if err = c.Rcpt(email); err != nil {
-		fmt.Println("Ошибка при указании получателя:", err)
-		return ""
-	}
-	w, err := c.Data()
-	if err != nil {
-		fmt.Println("Ошибка при получении объекта для записи данных:", err)
-		return ""
-	}
-	_, err = w.Write(msg)
-	if err != nil {
-		fmt.Println("Ошибка при записи данных:", err)
-		return ""
-	}
-	err = w.Close()
-	if err != nil {
-		fmt.Println("Ошибка при закрытии объекта:", err)
-		return ""
-	}
-	c.Quit()
-
-	fmt.Println("Письмо успешно отправлено!")
-	return code
-}
-
 func RegisterUSER() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var user entity.User
@@ -136,7 +57,7 @@ func RegisterUSER() gin.HandlerFunc {
 			ctx.JSON(400, gin.H{"message": "Ошибка"})
 			return
 		}
-		code := ConfirmEmail(user.Email)
+		code := emailalerts.ConfirmEmail(user.Email)
 
 		sessions := sessions.Default(ctx)
 		sessions.Set("login", user.Login)
@@ -253,7 +174,7 @@ func RecoverUserPassword() gin.HandlerFunc {
 			return
 		}
 
-		code := ConfirmEmail(userOK.Email)
+		code := emailalerts.ConfirmEmail(userOK.Email)
 
 		sessions := sessions.Default(ctx)
 		sessions.Set("login", userOK.Login)
