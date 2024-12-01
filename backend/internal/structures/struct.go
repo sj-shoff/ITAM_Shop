@@ -29,10 +29,10 @@ type Product struct {
 	Name           string  `json:"product_name"`
 	ImageURL       string  `json:"image_url"`
 	Description    string  `json:"product_description"`
-	Category       string  `json:"category"`
-	Specifications string  `json:"specifications"`
-	Quantity       int     `json:"quantity"`
-	StockQuantity  int     `json:"stock_quantity"`
+	Category       string  `json:"product_category"`
+	Specifications string  `json:"product_specifications"`
+	Quantity       int     `json:"product_quantity"`
+	StockQuantity  int     `json:"product_stock_quantity"`
 	//
 }
 
