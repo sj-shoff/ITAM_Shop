@@ -82,7 +82,7 @@ go run .
     Для бэкэнда:
         - Добавлена функция TakeOffMoney(login, price) -> bool Возвращает прошла ли оплата или нет
 
-Каталог
+Каталог NOT OK
 
     GET /catalog - Получение списка товаров.
     POST /catalog/filter - Фильтрация товаров.
@@ -90,6 +90,13 @@ go run .
     POST /catalog/fav_items/:id - Добавление товара в избранное.
 
 Административные функции
+
+    POST /createnewproduct - создание нового продукта(без логики администратора) Request -> entity.Product
+    POST /editproduct/:id - редактирование продукта(без логики администратора) Request -> entity.Product
+    POST /deleteproduct/:id - удаление продукта(без логики администратора)
+
+
+    NOT OK
 
     GET /analytics - Получение аналитики.
     GET /admin_panel - Доступ к административной панели.
@@ -132,10 +139,10 @@ type Product struct {
 	Name           string  `json:"product_name"`
 	ImageURL       string  `json:"image_url"`
 	Description    string  `json:"product_description"`
-	Category       string  `json:"category"`
-	Specifications string  `json:"specifications"`
-	Quantity       int     `json:"quantity"`
-	StockQuantity  int     `json:"stock_quantity"`
+	Category       string  `json:"product_category"`
+	Specifications string  `json:"product_specifications"`
+	Quantity       int     `json:"product_quantity"`
+	StockQuantity  int     `json:"product_stock_quantity"`
 	//
 }
 ```
