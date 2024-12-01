@@ -1,0 +1,14 @@
+.nav {
+    width: 100%;
+    max-width: 8.75rem; // 140px
+    // Чтобы не слипались элементы при минимальной ширине
+}
+
+.linksList {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    column-gap: 0.3125rem; // 5px
+}
