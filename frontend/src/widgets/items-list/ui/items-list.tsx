@@ -1,7 +1,7 @@
 import { ReactElement, useEffect, useState } from "react"
-import classes from "./items-list.module.scss"
 import { itemsMapper } from "../lib/items-list-lib"
 import { getItems, item } from "@entities/product"
+import classes from "./items-list.module.scss"
 
 export function ItemsList() {
     const [data, setData] = useState<item[] | null>()

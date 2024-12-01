@@ -1,16 +1,30 @@
 import { Homepage } from "@pages/home-page"
 import { LoginPage } from "@pages/login"
-import { createBrowserRouter } from "react-router-dom"
+import { ReactElement } from "react"
+import { Route, Routes } from "react-router-dom"
 
-export const router = createBrowserRouter([
+type link = {
+    link: string
+    element: ReactElement
+}
+
+const routesConfig: link[] = [
     {
-        path: "/",
+        link: "/",
         element: <Homepage />,
-        children: [
-            {
-                element: <LoginPage />,
-                path: "/login",
-            },
-        ],
     },
-])
+    {
+        link: "/login",
+        element: <LoginPage />,
+    },
+]
+
+export function AppRoutes() {
+    return (
+        <Routes>
+            {routesConfig.map((el) => (
+                <Route key={el.link} path={el.link} element={el.element} />
+            ))}
+        </Routes>
+    )
+}

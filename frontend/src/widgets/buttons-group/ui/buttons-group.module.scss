@@ -1,0 +1,13 @@
+.buttonsGroup {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 13.75rem;
+    column-gap: 0.3125rem;
+}
+
+.button {
+    width: 55px;
+    height: 55px;
+}

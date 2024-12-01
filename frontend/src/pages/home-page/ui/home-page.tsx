@@ -1,15 +1,13 @@
 import { ItemsList } from "@widgets/items-list"
-import { Main } from "@widgets/main"
+import classes from "./home-page.module.scss"
 
 export function Homepage() {
     return (
         <>
-            <div className='w-dvw h-dvh bg-slate-950 absolute -z-50' />
-            <div className='h-full main text-white flex items-center justify-center'>
-                <Main>
-                    <ItemsList />
-                </Main>
-            </div>
+            <div className={classes.homepageBg}></div>
+            <section>
+                <ItemsList />
+            </section>
         </>
     )
 }

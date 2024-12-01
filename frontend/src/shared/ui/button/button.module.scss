@@ -10,7 +10,27 @@
         background: var(--color-ui-active);
     }
 
-    &:hover { 
+    &:hover {
         background-color: var(--color-ui-hover);
+    }
+}
+
+.iconButton {
+    box-sizing: content-box;
+    padding: 0.625rem;
+    transition-duration: var(--transition-duration);
+    color: var(--color-light);
+
+    * {
+        width: 100%;
+        height: 100%;
+    }
+
+    &:hover {
+        color: var(--color-ui-hover);
+    }
+
+    &:active {
+        color: var(--color-ui-active);
     }
 }
