@@ -198,9 +198,11 @@ func LoginUser() gin.HandlerFunc {
 		if err := db.Raw(query, user.Login).Scan(&userOK).Error; err != nil {
 			if err == gorm.ErrRecordNotFound {
 				log.Print("Пользователь не найден: ", err)
+				ctx.JSON(204, gin.H{"message": "No such user"})
 				return
 			}
 			log.Print("Не удалось подключиться к базе данных: ", err)
+			ctx.JSON(500, gin.H{"message": "Cant connect to DB"})
 			return
 		}
 
