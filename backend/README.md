@@ -66,6 +66,11 @@ go run .
         - 5. /newpassword Запрос -> `json:"user_password"`
         - 6. После получения ответа 200 пароль успешно изменен
 
+Транзакции
+    POST /givemoney Request {`json:"user_login"`, `json:"user_money"`} Добавить деньги на счет пользователя
+
+    Для бэкэнда:
+        - Добавлена функция TakeOffMoney(login, price) -> bool Возвращает прошла ли оплата или нет
 
 Каталог
 
@@ -78,10 +83,11 @@ go run .
 
     GET /analytics - Получение аналитики.
     GET /admin_panel - Доступ к административной панели.
+    POST /giveadminrights - Выдача прав доступа админа по логину Request -> {`json:"user_login"`}
 
 
 ### Используемые сущности 
-
+ s
 # User
 ```bash
 type User struct {

@@ -29,6 +29,7 @@ func InitRegister(db1 *gorm.DB, s *gin.Engine) {
 	s.POST("/checkemail", Checkemail())
 	s.POST("/recoverpassword", RecoverUserPassword())
 	s.POST("/newpassword", Newpassword())
+	s.POST("/giveadminrights", GiveAdminRights())
 }
 
 func userExists(login string) bool {
@@ -288,33 +289,24 @@ func Newpassword() gin.HandlerFunc {
 	}
 }
 
-/*
-func main() {
-	fmt.Println("Starting server!")
+func GiveAdminRights() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var request struct {
+			Login string `json:"user_login"`
+		}
 
-	var err error
-	dsn := "admin_for_itam_store:your_password@tcp(147.45.163.58:3306)/itam_store?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Fatal("Ошибка при подключении к базе данных:", err)
+		if err := ctx.ShouldBindJSON(&request); err != nil {
+			ctx.JSON(400, gin.H{"message": "Invalid request"})
+			return
+		}
+
+		if err := db.Model(&entity.User{}).Where("user_login = ?", request.Login).Update("user_admin_rights", true).Error; err != nil {
+			ctx.JSON(400, gin.H{"message": "Error"})
+			log.Print("Database error: ", err)
+			return
+		}
+
+		ctx.JSON(200, gin.H{"message": "Admin rights successfully given"})
+
 	}
-	db.Debug()
-
-	s = gin.Default()
-
-	store = cookie.NewStore([]byte("secret-key"))
-	s.Use(sessions.Sessions("mysession", store))
-
-	s.GET("/health", func(ctx *gin.Context) {
-		ctx.AbortWithStatus(http.StatusOK)
-	})
-	s.POST("/register", RegisterUSER())
-	s.POST("/login", LoginUser())
-	s.POST("/checkemail", Checkemail())
-	s.POST("/recoverpassword", RecoverUserPassword())
-	s.POST("/newpassword", Newpassword())
-
-	s.Run(":8090")
-
-	fmt.Println("Server is running on :8090")
-}*/
+}
