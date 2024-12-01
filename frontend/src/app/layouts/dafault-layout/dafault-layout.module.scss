@@ -1,0 +1,20 @@
+.background {
+    position: absolute;
+    z-index: -1000;
+    width: 100dvw;
+    height: 100dvh;
+    background-image: url("public/background-image.png");
+    background-color: var(--color-background);
+}
+
+.page {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+    width: 100%;
+    // Не позволяет растягиваться контенту по всему экрану огромного монитора
+    max-width: #{$desktop-min}px;
+    padding: 2rem;
+}
