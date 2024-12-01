@@ -101,14 +101,15 @@ go run .
 # User
 ```bash
 type User struct {
-	ID          string `json:"user_id" gorm:"column:user_id"`
-	UserName    string `json:"user_name" gorm:"column:user_name"`
-	UserSurname string `json:"user_surname" gorm:"column:user_surname"`
-	Login       string `json:"user_login" gorm:"column:user_login"`
-	Email       string `json:"user_email" gorm:"column:user_email"`
-	Password    string `json:"user_password" gorm:"column:user_password"`
-	Admin       bool   `json:"user_admin_rights" gorm:"column:user_admin_rights"`
-	Avatar      string `json:"avatar"`
+	ID          uint    `json:"user_id" gorm:"column:user_id"`
+	Balance     float64 `json:"user_balance" gorm:"column:user_balance"`
+	UserName    string  `json:"user_name" gorm:"column:user_name"`
+	UserSurname string  `json:"user_surname" gorm:"column:user_surname"`
+	Login       string  `json:"user_login" gorm:"column:user_login"`
+	Email       string  `json:"user_email" gorm:"column:user_email"`
+	Password    string  `json:"user_password" gorm:"column:user_password"`
+	Admin       bool    `json:"user_admin_rights" gorm:"column:user_admin_rights"`
+	Avatar      []byte  `json:"user_avatar" gorm:"column:user_avatar"`
 	//
 }
 ```
