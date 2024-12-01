@@ -11,7 +11,7 @@ type User struct {
 	Email       string  `json:"user_email" gorm:"column:user_email"`
 	Password    string  `json:"user_password" gorm:"column:user_password"`
 	Admin       bool    `json:"user_admin_rights" gorm:"column:user_admin_rights"`
-	Avatar      string  `json:"avatar"`
+	Avatar      []byte  `json:"user_avatar" gorm:"column:user_avatar"`
 	//
 }
 
@@ -19,6 +19,7 @@ type FilterParams struct {
 	Category string  `json:"category"`
 	MinPrice float64 `json:"minPrice"`
 	MaxPrice float64 `json:"maxPrice"`
+	//
 }
 
 type Product struct {
@@ -39,20 +40,24 @@ type CartItem struct {
 	ProductID_cart uint    `json:"product_id"`
 	Quantity       int     `json:"quantity"`
 	Product        Product `json:"product"`
+	//
 }
 
 type Cart struct {
 	Items []CartItem `json:"items"`
+	//
 }
 
 type Favorite struct {
 	gorm.Model
 	UserID uint `gorm:"not null" json:"user_id"`
 	ItemID uint `gorm:"not null" json:"item_id"`
+	//
 }
 
 type Order struct {
 	gorm.Model
 	UserID uint   `gorm:"not null" json:"user_id"`
 	Status string `gorm:"not null" json:"status"`
+	//
 }

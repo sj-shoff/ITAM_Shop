@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	config "myapp/internal/data_base"
+	"io"
 	entity "myapp/internal/structures"
 	"net/http"
 
@@ -16,33 +16,51 @@ var (
 
 func InitPersonalAccount(db1 *gorm.DB, s *gin.Engine) {
 	db = db1
-	s.POST("/updateavatar", UpdateAvatar)
+
+	s.POST("/updateavatar", UpdateAvatar())
 	s.POST("/updatename", UpdateName())
 	s.POST("/updatesurname", UpdateSurname())
 	s.POST("/updatepassword", UpdatePassword)
 	s.POST("/logout", Logout)
 }
 
-func UpdateAvatar(c *gin.Context) {
-	sessions := sessions.Default(c)
-	id := sessions.Get("id")
-	if id == nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Ошибка": "User not logged"})
-		return
-	}
+func UpdateAvatar() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		file, err := ctx.FormFile("avatar")
+		if err != nil {
+			ctx.JSON(400, gin.H{"message": "File is required"})
+			return
+		}
 
-	var user entity.User
-	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Ошибка": err.Error()})
-		return
-	}
+		fileData, err := file.Open()
+		if err != nil {
+			ctx.JSON(500, gin.H{"message": "Failed to open file"})
+			return
+		}
+		defer fileData.Close()
 
-	if err := config.DB.Model(&entity.User{}).Where("user_id = ?", id).Update("user_avatar", user.Avatar).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"Ошибка": err.Error()})
-		return
-	}
+		data, err := io.ReadAll(fileData)
+		if err != nil {
+			ctx.JSON(500, gin.H{"message": "Failed to read file"})
+			return
+		}
 
-	c.JSON(http.StatusOK, gin.H{"Сообщение": "Аватарка обновлена"})
+		sessions := sessions.Default(ctx)
+		userID := sessions.Get("id")
+
+		if userID == nil {
+			ctx.JSON(http.StatusNotFound, gin.H{"message": "User not logged"})
+			return
+		}
+
+		var user entity.User
+		if err := db.Model(&user).Where("id = ?", userID).Update("user_avatar", data).Error; err != nil {
+			ctx.JSON(500, gin.H{"message": "Failed to update avatar"})
+			return
+		}
+
+		ctx.JSON(200, gin.H{"message": "Avatar uploaded successfully"})
+	}
 }
 
 func UpdatePassword(c *gin.Context) {
