@@ -81,8 +81,9 @@ go run .
 
 
 ### Используемые сущности 
-package entity
 
+# User
+```bash
 type User struct {
 	ID          string `json:"user_id" gorm:"column:user_id"`
 	UserName    string `json:"user_name" gorm:"column:user_name"`
@@ -94,13 +95,19 @@ type User struct {
 	Avatar      string `json:"avatar"`
 	//
 }
+```
 
+# FilterParams
+```bash
 type FilterParams struct {
 	Category string  `json:"category"`
 	MinPrice float64 `json:"minPrice"`
 	MaxPrice float64 `json:"maxPrice"`
 }
+```
 
+# Product
+```bash
 type Product struct {
 	gorm.Model
 	ProductID      uint    `json:"product_id"`
@@ -114,25 +121,38 @@ type Product struct {
 	StockQuantity  int     `json:"stock_quantity"`
 	//
 }
+```
 
+# CartItem
+```bash
 type CartItem struct {
 	ProductID_cart uint    `json:"product_id"`
 	Quantity       int     `json:"quantity"`
 	Product        Product `json:"product"`
 }
+```
 
+# Cart
+```bash
 type Cart struct {
 	Items []CartItem `json:"items"`
 }
+```
 
+# Favourite
+```bash
 type Favorite struct {
 	gorm.Model
 	UserID uint `gorm:"not null" json:"user_id"`
 	ItemID uint `gorm:"not null" json:"item_id"`
 }
+```
 
+# Order
+```bash
 type Order struct {
 	gorm.Model
 	UserID uint   `gorm:"not null" json:"user_id"`
 	Status string `gorm:"not null" json:"status"`
 }
+```
