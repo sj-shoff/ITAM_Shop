@@ -4,14 +4,15 @@ import (
 	config "myapp/internal/data_base"
 	entity "myapp/internal/structures"
 	"net/http"
-	"strconv"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
 func GetFavorites(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
+	sessions := sessions.Default(c)
+	id := sessions.Get("id")
+	if id == nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Ошибка": "Недействительный ID пользователя"})
 		return
 	}

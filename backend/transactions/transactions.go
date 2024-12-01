@@ -15,8 +15,7 @@ var (
 	db *gorm.DB
 )
 
-func InitRegister(db1 *gorm.DB, s *gin.Engine) {
-
+func InitTransaction(db1 *gorm.DB, s *gin.Engine) {
 	db = db1
 
 	s.POST("/givemoney", GimmeSomeMoney())

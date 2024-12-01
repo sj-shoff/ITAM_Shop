@@ -21,7 +21,6 @@ var (
 )
 
 func InitRegister(db1 *gorm.DB, s *gin.Engine) {
-
 	db = db1
 
 	s.POST("/register", RegisterUSER())
@@ -142,6 +141,7 @@ func RegisterUSER() gin.HandlerFunc {
 		sessions := sessions.Default(ctx)
 		sessions.Set("login", user.Login)
 		sessions.Set("code", code)
+		sessions.Set("id", user.ID)
 
 		if err := sessions.Save(); err != nil {
 			log.Print("Failed to save session: ", err)
@@ -215,6 +215,7 @@ func LoginUser() gin.HandlerFunc {
 
 		sessions := sessions.Default(ctx)
 		sessions.Set("login", user.Login)
+		sessions.Set("id", user.ID)
 
 		if err := sessions.Save(); err != nil {
 			log.Print("Failed to save session: ", err)

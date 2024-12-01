@@ -4,8 +4,10 @@ import (
 	"log"
 	storage "myapp/internal"
 	config "myapp/internal/data_base"
+	"myapp/internal/personal_account/controllers"
 	"myapp/internal/register"
 	entity "myapp/internal/structures"
+	"myapp/transactions"
 	"net/http"
 
 	"github.com/gin-contrib/sessions"
@@ -28,16 +30,24 @@ func main() {
 	r.GET("/front_page", storage.ShowHomePage)
 	r.GET("/catalog")
 
-	// Register, Login, Sessions
-
+	// Sessions
 	store := cookie.NewStore([]byte("secret-key"))
 	r.Use(sessions.Sessions("mysession", store))
 
+	// Register, Login, Sessions
 	register.InitRegister(config.DB, r)
 
-	r.GET("/register", storage.ShowRegistrationForm)
-	r.GET("/login", storage.ShowLoginForm)
-	r.GET("/login/:id/acc")
+	// Personal account
+	controllers.InitPersonalAccount(config.DB, r)
+
+	// Transactions
+	transactions.InitTransaction(config.DB, r)
+
+	//
+
+	//r.GET("/register", storage.ShowRegistrationForm)
+	//r.GET("/login", storage.ShowLoginForm)
+	//r.GET("/login/:id/acc")
 
 	r.POST("/catalog/filter")
 	r.GET("/catalog/fav_items")
