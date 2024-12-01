@@ -2,50 +2,44 @@ package server
 
 import (
 
-
-	"strconv"
-//	"log"
+	//	"log"
 	"fmt"
 	//"encoding/json"
 
 	entity "myapp/internal/structures"
 
-	"net/http"
 	"database/sql"
-  _ "github.com/go-sql-driver/mysql"
-	"github.com/gin-gonic/gin"
-)
+	"net/http"
 
+	"github.com/gin-gonic/gin"
+	_ "github.com/go-sql-driver/mysql"
+	"gorm.io/gorm"
+)
 
 var adress_data_base_test = "admin_for_itam_store:your_password@tcp(147.45.163.58:3306)/itam_store"
 
 var cart entity.Cart
 
-
 func ShowHomePage(c *gin.Context) {
 	fmt.Println("good")
 	var err error
 
-
 	db, err := sql.Open("mysql", "admin_for_itam_store:your_password@tcp(147.45.163.58:3306)/itam_store")
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
 
 	defer db.Close()
 	fmt.Printf("Подключено")
 	//Установка данных
- //insert, err := db.Query(fmt.Sprintf("INSERT INTO test.articles (`title`, `anons`, `full_text`) VALUES ('%s', '%s', '%s')", title, anons, full_text))
-// var zapros = fmt.Sprintf("SELEC T* FROM `users`")
-// _,err = db.Query(zapros)
- //fmt.Println(zapros)
+	//insert, err := db.Query(fmt.Sprintf("INSERT INTO test.articles (`title`, `anons`, `full_text`) VALUES ('%s', '%s', '%s')", title, anons, full_text))
+	// var zapros = fmt.Sprintf("SELEC T* FROM `users`")
+	// _,err = db.Query(zapros)
+	//fmt.Println(zapros)
 
-
- c.HTML(200, "index.html", gin.H{
- 		"title": "Main website", //IGNORE THIS
- })
-
-
+	c.HTML(200, "index.html", gin.H{
+		"title": "Main website", //IGNORE THIS
+	})
 
 }
 
@@ -58,7 +52,6 @@ func ShowLoginForm(c *gin.Context) {
 	c.HTML(http.StatusOK, "login.html", nil)
 }
 
-
 func AddToCart(c *gin.Context) {
 	c.HTML(http.StatusOK, "login.html", nil)
 }
@@ -67,28 +60,27 @@ func CreateNewProduct(c *gin.Context) {
 	fmt.Println("Strart")
 	var newItem entity.Product
 	if err := c.ShouldBindJSON(&newItem); err == nil {
-            // Здесь .вы можете добавить логику для обработки нового элемента
-            c.JSON(http.StatusCreated, newItem)
-  } else {
-            // Если произошла ошибка, возвращаем статус 400 с сообщением об ошибке
-            c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-  }
+		// Здесь .вы можете добавить логику для обработки нового элемента
+		c.JSON(http.StatusCreated, newItem)
+	} else {
+		// Если произошла ошибка, возвращаем статус 400 с сообщением об ошибке
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
 	fmt.Println(newItem.Name)
 	fmt.Println(newItem.Price)
 	fmt.Println(newItem.Description)
 	db, err := sql.Open("mysql", adress_data_base_test)
-  if err != nil{
-    panic(err)
-  }
-  defer db.Close()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
 
-	result, err := db.Exec("insert into itam_store.products_in_store ( `name`, `price`, `description`, `quantity`) values (?, ?,?, ?)",newItem.Name ,newItem.Price ,newItem.Description, newItem.,newItem.Quantity)
+	result, err := db.Exec("insert into itam_store.products_in_store ( `name`, `price`, `description`, `quantity`) values (?, ?, ?, ?)", newItem.Name, newItem.Price, newItem.Description, newItem.Quantity)
 
 	fmt.Println(result)
-	if(err != nil){
+	if err != nil {
 		fmt.Println(err)
 	}
-
 
 }
 
@@ -139,7 +131,6 @@ func sk(db *gorm.DB) gin.HandlerFunc {
 
 		c.JSON(http.StatusOK, cart)
 	}
-
 
 }
 
