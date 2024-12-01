@@ -12,3 +12,15 @@
     width: 100%;
     column-gap: 0.3125rem; // 5px
 }
+
+.link {
+    transition-duration: var(--transition-duration);
+
+    @include hover {
+        color: var(--color-ui-hover);
+    }
+
+    &:active {
+        color: var(--color-ui-active);
+    }
+}

@@ -6,16 +6,18 @@ type itemProps = {
     name: string
     price: number
     children: ReactNode
+    headContent?: ReactNode
 }
 
 // TODO: refactor to the model
-export type ProductUiElement = "image" | "text-info"
+export type ProductUiElement = "image" | "name" | "price"
 
-export function Product({ name, price, children }: itemProps) {
+export function Product({ name, price, children, headContent }: itemProps) {
     const [isLoaded, setIsLoaded] = useState<Record<ProductUiElement, boolean>>(
         {
             image: false,
-            "text-info": false,
+            name: false,
+            price: false,
         }
     )
 
@@ -28,8 +30,9 @@ export function Product({ name, price, children }: itemProps) {
 
     return (
         <article className={classes.card}>
+            <div className={classes.headContent}>{headContent}</div>
             <div className={classes.body}>
-                <Skeleton isLoaded={isLoaded.image ? true : false}>
+                <Skeleton isLoaded={isLoaded.image}>
                     <img
                         className={classes.image}
                         src='public/product-image-1.png'

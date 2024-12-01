@@ -10,6 +10,14 @@
     }
 }
 
+.headContent {
+    align-self: flex-end;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    column-gap: 0.3125rem; // 5px
+}
+
 .body {
     display: flex;
     flex-direction: column;

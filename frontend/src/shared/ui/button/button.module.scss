@@ -16,6 +16,8 @@
 }
 
 .iconButton {
+    box-sizing: content-box;
+    padding: 0.625rem;
     transition-duration: var(--transition-duration);
     color: var(--color-light);
 

@@ -61,7 +61,7 @@ export function PacketIcon({ width, height, size = 20 }: iconProps) {
     )
 }
 
-export function WantedListIcon({ width, height, size = 20 }: iconProps) {
+export function WishListIcon({ width, height, size = 20 }: iconProps) {
     return (
         <svg
             width={width || size}

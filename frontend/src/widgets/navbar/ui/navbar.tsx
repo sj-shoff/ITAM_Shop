@@ -7,7 +7,7 @@ export function Navbar() {
         <nav className={classes.nav}>
             <ul className={classes.linksList}>
                 {linksList.map((el) => (
-                    <Link key={el.path} to={el.path}>
+                    <Link key={el.path} to={el.path} className={classes.link}>
                         {el.value}
                     </Link>
                 ))}

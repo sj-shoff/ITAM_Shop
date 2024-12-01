@@ -1,5 +1,6 @@
 import { item, Product } from "@entities/product"
 import { AddToBusket } from "@features/add-to-basket"
+import { AddToWishList } from "@features/add-to-wishlist"
 import { Dispatch, SetStateAction } from "react"
 
 type usableProductProps = {
@@ -12,7 +13,11 @@ export function UsableProduct({
     globalConnector,
 }: usableProductProps) {
     return (
-        <Product name={product.name} price={product.price}>
+        <Product
+            name={product.name}
+            price={product.price}
+            headContent={<AddToWishList />}
+        >
             <AddToBusket product={product} globalConnector={globalConnector} />
         </Product>
     )
