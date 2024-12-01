@@ -66,7 +66,17 @@ go run .
         - 5. /newpassword Запрос -> `json:"user_password"`
         - 6. После получения ответа 200 пароль успешно изменен
 
+Личный кабинет
+
+    POST /logout - выход из личного кабинета
+    POST /updateavatar - Обновить аватар пользователя
+    POST /updatename - Обновить имя пользователя
+    POST /updatesurname - Обновить фамилию пользователя
+    POST /updatepassword - Обновить пароль пользователя
+
+
 Транзакции
+
     POST /givemoney Request {`json:"user_login"`, `json:"user_money"`} Добавить деньги на счет пользователя
 
     Для бэкэнда:
@@ -87,7 +97,7 @@ go run .
 
 
 ### Используемые сущности 
- s
+
 # User
 ```bash
 type User struct {
