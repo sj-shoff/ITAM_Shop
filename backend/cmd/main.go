@@ -7,7 +7,7 @@ import (
 	catalog "myapp/internal/catalog"
 	config "myapp/internal/data_base"
 	controllers "myapp/internal/personal_account/controllers"
-
+	admin "myapp/internal/admin"
 	"github.com/gin-gonic/gin"
 
 //	"github.com/jinzhu/gorm"
@@ -20,7 +20,7 @@ import (
 func init() {
 
 }
-=======
+
 
 func main() {
 
@@ -50,7 +50,7 @@ func main() {
 	r.GET("/catalog/fav_items")
 	r.POST("/catalog/fav_items/:id")
 
-	r.POST("/add_item", storage.CreateNewProduct)
+	r.POST("/add_item", admin.CreateNewProduct)
 	r.DELETE("/cart/:id")
 
 
@@ -64,15 +64,17 @@ func main() {
 	r.POST("/logout", controllers.Logout)
 	r.GET("/orders/:id", controllers.GetOrders)
 	r.GET("/orders/:id/status", controllers.GetOrderStatus)
-	r.GET("/favorites/:id", controllers.GetFavorites)
+	//r.GET("/favorites/:id", controllers.GetFavorites)
 
 	//логика каталога
 	r.GET("/products", catalog.GetProducts)
 	r.GET("/products/:id", catalog.GetProduct)
 	r.POST("/products/filter", catalog.ProductFilter)
+
 	r.POST("/cart/item/:id", catalog.AddToCart)
 	r.DELETE("/cart/item/:id", catalog.RemoveFromCart)
-	r.GET("/cart", storage.ShowCart)
+//	r.GET("/cart", storage.ShowCart)
+	//r.POST("/add_to_cart", storage.AddToCart)
 	r.POST("/favorites", catalog.AddToFavorites)
 
 	if err := r.Run(":8080"); err != nil {

@@ -16,14 +16,14 @@ type User struct {
 }
 
 
-type Product struct {
-	ProductID   uint    `json:"product_id"`
-	Name        string  `json:"product_name"`
-	Price       float64 `json:"product_price"`
-	Description string  `json:"product_discription"`
-	Quantity int  		`json:"product_quantity"`
-	//
-
+// type Product struct {
+// 	ProductID   uint    `json:"product_id"`
+// 	Name        string  `json:"product_name"`
+// 	Price       float64 `json:"product_price"`
+// 	Description string  `json:"product_discription"`
+// 	Quantity int  		`json:"product_quantity"`
+// 	//
+// }
 type FilterParams struct {
 	Category string  `json:"category"`
 	MinPrice float64 `json:"minPrice"`
@@ -36,6 +36,7 @@ type Product struct {
 	ProductID      uint    `json:"product_id"`
 	Name           string  `json:"product_name"`
 	Price          float64 `json:"product_price"`
+	Quantity int  		`json:"product_quantity"`
 	ImageURL       string  `json:"image_url"`
 	Description    string  `json:"product_description"`
 	Category       string  `json:"category"`

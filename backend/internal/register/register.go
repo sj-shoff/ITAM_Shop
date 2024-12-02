@@ -24,6 +24,25 @@ var (
 	s     *gin.Engine
 )
 
+func GetAuthUser(c *gin.Context) entity.User {
+	//sessions := sessions.Default(ctx)
+	login := "Mover-R" //sessions.Get("login")
+
+	var zapros = fmt.Sprintf("SELECT user_id, user_name FROM `users` WHERE user_login='%s'", login)
+	res,err := db.Query(zapros)
+	fmt.Println(zapros)
+	fmt.Println(res)
+
+	var AuthUser entity.User
+	for res.Next(){
+		err = res.Scan(&AuthUser.ID, &AuthUser.UserName)
+		if err != nil{
+			panic(err)
+		}
+	}
+	return AuthUser
+}
+
 func userExists(login string) bool {
 	var exists bool = false
 	query := "SELECT EXISTS(SELECT 1 FROM users WHERE user_login = ?)"

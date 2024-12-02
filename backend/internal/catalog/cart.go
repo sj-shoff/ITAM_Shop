@@ -2,11 +2,15 @@ package controllers
 
 import (
 	config "myapp/internal/data_base"
+	server "myapp/internal"
 	entity "myapp/internal/structures"
 	"net/http"
 	"strconv"
-
+	"fmt"
 	"github.com/gin-gonic/gin"
+
+	"database/sql"
+  _ "github.com/go-sql-driver/mysql"
 )
 
 func GetCart(c *gin.Context) {
@@ -28,35 +32,47 @@ func GetCart(c *gin.Context) {
 }
 
 func AddToCart(c *gin.Context) {
-	var cartItem entity.CartItem
-	if err := c.ShouldBindJSON(&cartItem); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Ошибка": err.Error()})
+	fmt.Println("ADD TO CART")
+	id_product, err := strconv.Atoi(c.Param("id"))
+	fmt.Println("Strart")
 
-		return
+	var adress_data_base_test = "admin_for_itam_store:your_password@tcp(147.45.163.58:3306)/itam_store"
+
+	db, err := sql.Open("mysql", adress_data_base_test)
+  if err != nil{
+    panic(err)
+  }
+  defer db.Close()
+	AuthUser := server.GetAuthUser(c)
+	result, err := db.Exec("insert into itam_store.users_carts ( `user_id`, `products_id`, `quantity`) values (?, ?,?)",AuthUser.ID ,id_product ,1)
+
+	fmt.Println(result)
+	if(err != nil){
+		fmt.Println(err)
 	}
-
-	if err := config.DB.Create(&cartItem).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"Ошибка": err.Error()})
-
-		return
-	}
-
 	c.JSON(http.StatusOK, gin.H{"Сообщение": "Продукт добавлен в корзину"})
 }
 
 func RemoveFromCart(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Ошибка": "Недействительный ID продукта"})
+	fmt.Println("ADD TO CART")
+	id_product, err := strconv.Atoi(c.Param("id"))
+	fmt.Println("Strart")
 
-		return
+
+	var adress_data_base_test = "admin_for_itam_store:your_password@tcp(147.45.163.58:3306)/itam_store"
+
+	db, err := sql.Open("mysql", adress_data_base_test)
+  if err != nil{
+    panic(err)
+  }
+  defer db.Close()
+	AuthUser := server.GetAuthUser(c)
+	result, err := db.Exec("DELETE FROM users_carts WHERE products_id = ?", products_id)
+
+	fmt.Println(result)
+	if(err != nil){
+		fmt.Println(err)
 	}
 
-	if err := config.DB.Where("id= ?", id).Delete(&entity.CartItem{}).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"Ошибка": err.Error()})
-
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"Сообщение": "Продукт удален из карзины"})
+	c.JSON(http.StatusOK, gin.H{"Сообщение": "Продукт удален из корзины"})
 }

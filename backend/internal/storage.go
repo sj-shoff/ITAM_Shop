@@ -3,7 +3,7 @@ package server
 import (
 
 
-	"strconv"
+//	"strconv"
 //	"log"
 	"fmt"
 	//"encoding/json"
@@ -17,29 +17,36 @@ import (
 )
 
 
-var adress_data_base_test = "admin_for_itam_store:your_password@tcp(147.45.163.58:3306)/itam_store"
+func GetAuthUser(c *gin.Context) entity.User {
+	//sessions := sessions.Default(ctx)
+	login := "Mover-R" //sessions.Get("login")
+	var adress_data_base_test = "admin_for_itam_store:your_password@tcp(147.45.163.58:3306)/itam_store"
 
-var cart entity.Cart
-
-
-func ShowHomePage(c *gin.Context) {
-	fmt.Println("good")
-	var err error
-
-
-	db, err := sql.Open("mysql", "admin_for_itam_store:your_password@tcp(147.45.163.58:3306)/itam_store")
+	db, err := sql.Open("mysql", adress_data_base_test)
 	if err != nil{
 		panic(err)
 	}
 
 	defer db.Close()
-	fmt.Printf("Подключено")
-	//Установка данных
- //insert, err := db.Query(fmt.Sprintf("INSERT INTO test.articles (`title`, `anons`, `full_text`) VALUES ('%s', '%s', '%s')", title, anons, full_text))
-// var zapros = fmt.Sprintf("SELEC T* FROM `users`")
-// _,err = db.Query(zapros)
- //fmt.Println(zapros)
+	var zapros = fmt.Sprintf("SELECT user_id, user_name FROM `users` WHERE user_login='%s'", login)
+	res,err := db.Query(zapros)
+	fmt.Println(zapros)
+	fmt.Println(res)
 
+	var AuthUser entity.User
+	for res.Next(){
+		err = res.Scan(&AuthUser.ID, &AuthUser.UserName)
+		if err != nil{
+			panic(err)
+		}
+	}
+	return AuthUser
+}
+//var cart entity.Cart
+
+
+
+func ShowHomePage(c *gin.Context) {
 
  c.HTML(200, "index.html", gin.H{
  		"title": "Main website", //IGNORE THIS
@@ -59,38 +66,9 @@ func ShowLoginForm(c *gin.Context) {
 }
 
 
-func AddToCart(c *gin.Context) {
-	c.HTML(http.StatusOK, "login.html", nil)
-}
-
-func CreateNewProduct(c *gin.Context) {
-	fmt.Println("Strart")
-	var newItem entity.Product
-	if err := c.ShouldBindJSON(&newItem); err == nil {
-            // Здесь .вы можете добавить логику для обработки нового элемента
-            c.JSON(http.StatusCreated, newItem)
-  } else {
-            // Если произошла ошибка, возвращаем статус 400 с сообщением об ошибке
-            c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-  }
-	fmt.Println(newItem.Name)
-	fmt.Println(newItem.Price)
-	fmt.Println(newItem.Description)
-	db, err := sql.Open("mysql", adress_data_base_test)
-  if err != nil{
-    panic(err)
-  }
-  defer db.Close()
-
-	result, err := db.Exec("insert into itam_store.products_in_store ( `name`, `price`, `description`, `quantity`) values (?, ?,?, ?)",newItem.Name ,newItem.Price ,newItem.Description, newItem.,newItem.Quantity)
-
-	fmt.Println(result)
-	if(err != nil){
-		fmt.Println(err)
-	}
 
 
-}
+
 
 func Add(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -122,26 +100,7 @@ func Add(db *sql.DB) gin.HandlerFunc {
 	}
 }
 
-func sk(db *gorm.DB) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var item entity.CartItem
-		if err := c.ShouldBindJSON(&item); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"Ошибка": err.Error()})
-			return
-		}
-		var product entity.Product
-		if err := db.First(&product, item.ProductID_cart).Error; err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"Ошибка": "Продукт не найден"})
-			return
-		}
-		item.Product = product
-		cart.Items = append(cart.Items, item)
 
-		c.JSON(http.StatusOK, cart)
-	}
-
-
-}
 
 func ShowFavourites(c *gin.Context) {
 	c.HTML(http.StatusOK, "favourites.html", nil)
