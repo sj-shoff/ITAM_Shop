@@ -1,4 +1,4 @@
-# ITAM_Sop Backend
+# ITAM_Shop Backend
 
 ITAM_Shop - это веб-приложение, разработанное с использованием Go и фреймворка Gin. Эта часть репозитория содержит серверную часть приложения, которая обрабатывает запросы, управляет сессиями и взаимодействует с базой данных.
 
@@ -82,12 +82,26 @@ go run .
     Для бэкэнда:
         - Добавлена функция TakeOffMoney(login, price) -> bool Возвращает прошла ли оплата или нет
 
-Каталог NOT OK
+Каталог 
 
-    GET /catalog - Получение списка товаров.
-    POST /catalog/filter - Фильтрация товаров.
-    GET /catalog/fav_items - Получение избранных товаров.
-    POST /catalog/fav_items/:id - Добавление товара в избранное.
+    
+	GET /catalog - Получение списка товаров из каталога
+	POST /filter - Применение фильтра к товарам в каталоге
+
+	GET /fav_items - Получение списка товаров, добавленных в избранное
+	GET /fav_items/:id - Получение страницы товара по его id
+	POST /fav_items/:id - Добавление товара в избранное 
+	DELETE /fav_items/:id - Удаление товара из избранного
+	
+	GET /cart - Получение списка товаров в корзине
+    GET /cart/:id - Получение страницы товара в корзине по его id 
+	POST /cart/add/:id - Добавление товара в корзину
+	DELETE /cart/remove/:id - Удаление товара из корзины
+
+	
+
+
+    
 
 Административные функции
 
@@ -167,8 +181,16 @@ type Cart struct {
 ```bash
 type Favorite struct {
 	gorm.Model
-	UserID uint `gorm:"not null" json:"user_id"`
-	ItemID uint `gorm:"not null" json:"item_id"`
+	ProductID      uint    `json:"product_id"`
+	Price          float64 `json:"product_price"`
+	Name           string  `json:"product_name"`
+	ImageURL       string  `json:"image_url"`
+	Description    string  `json:"product_description"`
+	Category       string  `json:"product_category"`
+	Specifications string  `json:"product_specifications"`
+	Quantity       int     `json:"product_quantity"`
+	StockQuantity  int     `json:"product_stock_quantity"`
+	IsFavorite     bool    `json:"is_favorite"`
 }
 ```
 
