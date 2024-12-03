@@ -1,3 +1,9 @@
-export { Product } from "./ui/product"
+export { ProductComponent } from "./ui/product"
 export { getItems } from "./api/item-api"
-export { type item } from "./model/item-model"
+export {
+    type Product,
+    type productId,
+    type productName,
+    type productPrice,
+    type producttImageUrl,
+} from "./model/item-model"

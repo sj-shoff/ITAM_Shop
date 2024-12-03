@@ -1,27 +1,10 @@
-import { ReactElement, useEffect, useState } from "react"
-import { itemsMapper } from "../lib/items-list-lib"
-import { getItems, item } from "@entities/product"
+import { useAppSelector } from "@shared/lib"
 import classes from "./items-list.module.scss"
+import { productsMaper } from "../lib/maper"
 
 export function ItemsList() {
-    const [data, setData] = useState<item[] | null>()
-    const [listState, setListState] = useState<ReactElement[] | null>()
+    const catalog = useAppSelector((el) => el.catalog.ids)
 
-    useEffect(() => {
-        getItems().then((el) => {
-            setData(el)
-        })
-    })
 
-    useEffect(() => {
-        if (data) {
-            setListState(itemsMapper(data, () => {}))
-        } else {
-            // TODO: добавить обработчик ошибок
-            console.log("[ERROR] no data")
-            setListState(null)
-        }
-    }, [data])
-
-    return <div className={classes.list}>{listState}</div>
+    return <div className={classes.list}>{productsMaper()}</div>
 }

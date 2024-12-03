@@ -1,18 +1,20 @@
 import { Button } from "@shared/ui/button"
 import { WishListIcon } from "@shared/ui/icons"
-import { useState } from "react"
+import { productId } from "@entities/product"
 import classes from "./add-to-wishlist.module.scss"
 
-export function AddToWishList() {
-    const [classValue, setClassValue] = useState(classes.basic)
+type AddToWishlistProps = {
+    productId: productId
+}
 
+export function AddToWishList({ productId }: AddToWishlistProps) {
     function clickHandler() {
-        console.log("click")
+        console.log(productId)
     }
 
     return (
         <Button
-            className={`${classes.addToWishlist} ${classValue}`}
+            className={classes.addToWishlist}
             isIconOnly
             onClick={clickHandler}
         >

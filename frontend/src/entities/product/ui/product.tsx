@@ -12,7 +12,12 @@ type itemProps = {
 // TODO: refactor to the model
 export type ProductUiElement = "image" | "name" | "price"
 
-export function Product({ name, price, children, headContent }: itemProps) {
+export function ProductComponent({
+    name,
+    price,
+    children,
+    headContent,
+}: itemProps) {
     const [isLoaded, setIsLoaded] = useState<Record<ProductUiElement, boolean>>(
         {
             image: false,
