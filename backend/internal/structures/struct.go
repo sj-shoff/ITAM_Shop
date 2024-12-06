@@ -28,6 +28,7 @@ type FilterParams struct {
 
 type Product struct {
 	gorm.Model
+	Features 			 []Feature `json:"features"`
 	ProductID      uint    `json:"product_id"`
 	Price          float64 `json:"product_price"`
 	Name           string  `json:"product_name"`
@@ -38,6 +39,11 @@ type Product struct {
 	Quantity       int     `json:"product_quantity"`
 	StockQuantity  int     `json:"product_stock_quantity"`
 	//
+}
+
+type Feature struct{
+	Name 					string 	 `json:"name_of_feature"`
+	Value 				string 	 `json:"value_for_feature"`
 }
 
 type CartItem struct {

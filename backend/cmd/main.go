@@ -41,14 +41,15 @@ func main() {
 
 	// Transactions
 	transactions.InitTransaction(config.DB, r)
-
+	admin.InitAdminPanel(config.DB, r)
 	// Catalog
 	catalog.InitCatalog(config.DB, r)
 
 	r.GET("/front_page") // пока не сделано
 	r.Use(func(c *gin.Context) {
-		c.Header("Content-Security-Policy", "default-src 'self' http://localhost:3000;")
+		c.Header("Content-Security-Policy", "default-src 'self' http://localhost:8080;")
 	})
+	
 	r.GET("/analytics")
 	r.GET("/admin_panel", admin.AdminPanelHandler)
 
