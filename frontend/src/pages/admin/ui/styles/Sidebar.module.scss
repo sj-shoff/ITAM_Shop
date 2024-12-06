@@ -1,0 +1,29 @@
+.sidebar {
+    width: 200px;
+    height: 100vh;
+    background-color: #e3f2fd;
+    padding: 20px;
+    box-sizing: border-box;
+  
+    h3 {
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+  
+    .menu-item {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      text-align: left;
+      background-color: #ffffff;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+  
+      &:hover {
+        background-color: #bbdefb;
+      }
+    }
+  }
+  
