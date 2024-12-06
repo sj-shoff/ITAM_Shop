@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -46,7 +46,7 @@ var (
 func AdminPanelHandler(c *gin.Context) {
 	htmlFile, err := os.Open("f/admin_panel.html")
 	if err != nil {
-		c.String(http.StatusInternalServerError, "Error reading HTML file")
+		c.String(http.StatusInternalServerError, "Error reading HTML fileA")
 		return
 	}
 	defer htmlFile.Close()
@@ -63,6 +63,8 @@ func AdminPanelHandler(c *gin.Context) {
 
 func InitAdminPanel(db1 *gorm.DB, s *gin.Engine) {
 	db = db1
+	s.POST("/add_features_to_item/:id_item/:id_features", AddFeaturesToItem())
+
 	s.POST("/createnewprod", CreateProduct())
 	s.POST("/editproduct/:id", EditProduct())
 	s.POST("/deleteproduct/:id", DeleteProduct())
@@ -72,7 +74,32 @@ func InitAdminPanel(db1 *gorm.DB, s *gin.Engine) {
 	s.POST("/sale", TrackSale())
 }
 
+type Temp struct{
+	Message string `json:"message" gorm:"column:message"`
+}
+
 // tracking
+func AddFeaturesToItem() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		id_item, err := strconv.Atoi(ctx.Param("id_item"))
+		id_features, err := strconv.Atoi(ctx.Param("id_features"))
+		var value_struct Temp
+		if err := ctx.ShouldBindJSON(&value_struct); err != nil {
+				fmt.Println("Error")
+				fmt.Println(err)
+			ctx.JSON(204, gin.H{"message": "Bad data for edit"})
+			return
+		}
+		result := db.Exec("insert into itam_store.added_features (id_item	, value, id_feature) values (?, ?,?)", id_item, value_struct.Message , id_features)
+		if( err != nil){
+			panic(err)
+		}
+	  fmt.Println(result)
+
+		ctx.JSON(200, gin.H{"message": "features added"})
+	}
+}
+
 
 func TrackSiteVisit() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
