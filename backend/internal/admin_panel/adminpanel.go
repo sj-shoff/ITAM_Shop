@@ -44,14 +44,14 @@ var (
 )
 
 func AdminPanelHandler(c *gin.Context) {
-	htmlFile, err := os.Open("admin_panel.html")
+	htmlFile, err := os.Open("f/admin_panel.html")
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Error reading HTML file")
 		return
 	}
 	defer htmlFile.Close()
 
-	htmlContent, err := os.ReadFile("admin_panel.html")
+	htmlContent, err := os.ReadFile("f/admin_panel.html")
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Error reading HTML file")
 		return
