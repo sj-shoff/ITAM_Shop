@@ -1,6 +1,10 @@
 package entity
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type User struct {
 	ID          uint    `json:"user_id" gorm:"column:user_id"`
@@ -67,4 +71,12 @@ type Order struct {
 	UserID uint   `gorm:"not null" json:"user_id"`
 	Status string `gorm:"not null" json:"status"`
 	//
+}
+
+type Sale struct {
+	ID        uint      `json:"id" gorm:"primaryKey"`
+	ProductID uint      `json:"product_id"`
+	Quantity  int       `json:"quantity"`
+	Price     float64   `json:"price"`
+	CreatedAt time.Time `json:"created_at"`
 }

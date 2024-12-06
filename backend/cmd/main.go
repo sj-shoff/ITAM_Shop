@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	admin "myapp/internal/admin_panel"
 	catalog "myapp/internal/catalog"
 	config "myapp/internal/data_base"
 	"myapp/internal/personal_account/controllers"
@@ -47,7 +48,7 @@ func main() {
 	r.GET("/front_page") // пока не сделано
 
 	r.GET("/analytics")
-	r.GET("/admin_panel")
+	r.GET("/admin_panel", admin.AdminPanelHandler)
 
 	if err := r.Run(":8080"); err != nil {
 		log.Fatal("Ошибка при запуске сервера: ", err)

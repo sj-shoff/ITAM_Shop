@@ -3,22 +3,99 @@ package adminpanel
 import (
 	"log"
 	entity "myapp/internal/structures"
+	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"gorm.io/gorm"
 )
 
 var (
 	db *gorm.DB
+
+	productsCreated = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "products_created_total",
+		Help: "The total number of created products",
+	})
+
+	productsEdited = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "products_edited_total",
+		Help: "The total number of edited products",
+	})
+
+	productsDeleted = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "products_deleted_total",
+		Help: "The total number of deleted products",
+	})
+
+	salesTotal = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "sales_total",
+		Help: "The total number of sales",
+	})
+
+	siteVisitsTotal = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "site_visits_total",
+		Help: "The total number of site visits",
+	})
 )
+
+func AdminPanelHandler(c *gin.Context) {
+	htmlFile, err := os.Open("admin_panel.html")
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Error reading HTML file")
+		return
+	}
+	defer htmlFile.Close()
+
+	htmlContent, err := os.ReadFile("admin_panel.html")
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Error reading HTML file")
+		return
+	}
+
+	c.Header("Content-Type", "text/html; charset=utf-8")
+	c.String(http.StatusOK, string(htmlContent))
+}
 
 func InitAdminPanel(db1 *gorm.DB, s *gin.Engine) {
 	db = db1
 	s.POST("/createnewprod", CreateProduct())
 	s.POST("/editproduct/:id", EditProduct())
 	s.POST("/deleteproduct/:id", DeleteProduct())
+
+	s.GET("/metrics", gin.WrapH(promhttp.Handler()))
+	s.GET("/", TrackSiteVisit())
+	s.POST("/sale", TrackSale())
 }
+
+// tracking
+
+func TrackSiteVisit() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		siteVisitsTotal.Inc()
+		ctx.JSON(200, gin.H{"message": "Welcome to the site"})
+	}
+}
+
+func TrackSale() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var sale entity.Sale
+
+		if err := ctx.ShouldBindJSON(&sale); err != nil {
+			ctx.JSON(204, gin.H{"message": "Bad data for sale"})
+			return
+		}
+
+		salesTotal.Inc()
+		ctx.JSON(200, gin.H{"message": "Sale tracked"})
+	}
+}
+
+// admin functions
 
 func CreateProduct() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
