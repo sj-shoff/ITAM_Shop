@@ -69,7 +69,7 @@ go run .
 Личный кабинет
 
     POST /logout - выход из личного кабинета
-    POST /updateavatar - Обновить аватар пользователя
+    POST /updateavatar - Обновить аватар пользователя Request -> entity.Images
     POST /updatename - Обновить имя пользователя
     POST /updatesurname - Обновить фамилию пользователя
     POST /updatepassword - Обновить пароль пользователя
@@ -99,16 +99,13 @@ go run .
 	DELETE /cart/remove/:id - Удаление товара из корзины
 
 
-
-
-
-
 Административные функции
 
     POST /createnewproduct - создание нового продукта(без логики администратора) Request -> entity.Product
     POST /editproduct/:id - редактирование продукта(без логики администратора) Request -> entity.Product
     POST /deleteproduct/:id - удаление продукта(без логики администратора)
     POST /add_features_to_item/:id_item/:id_features Добавление определенной фичи (по номеру) к товару. Передать Json с полем message с параметром value 
+	POST /updateimageforproduct/:id Добавление/обновление фото продукта Request -> entity.Images
 
     NOT OK
 
@@ -130,7 +127,17 @@ type User struct {
 	Email       string  `json:"user_email" gorm:"column:user_email"`
 	Password    string  `json:"user_password" gorm:"column:user_password"`
 	Admin       bool    `json:"user_admin_rights" gorm:"column:user_admin_rights"`
-	Avatar      []byte  `json:"user_avatar" gorm:"column:user_avatar"`
+	Avatar      uint    `json:"user_avatar" gorm:"column:user_avatar"`
+	//
+}
+```
+
+# Images
+```bash
+type Images struct {
+	gorm.Model
+	ImageID   uint   `json:"image_id"`
+	ImageData []byte `json:"image_data"`
 	//
 }
 ```
@@ -148,15 +155,16 @@ type FilterParams struct {
 ```bash
 type Product struct {
 	gorm.Model
-	ProductID      uint    `json:"product_id"`
-	Price          float64 `json:"product_price"`
-	Name           string  `json:"product_name"`
-	ImageURL       string  `json:"image_url"`
-	Description    string  `json:"product_description"`
-	Category       string  `json:"product_category"`
-	Specifications string  `json:"product_specifications"`
-	Quantity       int     `json:"product_quantity"`
-	StockQuantity  int     `json:"product_stock_quantity"`
+	Features       []Feature `json:"features"`
+	ProductID      uint      `json:"product_id"`
+	Price          float64   `json:"product_price"`
+	Name           string    `json:"product_name"`
+	Image          uint      `json:"product_image"`
+	Description    string    `json:"product_description"`
+	Category       string    `json:"product_category"`
+	Specifications string    `json:"product_specifications"`
+	Quantity       int       `json:"product_quantity"`
+	StockQuantity  int       `json:"product_stock_quantity"`
 	//
 }
 ```
@@ -184,7 +192,7 @@ type Favorite struct {
 	ProductID      uint    `json:"product_id"`
 	Price          float64 `json:"product_price"`
 	Name           string  `json:"product_name"`
-	ImageURL       string  `json:"image_url"`
+	Image          uint    `json:"product_image"`
 	Description    string  `json:"product_description"`
 	Category       string  `json:"product_category"`
 	Specifications string  `json:"product_specifications"`

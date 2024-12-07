@@ -7,6 +7,7 @@ import (
 )
 
 type User struct {
+	gorm.Model
 	ID          uint    `json:"user_id" gorm:"column:user_id"`
 	Balance     float64 `json:"user_balance" gorm:"column:user_balance"`
 	UserName    string  `json:"user_name" gorm:"column:user_name"`
@@ -15,7 +16,7 @@ type User struct {
 	Email       string  `json:"user_email" gorm:"column:user_email"`
 	Password    string  `json:"user_password" gorm:"column:user_password"`
 	Admin       bool    `json:"user_admin_rights" gorm:"column:user_admin_rights"`
-	Avatar      []byte  `json:"user_avatar" gorm:"column:user_avatar"`
+	Avatar      uint    `json:"user_avatar" gorm:"column:user_avatar"`
 	//
 }
 
@@ -28,22 +29,29 @@ type FilterParams struct {
 
 type Product struct {
 	gorm.Model
-	Features 			 []Feature `json:"features"`
-	ProductID      uint    `json:"product_id"`
-	Price          float64 `json:"product_price"`
-	Name           string  `json:"product_name"`
-	ImageURL       string  `json:"image_url"`
-	Description    string  `json:"product_description"`
-	Category       string  `json:"product_category"`
-	Specifications string  `json:"product_specifications"`
-	Quantity       int     `json:"product_quantity"`
-	StockQuantity  int     `json:"product_stock_quantity"`
+	Features       []Feature `json:"features"`
+	ProductID      uint      `json:"product_id"`
+	Price          float64   `json:"product_price"`
+	Name           string    `json:"product_name"`
+	Image          uint      `json:"product_image"`
+	Description    string    `json:"product_description"`
+	Category       string    `json:"product_category"`
+	Specifications string    `json:"product_specifications"`
+	Quantity       int       `json:"product_quantity"`
+	StockQuantity  int       `json:"product_stock_quantity"`
 	//
 }
 
-type Feature struct{
-	Name 					string 	 `json:"name_of_feature"`
-	Value 				string 	 `json:"value_for_feature"`
+type Images struct {
+	gorm.Model
+	ImageID   uint   `json:"image_id"`
+	ImageData []byte `json:"image_data"`
+	//
+}
+
+type Feature struct {
+	Name  string `json:"name_of_feature"`
+	Value string `json:"value_for_feature"`
 }
 
 type CartItem struct {
@@ -63,7 +71,7 @@ type Favorite struct {
 	ProductID      uint    `json:"product_id"`
 	Price          float64 `json:"product_price"`
 	Name           string  `json:"product_name"`
-	ImageURL       string  `json:"image_url"`
+	Image          uint    `json:"product_image"`
 	Description    string  `json:"product_description"`
 	Category       string  `json:"product_category"`
 	Specifications string  `json:"product_specifications"`
@@ -80,6 +88,7 @@ type Order struct {
 }
 
 type Sale struct {
+	gorm.Model
 	ID        uint      `json:"id" gorm:"primaryKey"`
 	ProductID uint      `json:"product_id"`
 	Quantity  int       `json:"quantity"`
