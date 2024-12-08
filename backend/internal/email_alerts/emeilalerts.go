@@ -120,7 +120,7 @@ func OrderReceipt(email string, ProductIDs []int) bool {
 	var total float64
 
 	for _, item := range items {
-		receipt.WriteString(fmt.Sprintf("ID: %d\nНазвание: %s\nОписание: %s\nЦена: %.2f\n\n", item.ID, item.Name, item.Description, item.Price))
+		receipt.WriteString(fmt.Sprintf("ID: %d\nНазвание: %s\nОписание: %s\nЦена: %.2f\n\n", item.ProductID, item.Name, item.Description, item.Price))
 		total += item.Price
 	}
 

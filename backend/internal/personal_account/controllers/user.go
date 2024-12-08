@@ -1,9 +1,7 @@
 package controllers
 
 import (
-	"io"
 	entity "myapp/internal/structures"
-	"net/http"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -17,50 +15,11 @@ var (
 func InitPersonalAccount(db1 *gorm.DB, s *gin.Engine) {
 	db = db1
 
-	s.POST("/updateavatar", UpdateAvatar())
+	s.POST("/updateavatar", UpdateUserAvatar())
 	s.POST("/updatename", UpdateName())
 	s.POST("/updatesurname", UpdateSurname())
 	s.POST("/updatepassword", UpdatePassword)
 	s.POST("/logout", Logout)
-}
-
-func UpdateAvatar() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		file, err := ctx.FormFile("avatar")
-		if err != nil {
-			ctx.JSON(400, gin.H{"message": "File is required"})
-			return
-		}
-
-		fileData, err := file.Open()
-		if err != nil {
-			ctx.JSON(500, gin.H{"message": "Failed to open file"})
-			return
-		}
-		defer fileData.Close()
-
-		data, err := io.ReadAll(fileData)
-		if err != nil {
-			ctx.JSON(500, gin.H{"message": "Failed to read file"})
-			return
-		}
-
-		sessions := sessions.Default(ctx)
-		userID := sessions.Get("id")
-
-		if userID == nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"message": "User not logged"})
-			return
-		}
-
-		var user entity.User
-		if err := db.Model(&user).Where("id = ?", userID).Update("user_avatar", data).Error; err != nil {
-			ctx.JSON(500, gin.H{"message": "Failed to update avatar"})
-			return
-		}
-
-		ctx.JSON(200, gin.H{"message": "Avatar uploaded successfully"})
-	}
 }
 
 func UpdatePassword(c *gin.Context) {
@@ -125,6 +84,54 @@ func UpdateSurname() gin.HandlerFunc {
 		}
 
 		ctx.JSON(200, gin.H{"message": "Password updated"})
+	}
+}
+
+func DeleteUserAvatar(login string) bool {
+	var user entity.User
+
+	if err := db.Model(&entity.User{}).Where("user_login = ?", login).First(&user).Error; err != nil {
+		return false
+	}
+
+	ImageID := user.Avatar
+	query := "DELETE FROM images WHERE image_id = ?"
+	if err := db.Exec(query, ImageID); err != nil {
+		return false
+	}
+
+	return true
+}
+
+func UpdateUserAvatar() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var newImage entity.Images
+		if err := ctx.ShouldBindJSON(&newImage); err != nil {
+			ctx.JSON(400, gin.H{"message": "Bad request"})
+			return
+		}
+
+		sessions := sessions.Default(ctx)
+		login := sessions.Get("login").(string)
+
+		result := db.Create(&newImage)
+
+		if result.Error != nil {
+			ctx.JSON(400, gin.H{"message": "Ошибка"})
+			return
+		}
+
+		if !DeleteUserAvatar(login) {
+			ctx.JSON(400, gin.H{"message": "Bad request"})
+			return
+		}
+
+		if err := db.Model(&entity.User{}).Where("user_login = ?", login).Update("user_avatar = ?", newImage.ImageID).Error; err != nil {
+			ctx.JSON(400, gin.H{"message": "Error"})
+			return
+		}
+
+		ctx.JSON(200, gin.H{"message": "Updated avatar"})
 	}
 }
 

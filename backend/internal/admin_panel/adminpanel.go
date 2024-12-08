@@ -1,6 +1,7 @@
 package adminpanel
 
 import (
+	"fmt"
 	"log"
 	entity "myapp/internal/structures"
 	"net/http"
@@ -46,7 +47,7 @@ var (
 func AdminPanelHandler(c *gin.Context) {
 	htmlFile, err := os.Open("/home/sj_shoff/ITAM_Shop/backend/f/admin_panel.html")
 	if err != nil {
-		c.String(http.StatusInternalServerError, "Error reading HTML file")
+		c.String(http.StatusInternalServerError, "Error reading HTML fileA")
 		return
 	}
 	defer htmlFile.Close()
@@ -63,16 +64,47 @@ func AdminPanelHandler(c *gin.Context) {
 
 func InitAdminPanel(db1 *gorm.DB, s *gin.Engine) {
 	db = db1
+	s.POST("/add_features_to_item/:id_item/:id_features", AddFeaturesToItem())
+
 	s.POST("/createnewprod", CreateProduct())
 	s.POST("/editproduct/:id", EditProduct())
 	s.POST("/deleteproduct/:id", DeleteProduct())
+	s.POST("/updateimageforproduct/:id", UpdateImageForProduct())
 
 	s.GET("/metrics", gin.WrapH(promhttp.Handler()))
 	s.GET("/", TrackSiteVisit())
 	s.POST("/sale", TrackSale())
 }
 
+type Temp struct {
+	Message string `json:"message" gorm:"column:message"`
+}
+
 // tracking
+func AddFeaturesToItem() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		id_item, err := strconv.Atoi(ctx.Param("id_item"))
+		if err != nil {
+			ctx.JSON(400, gin.H{"message": "Bad request"})
+			return
+		}
+		id_features, err := strconv.Atoi(ctx.Param("id_features"))
+		var value_struct Temp
+		if err := ctx.ShouldBindJSON(&value_struct); err != nil {
+			fmt.Println("Error")
+			fmt.Println(err)
+			ctx.JSON(204, gin.H{"message": "Bad data for edit"})
+			return
+		}
+		result := db.Exec("insert into itam_store.added_features (id_item	, value, id_feature) values (?, ?,?)", id_item, value_struct.Message, id_features)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(result)
+
+		ctx.JSON(200, gin.H{"message": "features added"})
+	}
+}
 
 func TrackSiteVisit() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -96,7 +128,6 @@ func TrackSale() gin.HandlerFunc {
 }
 
 // admin functions
-
 func CreateProduct() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var p entity.Product
@@ -114,6 +145,58 @@ func CreateProduct() gin.HandlerFunc {
 		}
 
 		ctx.JSON(200, gin.H{"message": "Product succesfully created"})
+	}
+}
+
+func DeleteProductImage(id int) bool {
+	var prod entity.Product
+
+	if err := db.Model(&entity.Product{}).Where("product_id = ?", id).First(&prod).Error; err != nil {
+		return false
+	}
+
+	ImageID := prod.Image
+	query := "DELETE FROM images WHERE image_id = ?"
+	if err := db.Exec(query, ImageID); err != nil {
+		return false
+	}
+
+	return true
+}
+
+func UpdateImageForProduct() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			log.Print(err)
+			ctx.JSON(404, gin.H{"message": "No such product"})
+			return
+		}
+
+		var newImage entity.Images
+		if err := ctx.ShouldBindJSON(&newImage); err != nil {
+			ctx.JSON(400, gin.H{"message": "Bad request"})
+			return
+		}
+
+		result := db.Create(&newImage)
+
+		if result.Error != nil {
+			ctx.JSON(400, gin.H{"message": "Ошибка"})
+			return
+		}
+
+		if !DeleteProductImage(id) {
+			ctx.JSON(400, gin.H{"message": "Bad request"})
+			return
+		}
+
+		if err := db.Model(&entity.Product{}).Where("product_id = ?", id).Update("product_image = ?", newImage.ImageID).Error; err != nil {
+			ctx.JSON(400, gin.H{"message": "Error"})
+			return
+		}
+
+		ctx.JSON(200, gin.H{"message": "Product image updated"})
 	}
 }
 
