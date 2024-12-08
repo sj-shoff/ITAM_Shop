@@ -1,4 +1,4 @@
-import { item } from "../model/item-model"
+import { item } from "../model/product-model"
 
 export async function getItems(): Promise<item[]> {
     // В будущем это будет на затычка, а полноценный зпрос

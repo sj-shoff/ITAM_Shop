@@ -6,4 +6,5 @@ export {
     type productName,
     type productPrice,
     type producttImageUrl,
-} from "./model/item-model"
+} from "./model/product-model"
+export { productSlice } from "./model/product-slice"

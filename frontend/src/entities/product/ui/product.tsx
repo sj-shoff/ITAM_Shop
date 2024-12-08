@@ -1,6 +1,8 @@
 import { ReactNode, useState } from "react"
 import { Skeleton } from "@nextui-org/react"
 import classes from "./prooduct.module.scss"
+import { useSelector } from "react-redux"
+import { productSlice } from "../model/product-slice"
 
 type itemProps = {
     name: string
@@ -25,6 +27,9 @@ export function ProductComponent({
             price: false,
         }
     )
+    const name = useSelector(productSlice.selectors.getName)
+    const id = useSelector(productSlice.selectors.getId)
+    const price = useSelector(productSlice.selectors.getPrice)
 
     function imageLoadHandler() {
         setIsLoaded((prev) => ({

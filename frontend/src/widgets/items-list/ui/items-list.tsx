@@ -1,10 +1,9 @@
-import { useAppSelector } from "@shared/lib"
 import classes from "./items-list.module.scss"
 import { productsMaper } from "../lib/maper"
+import { useSelector } from "react-redux"
 
 export function ItemsList() {
-    const catalog = useAppSelector((el) => el.catalog.ids)
+    const catalog = useSelector()
 
-
-    return <div className={classes.list}>{productsMaper()}</div>
+    return <div className={classes.list}>{productsMaper(catalog)}</div>
 }

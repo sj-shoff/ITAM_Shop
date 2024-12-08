@@ -1,6 +1,6 @@
 import { AppRoutes } from "./router/router"
 import { Provider } from "react-redux"
-import { store } from "./storage"
+import { store } from "./store"
 import { DefaultLayout } from "./layouts/dafault-layout/dafault-layout"
 import "./main.scss"
 
