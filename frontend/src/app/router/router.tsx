@@ -1,7 +1,7 @@
-import { Homepage } from "@pages/home-page"
+import { CatalogPage, Homepage } from "@pages/catalog-page"
 import { LoginPage } from "@pages/login"
 import { ReactElement } from "react"
-import { Route, Routes } from "react-router-dom"
+import { createBrowserRouter, Route, Routes } from "react-router-dom"
 
 type link = {
     link: string
@@ -28,3 +28,16 @@ export function AppRoutes() {
         </Routes>
     )
 }
+
+export const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <Homepage />,
+        children: [
+            {
+                path: "/catalog",
+                element: <CatalogPage />,
+            },
+        ],
+    },
+])
