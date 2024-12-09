@@ -1,13 +1,13 @@
-import { Product, productId } from "@entities/product"
+import { ProductId } from "@entities/product"
 import { Button } from "@shared/ui/button"
 
 type addToBusketProps = {
-    productId: productId
+    productId: ProductId
 }
 
 export function AddToBusket({ productId }: addToBusketProps) {
     function clickHandler() {
-        // TODO: add logic
+        console.log(productId)
     }
 
     return <Button onClick={clickHandler}>Добавить в корзину</Button>

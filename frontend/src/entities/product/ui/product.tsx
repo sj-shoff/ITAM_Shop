@@ -25,7 +25,10 @@ export function ProductComponent({
         <article className={classes.card}>
             <div className={classes.headContent}>{headContent}</div>
             <div className={classes.body}>
-                <Skeleton isLoaded={isImageLoaded}>
+                <Skeleton
+                    className={classes.imageContainer}
+                    isLoaded={isImageLoaded}
+                >
                     <img
                         className={classes.image}
                         src={product_image}
@@ -36,13 +39,11 @@ export function ProductComponent({
                         onLoad={imageLoadHandler}
                     />
                 </Skeleton>
-                <div>
-                    <p className={classes.productInfo}>
-                        <span className={classes.name}>{product_name}</span>
-                        <span className={classes.price}>
-                            <b>({product_price}₽)</b>
-                        </span>
-                    </p>
+                <div className={classes.productInfo}>
+                    <span className={classes.name}>{product_name}</span>
+                    <span className={classes.price}>
+                        <b>({product_price}₽)</b>
+                    </span>
                 </div>
                 {/* Здесь будут все фичи */}
                 {children}
