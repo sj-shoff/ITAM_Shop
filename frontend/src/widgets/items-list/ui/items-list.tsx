@@ -1,9 +1,14 @@
 import classes from "./items-list.module.scss"
 import { productsMaper } from "../lib/maper"
-import { useSelector } from "react-redux"
+import { useGetProductsQuery } from "@entities/product"
+import { Spinner } from "@nextui-org/react"
 
 export function ItemsList() {
-    const catalog = useSelector()
+    const { data } = useGetProductsQuery()
 
-    return <div className={classes.list}>{productsMaper(catalog)}</div>
+    return (
+        <div className={classes.list}>
+            {data ? productsMaper(data) : <Spinner label='loading...' />}
+        </div>
+    )
 }

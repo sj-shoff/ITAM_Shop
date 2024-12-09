@@ -1,18 +1,17 @@
-import { ProductComponent, productId } from "@entities/product"
+import { Product, ProductComponent, ProductId } from "@entities/product"
 import { AddToBusket } from "@features/add-to-basket"
 import { AddToWishList } from "@features/add-to-wishlist"
-import { useAppSelector } from "@shared/lib/state"
 
 type usableProductProps = {
-    id: productId
+    id: ProductId
+    product: Partial<Product>
 }
 
-export function UsableProduct({ id }: usableProductProps) {
-    const product = useAppSelector((state) => state.catalog.products[id])
-
+export function UsableProduct({ id, product }: usableProductProps) {
     return (
         <ProductComponent
-            headContent={<AddToWishList productId={id} {...product} />}
+            product={product}
+            headContent={<AddToWishList productId={id} />}
         >
             <AddToBusket productId={id} />
         </ProductComponent>
