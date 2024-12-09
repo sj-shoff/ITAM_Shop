@@ -6,7 +6,7 @@
     transition-duration: var(--transition-duration);
 
     @include hover {
-        background-color: var(--color-ui-hover-alt);
+        background-color: var(--color-ui-hover);
     }
 }
 

@@ -1,17 +1,13 @@
-import { AppRoutes } from "./router/router"
+import { router } from "./router/router"
 import { Provider } from "react-redux"
 import { store } from "./store"
-import { DefaultLayout } from "./layouts/dafault-layout/ui/dafault-layout"
 import "./main.scss"
+import { RouterProvider } from "react-router-dom"
 
 export function App() {
     return (
         <Provider store={store}>
-            <div className='dark'>
-                <DefaultLayout>
-                    <AppRoutes />
-                </DefaultLayout>
-            </div>
+            <RouterProvider router={router} />
         </Provider>
     )
 }

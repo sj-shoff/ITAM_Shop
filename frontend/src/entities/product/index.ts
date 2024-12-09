@@ -1,13 +1,17 @@
 export { ProductComponent } from "./ui/product"
-export { productsApi, useGetProductsQuery } from "./api/item-api"
 export {
-    type Product,
-    type ProductId,
-    type ProductName,
-    type ProductCategory,
-    type ProductDescription,
-    type ProductImageUrl,
-    type ProductPrice,
-    type ProductSpecifications,
+    productsApi,
+    useGetProductsQuery,
+    useGetProductQuery,
+} from "./api/item-api"
+export type {
+    Product,
+    ProductId,
+    ProductName,
+    ProductCategory,
+    ProductDescription,
+    ProductImageUrl,
+    ProductPrice,
+    ProductSpecifications,
 } from "./model/product-model"
 export { productSlice } from "./model/product-slice"

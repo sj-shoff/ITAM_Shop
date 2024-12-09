@@ -1,42 +1,50 @@
-import { CatalogPage, Homepage } from "@pages/catalog-page"
-import { LoginPage } from "@pages/login"
-import { ReactElement } from "react"
-import { createBrowserRouter, Route, Routes } from "react-router-dom"
-
-type link = {
-    link: string
-    element: ReactElement
-}
-
-const routesConfig: link[] = [
-    {
-        link: "/",
-        element: <Homepage />,
-    },
-    {
-        link: "/login",
-        element: <LoginPage />,
-    },
-]
-
-export function AppRoutes() {
-    return (
-        <Routes>
-            {routesConfig.map((el) => (
-                <Route key={el.link} path={el.link} element={el.element} />
-            ))}
-        </Routes>
-    )
-}
+import { Spinner } from "@nextui-org/react"
+import { DefaultLayout } from "../layouts/dafault-layout/ui/dafault-layout"
+import { CatalogPage } from "@pages/catalog-page"
+import { Homepage } from "@pages/home-page"
+import { createBrowserRouter } from "react-router-dom"
+import { ProductPage } from "@pages/product-page"
 
 export const router = createBrowserRouter([
     {
         path: "/",
-        element: <Homepage />,
+        element: <DefaultLayout />,
+        errorElement: (
+            <Spinner
+                style={{ marginTop: "7rem" }}
+                label='Oups... Application crashed or this page doesn`t exist'
+                color='danger'
+                labelColor='danger'
+            />
+        ),
         children: [
             {
-                path: "/catalog",
+                path: "/",
+                element: <Homepage />,
+                errorElement: (
+                    <Spinner
+                        style={{ marginTop: "7rem" }}
+                        label='Oups... Can`t access to the homepage'
+                        color='danger'
+                        labelColor='danger'
+                    />
+                ),
+            },
+            {
+                path: "catalog",
                 element: <CatalogPage />,
+                errorElement: (
+                    <Spinner
+                        style={{ marginTop: "7rem" }}
+                        label='somthing went wrong on catalog page...'
+                        color='danger'
+                        labelColor='danger'
+                    />
+                ),
+            },
+            {
+                path: "catalog/:product_id",
+                element: <ProductPage />,
             },
         ],
     },

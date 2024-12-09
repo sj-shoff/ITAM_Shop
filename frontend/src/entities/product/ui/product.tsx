@@ -2,6 +2,7 @@ import { ReactNode, useState } from "react"
 import { Skeleton } from "@nextui-org/react"
 import classes from "./prooduct.module.scss"
 import { Product } from "../model/product-model"
+import { useNavigate } from "react-router-dom"
 
 type itemProps = {
     product: Partial<Product>
@@ -15,14 +16,19 @@ export function ProductComponent({
     children,
 }: itemProps) {
     const [isImageLoaded, setIsImageLoaded] = useState<boolean>(false)
+    const navigate = useNavigate()
     const { product_name, product_image, product_price } = product
 
     function imageLoadHandler() {
         setIsImageLoaded(true)
     }
 
+    function cardClickHandler() {
+        navigate(`${product.product_id}`)
+    }
+
     return (
-        <article className={classes.card}>
+        <article className={classes.card} onClick={cardClickHandler}>
             <div className={classes.headContent}>{headContent}</div>
             <div className={classes.body}>
                 <Skeleton

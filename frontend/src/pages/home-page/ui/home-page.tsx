@@ -1,7 +1,9 @@
 export function Homepage() {
     return (
         <section>
-            <h1>Welcome to the our platform!</h1>
+            <h1 className='text-7xl text-center'>
+                Добро пожаловать в магазин ITAM!
+            </h1>
         </section>
     )
 }

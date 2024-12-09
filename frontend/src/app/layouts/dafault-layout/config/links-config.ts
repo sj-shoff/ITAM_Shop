@@ -9,8 +9,4 @@ export const linksList: LinksConfiguration = [
         path: "/catalog",
         value: "Каталог",
     },
-    {
-        path: "/wishlist",
-        value: "Список желаемого",
-    },
 ]
