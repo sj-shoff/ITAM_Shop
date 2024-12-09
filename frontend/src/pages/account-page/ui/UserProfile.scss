@@ -1,0 +1,59 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #000; /* Фон */
+    color: #fff;
+  }
+  
+  .card {
+    background: #1a1a1a;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    text-align: center;
+    width: 400px;
+  }
+  
+  .avatar {
+    margin: 0 auto 1rem;
+    background: radial-gradient(circle, rgba(255,255,255,0.1), rgba(0,0,0,0.8));
+  }
+  
+  .title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #fff;
+  }
+  
+  .inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .input {
+    --nextui-input-border-radius: 8px;
+    --nextui-input-border-color: #555;
+    --nextui-input-hover-border-color: #888;
+    --nextui-input-text-color: #ddd;
+    --nextui-input-background-color: #2b2b2b;
+  }
+  
+  .buttons {
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+  }
+  
+  .button {
+    background: #3b3b3b;
+    color: #fff;
+    transition: background 0.3s;
+    &:hover {
+      background: #555;
+    }
+  }
+  
