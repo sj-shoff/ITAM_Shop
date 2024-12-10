@@ -49,7 +49,10 @@ func main() {
 	r.Use(func(c *gin.Context) {
 		c.Header("Content-Security-Policy", "default-src 'self' http://localhost:8080;")
 	})
-	
+	r.Use(func(c *gin.Context) {
+		c.Header("Content-Security-Policy", "default-src 'self' http://localhost:3000;")
+	})
+
 	r.GET("/analytics")
 	r.GET("/admin_panel", admin.AdminPanelHandler)
 
