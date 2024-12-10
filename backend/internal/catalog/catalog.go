@@ -188,7 +188,7 @@ func ProductFilter(c *gin.Context) {
 		query = query.Where("product_category = ?", filterParams.Category)
 	}
 
-	query = query.Where("price >= ? AND price <= ?", filterParams.MinPrice, filterParams.MaxPrice)
+	query = query.Where("product_price >= ? AND product_price <= ?", filterParams.MinPrice, filterParams.MaxPrice)
 
 	if err := query.Find(&products).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"Ошибка": err.Error()})
