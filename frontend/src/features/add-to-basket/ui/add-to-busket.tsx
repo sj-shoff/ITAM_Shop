@@ -1,15 +1,15 @@
-import { ProductId } from "@entities/product"
-import { Button } from "@shared/ui/button"
-import { MouseEventHandler } from "react"
+import { item } from "@entities/product"
+import { Button } from "@nextui-org/react"
+import { Dispatch, SetStateAction } from "react"
 
 type addToBusketProps = {
-    productId: ProductId
+    product: item
+    globalConnector: Dispatch<SetStateAction<item[]>>
 }
 
-export function AddToBusket({ productId }: addToBusketProps) {
-    const clickHandler: MouseEventHandler<HTMLButtonElement> = (e) => {
-        e.stopPropagation()
-        console.log(productId)
+export function AddToBusket({ product, globalConnector }: addToBusketProps) {
+    function clickHandler() {
+        globalConnector((prev) => prev.filter((el) => el.id === product.id))
     }
 
     return <Button onClick={clickHandler}>Добавить в корзину</Button>

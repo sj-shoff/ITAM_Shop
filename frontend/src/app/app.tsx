@@ -1,13 +1,12 @@
-import { router } from "./router/router"
-import { Provider } from "react-redux"
-import { store } from "./store"
+import { Routes, Route } from "react-router-dom"
+import { Homepage } from "@pages/home-page"
+
 import "./main.scss"
-import { RouterProvider } from "react-router-dom"
 
 export function App() {
     return (
-        <Provider store={store}>
-            <RouterProvider router={router} />
-        </Provider>
+        <Routes>
+            <Route path={"/"} element={<Homepage />} />
+        </Routes>
     )
 }

@@ -1,20 +1,9 @@
 :root {
-    background-color: var(--color-background) !important;
-
     // COLOR
-    --color-background: #000000;
-    --color-light: #ffffff;
+    --color-background: #0d0714;
     --color-main: #ff0000;
-    --color-main-alt: #cd2929;
-    // --color-accent: #00ff22;
-    --color-ui-default: #C8C8C8;
-    --color-ui-hover: #969696;
-    --color-ui-hover-alt: #d9d9d9;
-    --color-ui-active: #494949;
+    --color-accent: #00ff22;
     --color-text-main: #fff;
-    --coolor-text-placeholder: #B1B1B1;
-    --color-text-alt: #000;
-
 
     // FONT SIZE
     --h1-font-size: 70px;
@@ -36,9 +25,10 @@
     --site-padding-x: 100px;
 
     // FONT
-    --font-family-ui: "American Captain";
+    --font-family-main: "Space Grotesk", sans-serif;
     --font-style: normal;
     --line-height: 1;
+    --font-size: 16px;
 
     // DECORATIONS
     --border: 1px solid var(--color-main);

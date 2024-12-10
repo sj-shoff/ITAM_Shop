@@ -1,35 +1,10 @@
 import { HTMLAttributes, ReactNode } from "react"
-import classes from "./button.module.scss"
 
-type ButtonProps = HTMLAttributes<HTMLButtonElement> & {
-    children?: ReactNode
-    isIconOnly?: boolean
+type ButtonProps = {
+    children: ReactNode
+    onClick?: () => void
 }
 
-export function Button({
-    children,
-    isIconOnly = false,
-    className = "",
-    ...rest
-}: ButtonProps & HTMLAttributes<HTMLButtonElement>) {
-    return (
-        <>
-            {!isIconOnly ? (
-                <button
-                    type='button'
-                    className={`${classes.button} ${className}`}
-                    {...rest}
-                >
-                    {children}
-                </button>
-            ) : (
-                <button
-                    className={`${classes.iconButton} ${className}`}
-                    {...rest}
-                >
-                    {children}
-                </button>
-            )}
-        </>
-    )
+export function Button(props: ButtonProps & HTMLAttributes<HTMLButtonElement>) {
+    return <button onClick={props.onClick}>{props.children}</button>
 }
