@@ -6,8 +6,10 @@ import { RouterProvider } from "react-router-dom"
 
 export function App() {
     return (
-        <Provider store={store}>
-            <RouterProvider router={router} />
-        </Provider>
+        <div className='dark text-foreground w-full h-full flex justify-center'>
+            <Provider store={store}>
+                <RouterProvider router={router} />
+            </Provider>
+        </div>
     )
 }

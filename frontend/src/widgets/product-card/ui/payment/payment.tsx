@@ -15,7 +15,7 @@ export function Payment({
 }) {
     return (
         <div className={classes.payment}>
-            <h2 className={classes.priceBlock}>{price} ₽</h2>
+            <h2 className={classes.price}>Цена: {price} ₽</h2>
             <div className={classes.paymentContent}>
                 <div className={classes.quantityBlock}>
                     <span className={classes.label}>В наличии: </span>
