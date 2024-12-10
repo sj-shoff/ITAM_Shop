@@ -23,7 +23,10 @@ export function Button({
                     {children}
                 </button>
             ) : (
-                <button className={`${classes.iconButton} ${className}`}>
+                <button
+                    className={`${classes.iconButton} ${className}`}
+                    {...rest}
+                >
                     {children}
                 </button>
             )}

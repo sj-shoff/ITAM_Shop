@@ -1,0 +1,178 @@
+{
+    "catalog": [
+        {
+            "product_id": 1,
+            "product_price": 49.99,
+            "product_name": "Wireless Headphones",
+            "product_image": "https://via.placeholder.com/150/0000FF/FFFFFF?text=Wireless+Headphones",
+            "product_description": "High-quality wireless headphones with noise cancellation",
+            "product_category": "Electronics",
+            "product_specifications": {
+                "driver_size": "40mm",
+                "frequency_response": "20Hz - 20kHz",
+                "battery_life": "30 hours"
+            },
+            "product_stock_quantity": 25
+        },
+        {
+            "product_id": 2,
+            "product_price": 29.99,
+            "product_name": "Bluetooth Speaker",
+            "product_image": "https://via.placeholder.com/150/FF0000/FFFFFF?text=Bluetooth+Speaker",
+            "product_description": "Portable Bluetooth speaker with powerful sound",
+            "product_category": "Electronics",
+            "product_specifications": {
+                "output_power": "20W",
+                "battery_life": "12 hours"
+            },
+            "product_stock_quantity": 15
+        },
+        {
+            "product_id": 3,
+            "product_price": 79.99,
+            "product_name": "4K Smart TV",
+            "product_image": "https://via.placeholder.com/150/00FF00/FFFFFF?text=4K+Smart+TV",
+            "product_description": "42-inch 4K Ultra HD Smart TV with HDR",
+            "product_category": "Electronics",
+            "product_specifications": {
+                "screen_size": "42 inches",
+                "resolution": "3840 x 2160",
+                "refresh_rate": "60Hz"
+            },
+            "product_stock_quantity": 8
+        },
+        {
+            "product_id": 4,
+            "product_price": 59.99,
+            "product_name": "Fitness Tracker",
+            "product_image": "https://via.placeholder.com/150/FFFF00/000000?text=Fitness+Tracker",
+            "product_description": "Waterproof fitness tracker with heart rate monitoring",
+            "product_category": "Sports & Outdoors",
+            "product_specifications": {
+                "display_type": "OLED",
+                "battery_life": "7 days"
+            },
+            "product_stock_quantity": 20
+        },
+        {
+            "product_id": 5,
+            "product_price": 39.99,
+            "product_name": "Wireless Keyboard",
+            "product_image": "https://via.placeholder.com/150/FFA500/FFFFFF?text=Wireless+Keyboard",
+            "product_description": "Slim and lightweight wireless keyboard for laptops and desktops",
+            "product_category": "Computers & Accessories",
+            "product_specifications": {
+                "connectivity": "Bluetooth",
+                "battery_life": "6 months"
+            },
+            "product_stock_quantity": 12
+        },
+        {
+            "product_id": 6,
+            "product_price": 19.99,
+            "product_name": "Reusable Water Bottle",
+            "product_image": "https://via.placeholder.com/150/008080/FFFFFF?text=Water+Bottle",
+            "product_description": "Durable and leak-proof water bottle with a wide mouth",
+            "product_category": "Sports & Outdoors",
+            "product_specifications": {
+                "capacity": "32oz",
+                "material": "Stainless Steel"
+            },
+            "product_stock_quantity": 30
+        },
+        {
+            "product_id": 7,
+            "product_price": 99.99,
+            "product_name": "Gaming Laptop",
+            "product_image": "https://via.placeholder.com/150/800080/FFFFFF?text=Gaming+Laptop",
+            "product_description": "High-performance gaming laptop with 16GB RAM and dedicated GPU",
+            "product_category": "Computers & Accessories",
+            "product_specifications": {
+                "processor": "Intel Core i7",
+                "graphics": "NVIDIA GeForce RTX 3060",
+                "storage": "512GB SSD"
+            },
+            "product_stock_quantity": 6
+        },
+        {
+            "product_id": 8,
+            "product_price": 14.99,
+            "product_name": "Mechanical Pencil",
+            "product_image": "https://via.placeholder.com/150/FFFFF0/000000?text=Mechanical+Pencil",
+            "product_description": "Premium mechanical pencil with 0.5mm lead and a sleek design",
+            "product_category": "Office Supplies",
+            "product_specifications": {
+                "lead_size": "0.5mm",
+                "barrel_material": "Metal"
+            },
+            "product_stock_quantity": 50
+        },
+        {
+            "product_id": 9,
+            "product_price": 79.99,
+            "product_name": "Cordless Vacuum Cleaner",
+            "product_image": "https://via.placeholder.com/150/000000/FFFFFF?text=Vacuum+Cleaner",
+            "product_description": "Powerful cordless vacuum cleaner with HEPA filtration",
+            "product_category": "Home & Kitchen",
+            "product_specifications": {
+                "battery_life": "45 minutes",
+                "suction_power": "120AW"
+            },
+            "product_stock_quantity": 10
+        },
+        {
+            "product_id": 10,
+            "product_price": 24.99,
+            "product_name": "Wireless Charging Pad",
+            "product_image": "https://via.placeholder.com/150/CCCCCC/000000?text=Charging+Pad",
+            "product_description": "Qi-certified wireless charging pad for smartphones and devices",
+            "product_category": "Electronics",
+            "product_specifications": {
+                "charging_power": "10W",
+                "compatibility": "Qi-enabled devices"
+            },
+            "product_stock_quantity": 18
+        }
+    ],
+    "fav_items": [
+        {
+            "product_id": 8,
+            "product_price": 14.99,
+            "product_name": "Mechanical Pencil",
+            "product_image": "https://via.placeholder.com/150/FFFFF0/000000?text=Mechanical+Pencil",
+            "product_description": "Premium mechanical pencil with 0.5mm lead and a sleek design",
+            "product_category": "Office Supplies",
+            "product_specifications": {
+                "lead_size": "0.5mm",
+                "barrel_material": "Metal"
+            },
+            "product_stock_quantity": 50
+        },
+        {
+            "product_id": 9,
+            "product_price": 79.99,
+            "product_name": "Cordless Vacuum Cleaner",
+            "product_image": "https://via.placeholder.com/150/000000/FFFFFF?text=Vacuum+Cleaner",
+            "product_description": "Powerful cordless vacuum cleaner with HEPA filtration",
+            "product_category": "Home & Kitchen",
+            "product_specifications": {
+                "battery_life": "45 minutes",
+                "suction_power": "120AW"
+            },
+            "product_stock_quantity": 10
+        },
+        {
+            "product_id": 10,
+            "product_price": 24.99,
+            "product_name": "Wireless Charging Pad",
+            "product_image": "https://via.placeholder.com/150/CCCCCC/000000?text=Charging+Pad",
+            "product_description": "Qi-certified wireless charging pad for smartphones and devices",
+            "product_category": "Electronics",
+            "product_specifications": {
+                "charging_power": "10W",
+                "compatibility": "Qi-enabled devices"
+            },
+            "product_stock_quantity": 18
+        }
+    ]
+}

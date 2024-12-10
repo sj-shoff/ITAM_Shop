@@ -28,10 +28,15 @@
 .productInfo {
     display: flex;
     flex-direction: row;
-    row-gap: 0.3125; // 5px
+    column-gap: 0.3125rem; // 5px
+    width: fit-content;
 }
 
-.image {
+.imageContainer {
     border-radius: 10px;
-    background: transparent;
+    overflow: hidden !important; 
+
+    .image {
+        background: transparent;
+    }
 }

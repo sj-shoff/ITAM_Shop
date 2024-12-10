@@ -1,24 +1,19 @@
-import { item, Product } from "@entities/product"
+import { Product, ProductComponent, ProductId } from "@entities/product"
 import { AddToBusket } from "@features/add-to-basket"
 import { AddToWishList } from "@features/add-to-wishlist"
-import { Dispatch, SetStateAction } from "react"
 
 type usableProductProps = {
-    product: item
-    globalConnector: Dispatch<SetStateAction<item[]>>
+    id: ProductId
+    product: Partial<Product>
 }
 
-export function UsableProduct({
-    product,
-    globalConnector,
-}: usableProductProps) {
+export function UsableProduct({ id, product }: usableProductProps) {
     return (
-        <Product
-            name={product.name}
-            price={product.price}
-            headContent={<AddToWishList />}
+        <ProductComponent
+            product={product}
+            headContent={<AddToWishList productId={id} />}
         >
-            <AddToBusket product={product} globalConnector={globalConnector} />
-        </Product>
+            <AddToBusket productId={id} />
+        </ProductComponent>
     )
 }

@@ -1,15 +1,13 @@
-import { AppRoutes } from "./router/router"
+import { router } from "./router/router"
 import { Provider } from "react-redux"
-import { store } from "./storage"
-import { DefaultLayout } from "./layouts/dafault-layout/dafault-layout"
+import { store } from "./store"
 import "./main.scss"
+import { RouterProvider } from "react-router-dom"
 
 export function App() {
     return (
         <Provider store={store}>
-            <DefaultLayout>
-                <AppRoutes />
-            </DefaultLayout>
+            <RouterProvider router={router} />
         </Provider>
     )
 }

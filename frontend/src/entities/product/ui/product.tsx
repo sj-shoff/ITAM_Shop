@@ -1,41 +1,43 @@
 import { ReactNode, useState } from "react"
 import { Skeleton } from "@nextui-org/react"
 import classes from "./prooduct.module.scss"
+import { Product } from "../model/product-model"
+import { useNavigate } from "react-router-dom"
 
 type itemProps = {
-    name: string
-    price: number
+    product: Partial<Product>
     children: ReactNode
     headContent?: ReactNode
 }
 
-// TODO: refactor to the model
-export type ProductUiElement = "image" | "name" | "price"
-
-export function Product({ name, price, children, headContent }: itemProps) {
-    const [isLoaded, setIsLoaded] = useState<Record<ProductUiElement, boolean>>(
-        {
-            image: false,
-            name: false,
-            price: false,
-        }
-    )
+export function ProductComponent({
+    product,
+    headContent,
+    children,
+}: itemProps) {
+    const [isImageLoaded, setIsImageLoaded] = useState<boolean>(false)
+    const navigate = useNavigate()
+    const { product_name, product_image, product_price } = product
 
     function imageLoadHandler() {
-        setIsLoaded((prev) => ({
-            ...prev,
-            image: true,
-        }))
+        setIsImageLoaded(true)
+    }
+
+    function cardClickHandler() {
+        navigate(`${product.product_id}`)
     }
 
     return (
-        <article className={classes.card}>
+        <article className={classes.card} onClick={cardClickHandler}>
             <div className={classes.headContent}>{headContent}</div>
             <div className={classes.body}>
-                <Skeleton isLoaded={isLoaded.image}>
+                <Skeleton
+                    className={classes.imageContainer}
+                    isLoaded={isImageLoaded}
+                >
                     <img
                         className={classes.image}
-                        src='public/product-image-1.png'
+                        src={product_image}
                         alt='product image'
                         width='410'
                         height='460'
@@ -43,13 +45,11 @@ export function Product({ name, price, children, headContent }: itemProps) {
                         onLoad={imageLoadHandler}
                     />
                 </Skeleton>
-                <div>
-                    <p className={classes.productInfo}>
-                        <span className={classes.name}>{name}</span>
-                        <span className={classes.price}>
-                            <b>({price}₽)</b>
-                        </span>
-                    </p>
+                <div className={classes.productInfo}>
+                    <span className={classes.name}>{product_name}</span>
+                    <span className={classes.price}>
+                        <b>({product_price}₽)</b>
+                    </span>
                 </div>
                 {/* Здесь будут все фичи */}
                 {children}
