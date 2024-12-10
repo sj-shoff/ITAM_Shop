@@ -1,6 +1,6 @@
 import { baseApi } from "@shared/api"
 import { z } from "zod"
-import { Product, ProductId } from "../model/product-model"
+import { FilterOptions, Product, ProductId } from "../model/product-model"
 
 const productDTOschema = z.object({
     product_id: z.number(),
@@ -27,19 +27,21 @@ export const productsApi = baseApi.injectEndpoints({
                 productDTOschema.parse(responce),
             providesTags: ["Product"],
         }),
-        deleteProduct: create.query<Product, ProductId>({
-            query: (productId) => `/catalog/${productId}`,
-            transformResponse: (responce: unknown) =>
-                productDTOschema.parse(responce),
-            providesTags: ["Product"],
+        filterProducts: create.mutation<void, FilterOptions>({
+            query: (options) => ({
+                method: "POST",
+                url: "/filter",
+                body: options,
+            }),
+            invalidatesTags: ["Catalog"],
         }),
-        getWishlist: create.query<Product, void>({
+        getWishlist: create.query<Product[], void>({
             query: () => "/fav_items",
             transformResponse: (responce: unknown) =>
-                productDTOschema.parse(responce),
+                productDTOschema.array().parse(responce),
             providesTags: ["Wishlist"],
         }),
-        getWishListProduct: create.query<Product, ProductId>({
+        getWishistItem: create.query<Product, ProductId>({
             query: (productId) => `/fav_items/${productId}`,
             transformResponse: (responce: unknown) =>
                 productDTOschema.parse(responce),
@@ -57,4 +59,5 @@ export const {
     useGetProductQuery,
     useGetWishlistQuery,
     useAddToWishListMutation,
+    useFilterProductsMutation,
 } = productsApi

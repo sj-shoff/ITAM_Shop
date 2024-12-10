@@ -17,3 +17,13 @@ export type Product = {
     product_specifications: object
     product_stock_quantity: number
 }
+
+export type FilterCategory = ProductCategory
+export type FilterMinPrice = number
+export type FilterMaxPrice = number
+
+export type FilterOptions = {
+    category: FilterCategory
+    minPrice: FilterMinPrice
+    maxPrice: FilterMaxPrice
+}
