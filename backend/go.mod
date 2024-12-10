@@ -5,7 +5,6 @@ go 1.23.2
 require (
 	github.com/gin-contrib/sessions v1.0.1
 	github.com/gin-gonic/gin v1.10.0
-	github.com/jinzhu/gorm v1.9.16
 )
 
 require (

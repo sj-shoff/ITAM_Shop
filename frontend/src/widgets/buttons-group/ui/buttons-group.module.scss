@@ -1,0 +1,25 @@
+.buttonsGroup {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    max-width: 13.75rem;
+    column-gap: 0.3125rem;
+
+    li {
+        display: flex;
+        align-items: center;
+        height: 100%;
+
+        * {
+            height: 100%;
+        }
+    }
+}
+
+.button {
+    width: 55px;
+    height: 55px;
+}

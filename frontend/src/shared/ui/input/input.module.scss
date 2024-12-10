@@ -1,0 +1,20 @@
+.input {
+    padding: 15px 35px;
+    transition-duration: var(--transition-duration);
+    background-color: var(--color-light);
+    color: var(--color-text-alt);
+    border-radius: 64px;
+
+    &::placeholder {
+        color: var(--coolor-text-placeholder);
+    }
+
+    &:hover {
+        background-color: var(--color-ui-hover);
+    }
+
+    &:focus-within {
+        background-color: var(--color-ui-active);
+        color: var(--color-text);
+    }
+}

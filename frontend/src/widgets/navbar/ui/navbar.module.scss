@@ -1,0 +1,27 @@
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.linksList {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    column-gap: 1rem; // 16px
+}
+
+.link {
+    height: 100%;
+    transition-duration: var(--transition-duration);
+
+    @include hover {
+        color: var(--color-ui-hover);
+    }
+
+    &:active {
+        color: var(--color-ui-active);
+    }
+}
