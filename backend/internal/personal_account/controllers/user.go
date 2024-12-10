@@ -61,7 +61,7 @@ func UpdateName() gin.HandlerFunc {
 			return
 		}
 
-		ctx.JSON(200, gin.H{"message": "Password updated"})
+		ctx.JSON(200, gin.H{"message": "Name updated"})
 	}
 }
 
@@ -83,24 +83,8 @@ func UpdateSurname() gin.HandlerFunc {
 			return
 		}
 
-		ctx.JSON(200, gin.H{"message": "Password updated"})
+		ctx.JSON(200, gin.H{"message": "Surname updated"})
 	}
-}
-
-func DeleteUserAvatar(login string) bool {
-	var user entity.User
-
-	if err := db.Model(&entity.User{}).Where("user_login = ?", login).First(&user).Error; err != nil {
-		return false
-	}
-
-	ImageID := user.Avatar
-	query := "DELETE FROM images WHERE image_id = ?"
-	if err := db.Exec(query, ImageID); err != nil {
-		return false
-	}
-
-	return true
 }
 
 func UpdateUserAvatar() gin.HandlerFunc {
@@ -121,12 +105,7 @@ func UpdateUserAvatar() gin.HandlerFunc {
 			return
 		}
 
-		if !DeleteUserAvatar(login) {
-			ctx.JSON(400, gin.H{"message": "Bad request"})
-			return
-		}
-
-		if err := db.Model(&entity.User{}).Where("user_login = ?", login).Update("user_avatar = ?", newImage.ImageID).Error; err != nil {
+		if err := db.Model(&entity.User{}).Where("user_login = ?", login).Update("user_avatar", newImage.ImageData).Error; err != nil {
 			ctx.JSON(400, gin.H{"message": "Error"})
 			return
 		}
