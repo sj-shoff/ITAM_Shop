@@ -3,59 +3,45 @@ package main
 import (
 	"log"
 	storage "myapp/internal"
-	config "myapp/internal/data_base"
-	"myapp/internal/personal_account/controllers"
-	"myapp/internal/register"
-	entity "myapp/internal/structures"
-	"myapp/transactions"
-	"net/http"
 
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
+var db *gorm.DB
+
+func initDB() {
+	var err error
+	dsn := "admin_for_itam_store:your_password@tcp(147.45.163.58:3306)/itam_store?charset=utf8mb4&parseTime=True&loc=Local"
+	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		log.Fatal("Ошибка при подключении к базе данных:", err)
+	}
+	db.Debug()
+}
 func main() {
 
-	config.InitDB()
-	config.DB.AutoMigrate(&entity.User{}, &entity.Order{}, &entity.Favorite{})
+	initDB()
 
 	r := gin.Default()
-
-	// Health
-	r.GET("/health", func(ctx *gin.Context) {
-		ctx.AbortWithStatus(http.StatusOK)
-	})
 
 	r.GET("/front_page", storage.ShowHomePage)
 	r.GET("/catalog")
 
-	// Sessions
-	store := cookie.NewStore([]byte("secret-key"))
-	r.Use(sessions.Sessions("mysession", store))
-
-	// Register, Login, Sessions
-	register.InitRegister(config.DB, r)
-
-	// Personal account
-	controllers.InitPersonalAccount(config.DB, r)
-
-	// Transactions
-	transactions.InitTransaction(config.DB, r)
-
-	//
-
-	//r.GET("/register", storage.ShowRegistrationForm)
-	//r.GET("/login", storage.ShowLoginForm)
-	//r.GET("/login/:id/acc")
+	r.GET("/register", storage.ShowRegistrationForm)
+	r.POST("/register")
+	r.GET("/login", storage.ShowLoginForm)
+	r.POST("/login")
+	r.GET("/login/:id/acc")
 
 	r.POST("/catalog/filter")
 	r.GET("/catalog/fav_items")
 	r.POST("/catalog/fav_items/:id")
 
-	//r.POST("/cart/item/:id", storage.AddToCart)
-	//r.DELETE("/cart/item/:id", storage.RemoveFromCart)
-	//r.GET("/cart", storage.ShowCart)
+	r.POST("/cart/item/:id", storage.AddToCart(db))
+	r.DELETE("/cart/item/:id", storage.RemoveFromCart(db))
+	r.GET("/cart", storage.ShowCart)
 
 	r.GET("/analytics")
 	r.GET("/admin_panel")
