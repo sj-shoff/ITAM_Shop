@@ -9,4 +9,8 @@
 
 .clicked {
     color: var(--color-main);
+
+    &:hover {
+        color: var(--color-main-alt);
+    }
 }

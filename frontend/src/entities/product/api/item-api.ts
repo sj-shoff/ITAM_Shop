@@ -1,32 +1,60 @@
-import { item } from "../model/item-model"
+import { baseApi } from "@shared/api"
+import { z } from "zod"
+import { Product, ProductId } from "../model/product-model"
 
-export async function getItems(): Promise<item[]> {
-    // В будущем это будет на затычка, а полноценный зпрос
-    // const req = await axios.get()
+const productDTOschema = z.object({
+    product_id: z.number(),
+    product_price: z.number(),
+    product_name: z.string(),
+    product_image: z.string(),
+    product_description: z.string(),
+    product_category: z.string(),
+    product_specifications: z.object({}),
+    product_stock_quantity: z.number(),
+})
 
-    // Затычка
-    const data: item[] = [
-        {
-            id: 1,
-            name: "Кожанка 72 ITAM x Hack Club",
-            price: 5200,
-        },
-        {
-            id: 2,
-            name: "Брюки ITAM x Hack Club",
-            price: 3400,
-        },
-        {
-            id: 3,
-            name: "Кожанка 72 ITAM x Hack Club",
-            price: 5200,
-        },
-        {
-            id: 4,
-            name: "Брюки ITAM x Hack Club",
-            price: 3400,
-        },
-    ]
+export const productsApi = baseApi.injectEndpoints({
+    endpoints: (create) => ({
+        getProducts: create.query<Product[], void>({
+            query: () => "/catalog",
+            transformResponse: (responce: unknown) =>
+                productDTOschema.array().parse(responce),
+            providesTags: ["Catalog"],
+        }),
+        getProduct: create.query<Product, ProductId>({
+            query: (productId) => `/catalog/${productId}`,
+            transformResponse: (responce: unknown) =>
+                productDTOschema.parse(responce),
+            providesTags: ["Product"],
+        }),
+        deleteProduct: create.query<Product, ProductId>({
+            query: (productId) => `/catalog/${productId}`,
+            transformResponse: (responce: unknown) =>
+                productDTOschema.parse(responce),
+            providesTags: ["Product"],
+        }),
+        getWishlist: create.query<Product, void>({
+            query: () => "/fav_items",
+            transformResponse: (responce: unknown) =>
+                productDTOschema.parse(responce),
+            providesTags: ["Wishlist"],
+        }),
+        getWishListProduct: create.query<Product, ProductId>({
+            query: (productId) => `/fav_items/${productId}`,
+            transformResponse: (responce: unknown) =>
+                productDTOschema.parse(responce),
+            providesTags: ["Product"],
+        }),
+        addToWishList: create.mutation<void, ProductId>({
+            query: (id) => ({ method: "Post", url: `fav_items/${id}` }),
+        }),
+    }),
+    overrideExisting: true,
+})
 
-    return data
-}
+export const {
+    useGetProductsQuery,
+    useGetProductQuery,
+    useGetWishlistQuery,
+    useAddToWishListMutation,
+} = productsApi

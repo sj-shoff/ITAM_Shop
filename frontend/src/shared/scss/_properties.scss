@@ -1,12 +1,15 @@
 :root {
+    background-color: var(--color-background) !important;
+
     // COLOR
     --color-background: #000000;
     --color-light: #ffffff;
     --color-main: #ff0000;
+    --color-main-alt: #cd2929;
     // --color-accent: #00ff22;
     --color-ui-default: #C8C8C8;
     --color-ui-hover: #969696;
-    --color-ui-hover-alt: #f3f3f3;
+    --color-ui-hover-alt: #d9d9d9;
     --color-ui-active: #494949;
     --color-text-main: #fff;
     --coolor-text-placeholder: #B1B1B1;

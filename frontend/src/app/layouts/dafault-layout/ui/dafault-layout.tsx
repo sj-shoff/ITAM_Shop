@@ -1,19 +1,18 @@
 import { Main } from "@widgets/main"
-import { ReactNode } from "react"
 import { Header } from "@widgets/header"
 import classes from "./dafault-layout.module.scss"
+import { linksList } from "../config/links-config"
+import { Outlet } from "react-router-dom"
 
-type defaultLayoutProps = {
-    children: ReactNode
-}
-
-export function DefaultLayout({ children }: defaultLayoutProps) {
+export function DefaultLayout() {
     return (
         <>
             <div className={classes.background} />
             <div className={classes.page}>
-                <Header />
-                <Main>{children}</Main>
+                <Header linksList={linksList} />
+                <Main>
+                    <Outlet />
+                </Main>
             </div>
         </>
     )
