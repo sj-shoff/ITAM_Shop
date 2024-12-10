@@ -80,6 +80,10 @@ func GetItem(c *gin.Context) {
 		features = append(features, tempFeature)
 
 	}
+	combined := map[string]interface{}{
+        "product":    product,
+        "features": features,
+    }
 	//product.Features = features
 
 	//	if err := config.DB.First(&product, id).Error; err != nil {
@@ -89,8 +93,8 @@ func GetItem(c *gin.Context) {
 
 	//	return
 	//}
-	fmt.Println(product)
-	c.JSON(http.StatusOK, product)
+	//fmt.Println(product)
+	c.JSON(http.StatusOK, combined)
 }
 
 func GetFavoriteItems(c *gin.Context) {
