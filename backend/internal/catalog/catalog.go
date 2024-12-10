@@ -174,6 +174,7 @@ func RemoveFromFavorites(c *gin.Context) {
 }
 
 func ProductFilter(c *gin.Context) {
+
 	var filterParams entity.FilterParams
 	if err := c.ShouldBindJSON(&filterParams); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Ошибка": err.Error()})
@@ -184,7 +185,7 @@ func ProductFilter(c *gin.Context) {
 	query := config.DB
 
 	if filterParams.Category != "" {
-		query = query.Where("category = ?", filterParams.Category)
+		query = query.Where("product_category = ?", filterParams.Category)
 	}
 
 	query = query.Where("price >= ? AND price <= ?", filterParams.MinPrice, filterParams.MaxPrice)
