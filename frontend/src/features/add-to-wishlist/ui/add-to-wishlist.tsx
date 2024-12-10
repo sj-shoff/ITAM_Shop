@@ -1,18 +1,19 @@
 import { Button } from "@shared/ui/button"
 import { WishListIcon } from "@shared/ui/icons"
 import classes from "./add-to-wishlist.module.scss"
-import { ProductId } from "@entities/product"
-import { useState } from "react"
+import { ProductId, useAddToWishListMutation } from "@entities/product"
+import { MouseEventHandler, useState } from "react"
 
 type AddToWishlistProps = {
     productId: ProductId
 }
 
 export function AddToWishList({ productId }: AddToWishlistProps) {
+    const [] = useAddToWishListMutation()
     const [isClicked, setIsClicked] = useState<boolean>(false)
 
-    function clickHandler() {
-        console.log("123")
+    const clickHandler: MouseEventHandler<HTMLButtonElement> = (e) => {
+        e.stopPropagation()
         setIsClicked(!isClicked)
     }
 

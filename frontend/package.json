@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "dev:client": "vite",
-        "dev:server": "npx json-server db.json",
+        "dev:server": "npx json-server db.json -i product_id",
         "dev": "concurrently \" npm run dev:client \"  \" npm run dev:server \"",
         "build": "tsc && vite build",
         "lint": "npx eslint .",
@@ -15,6 +15,7 @@
     "dependencies": {
         "@react-aria/visually-hidden": "3.8.12",
         "@reduxjs/toolkit": "^2.4.0",
+        "json-server": "^0.17.4",
         "react": "18.3.1",
         "react-dom": "18.3.1",
         "react-redux": "^9.1.2",
@@ -44,7 +45,6 @@
         "eslint-plugin-react-hooks": "^4.6.0",
         "eslint-plugin-unused-imports": "4.1.4",
         "framer-motion": "^11.11.17",
-        "json-server": "^1.0.0-beta.3",
         "postcss": "8.4.38",
         "prettier": "3.3.3",
         "sass-embedded": "^1.81.0",

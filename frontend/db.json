@@ -133,5 +133,46 @@
             },
             "product_stock_quantity": 18
         }
+    ],
+    "fav_items": [
+        {
+            "product_id": 8,
+            "product_price": 14.99,
+            "product_name": "Mechanical Pencil",
+            "product_image": "https://via.placeholder.com/150/FFFFF0/000000?text=Mechanical+Pencil",
+            "product_description": "Premium mechanical pencil with 0.5mm lead and a sleek design",
+            "product_category": "Office Supplies",
+            "product_specifications": {
+                "lead_size": "0.5mm",
+                "barrel_material": "Metal"
+            },
+            "product_stock_quantity": 50
+        },
+        {
+            "product_id": 9,
+            "product_price": 79.99,
+            "product_name": "Cordless Vacuum Cleaner",
+            "product_image": "https://via.placeholder.com/150/000000/FFFFFF?text=Vacuum+Cleaner",
+            "product_description": "Powerful cordless vacuum cleaner with HEPA filtration",
+            "product_category": "Home & Kitchen",
+            "product_specifications": {
+                "battery_life": "45 minutes",
+                "suction_power": "120AW"
+            },
+            "product_stock_quantity": 10
+        },
+        {
+            "product_id": 10,
+            "product_price": 24.99,
+            "product_name": "Wireless Charging Pad",
+            "product_image": "https://via.placeholder.com/150/CCCCCC/000000?text=Charging+Pad",
+            "product_description": "Qi-certified wireless charging pad for smartphones and devices",
+            "product_category": "Electronics",
+            "product_specifications": {
+                "charging_power": "10W",
+                "compatibility": "Qi-enabled devices"
+            },
+            "product_stock_quantity": 18
+        }
     ]
 }
