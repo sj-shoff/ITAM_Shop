@@ -1,0 +1,32 @@
+.payment {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    row-gap: 0.625rem; // 10px
+    width: 100%;
+}
+
+.paymentContent {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.3125rem; // 5px
+    width: 100%;
+}
+
+.price {
+    font-size: 2rem; // 32px
+}
+
+.quantityBlock {
+    font-size: 1.25rem; // 20px
+
+    .quantity {
+        color: var(--color-accent);
+    }
+}
+
+.buttonsLayout {
+    display: flex;
+    flex-direction: row;
+    column-gap: 0.5rem; // 8px
+}

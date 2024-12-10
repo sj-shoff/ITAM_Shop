@@ -1,0 +1,17 @@
+.productCard {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    justify-content: space-between;
+    column-gap: 1.25rem; // 20px
+    width: 100%;
+    max-width: 68.75rem; // 1100px
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    row-gap: 2.5rem; // 40px
+}

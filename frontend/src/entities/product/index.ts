@@ -14,5 +14,6 @@ export type {
     ProductImageUrl,
     ProductPrice,
     ProductSpecifications,
+    ProductStockQuantity,
 } from "./model/product-model"
 export { productSlice } from "./model/product-slice"

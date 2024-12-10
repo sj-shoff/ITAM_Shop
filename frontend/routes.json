@@ -1,5 +1,0 @@
-{
-    "/": "/catalog",
-    "/catalog": "/catalog",
-    "/catalog/:product_id": "/catalog/:product_id"
-}
