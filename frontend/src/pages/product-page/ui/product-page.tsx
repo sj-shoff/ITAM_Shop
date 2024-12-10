@@ -1,4 +1,3 @@
-import { ProductId } from "@entities/product"
 import { ProductCard } from "@widgets/product-card"
 import { useParams } from "react-router-dom"
 

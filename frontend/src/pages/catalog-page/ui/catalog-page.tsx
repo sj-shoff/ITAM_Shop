@@ -8,7 +8,7 @@ export function CatalogPage() {
 
     function clickHandler() {
         const opt: FilterOptions = {
-            category: "Electronics",
+            category: "Категория 4",
             minPrice: 0,
             maxPrice: 10000000,
         }

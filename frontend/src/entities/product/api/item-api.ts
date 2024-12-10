@@ -6,15 +6,16 @@ const productDTOschema = z.object({
     product_id: z.number(),
     product_price: z.number(),
     product_name: z.string(),
-    product_image: z.string(),
+    product_image: z.number(),
     product_description: z.string(),
     product_category: z.string(),
-    product_specifications: z.object({}),
+    // product_specifications: z.object({}),
     product_stock_quantity: z.number(),
 })
 
 export const productsApi = baseApi.injectEndpoints({
     endpoints: (create) => ({
+        // Сatalog
         getProducts: create.query<Product[], void>({
             query: () => "/catalog",
             transformResponse: (responce: unknown) =>
@@ -22,7 +23,7 @@ export const productsApi = baseApi.injectEndpoints({
             providesTags: ["Catalog"],
         }),
         getProduct: create.query<Product, ProductId>({
-            query: (productId) => `/catalog/${productId}`,
+            query: (productId) => `/fav_items/${productId}`,
             transformResponse: (responce: unknown) =>
                 productDTOschema.parse(responce),
             providesTags: ["Product"],
@@ -35,19 +36,21 @@ export const productsApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ["Catalog"],
         }),
+
+        // Wishlist
         getWishlist: create.query<Product[], void>({
             query: () => "/fav_items",
             transformResponse: (responce: unknown) =>
                 productDTOschema.array().parse(responce),
             providesTags: ["Wishlist"],
         }),
-        getWishistItem: create.query<Product, ProductId>({
+        getWishlistItem: create.query<Product, ProductId>({
             query: (productId) => `/fav_items/${productId}`,
             transformResponse: (responce: unknown) =>
                 productDTOschema.parse(responce),
             providesTags: ["Product"],
         }),
-        addToWishList: create.mutation<void, ProductId>({
+        addToWishlist: create.mutation<void, ProductId>({
             query: (id) => ({ method: "Post", url: `fav_items/${id}` }),
         }),
     }),
@@ -58,6 +61,5 @@ export const {
     useGetProductsQuery,
     useGetProductQuery,
     useGetWishlistQuery,
-    useAddToWishListMutation,
     useFilterProductsMutation,
 } = productsApi

@@ -3,7 +3,6 @@ export {
     productsApi,
     useGetProductsQuery,
     useGetProductQuery,
-    useAddToWishListMutation,
     useFilterProductsMutation,
 } from "./api/item-api"
 export type {
@@ -12,9 +11,7 @@ export type {
     ProductName,
     ProductCategory,
     ProductDescription,
-    ProductImageUrl,
     ProductPrice,
-    ProductSpecifications,
     ProductStockQuantity,
     FilterOptions,
     FilterCategory,
