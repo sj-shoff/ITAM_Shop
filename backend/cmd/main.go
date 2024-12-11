@@ -24,18 +24,18 @@ func main() {
 
 	r := gin.Default()
 	r.Use(func(c *gin.Context) {
-	        c.Header("Access-Control-Allow-Origin", "*") // Разрешаем все домены
-	        c.Header("Access-Control-Allow-Methods", "GET, POST, OPTIONS") // Разрешаем методы
-	        c.Header("Access-Control-Allow-Headers", "Content-Type") // Разрешаем заголовки
+		c.Header("Access-Control-Allow-Origin", "*")                   // Разрешаем все домены
+		c.Header("Access-Control-Allow-Methods", "GET, POST, OPTIONS") // Разрешаем методы
+		c.Header("Access-Control-Allow-Headers", "Content-Type")       // Разрешаем заголовки
 
-	        // Если это preflight-запрос, просто возвращаем 200 OK
-	        if c.Request.Method == http.MethodOptions {
-	            c.AbortWithStatus(http.StatusOK)
-	            return
-	        }
+		// Если это preflight-запрос, просто возвращаем 200 OK
+		if c.Request.Method == http.MethodOptions {
+			c.AbortWithStatus(http.StatusOK)
+			return
+		}
 
-	        c.Next()
-	    })
+		c.Next()
+	})
 	// Health
 	r.GET("/health", func(ctx *gin.Context) {
 		ctx.AbortWithStatus(http.StatusOK)
@@ -60,6 +60,9 @@ func main() {
 	r.GET("/front_page") // пока не сделано
 	r.Use(func(c *gin.Context) {
 		c.Header("Content-Security-Policy", "default-src 'self' http://localhost:8080;")
+	})
+	r.Use(func(c *gin.Context) {
+		c.Header("Content-Security-Policy", "default-src 'self' http://localhost:3000;")
 	})
 
 	r.GET("/analytics")

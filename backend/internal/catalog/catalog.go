@@ -65,9 +65,7 @@ func GetItem(c *gin.Context) {
 	res, err := db.Query(zapros)
 	var product entity.Product
 	for res.Next() {
-
 		err = res.Scan(&product.Name, &product.Price, &product.Description, &product.Category)
-
 	}
 
 	var zapros2 = fmt.Sprintf("SELECT id_feature, value FROM `added_features` WHERE id_item  = '%d'", id)
@@ -99,7 +97,7 @@ func GetItem(c *gin.Context) {
 
 func GetFavoriteItems(c *gin.Context) {
 	session := sessions.Default(c)
-	userID := session.Get("user_id")
+	userID := session.Get("id")
 	if userID == nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"Ошибка": "Пользователь не авторизован"})
 		return
@@ -130,7 +128,7 @@ func GetFavoriteItems(c *gin.Context) {
 func AddToFavorites(c *gin.Context) {
 
 	session := sessions.Default(c)
-	userID := session.Get("user_id")
+	userID := session.Get("id")
 	if userID == nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"Ошибка": "Пользователь не авторизован"})
 		return
@@ -153,7 +151,7 @@ func AddToFavorites(c *gin.Context) {
 func RemoveFromFavorites(c *gin.Context) {
 
 	session := sessions.Default(c)
-	userID := session.Get("user_id")
+	userID := session.Get("id")
 	if userID == nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"Ошибка": "Пользователь не авторизован"})
 		return
@@ -245,7 +243,7 @@ func AddToCart(c *gin.Context) {
 func RemoveFromCart(c *gin.Context) {
 
 	session := sessions.Default(c)
-	userID := session.Get("user_id")
+	userID := session.Get("id")
 	if userID == nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"Ошибка": "Пользователь не авторизован"})
 		return
@@ -258,7 +256,7 @@ func RemoveFromCart(c *gin.Context) {
 		return
 	}
 
-	if err := config.DB.Where("id= ?", id).Delete(&entity.CartItem{}).Error; err != nil {
+	if err := config.DB.Where("id = ?", id).Delete(&entity.CartItem{}).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"Ошибка": err.Error()})
 
 		return

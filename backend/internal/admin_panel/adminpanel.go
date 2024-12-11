@@ -67,7 +67,14 @@ func InitAdminPanel(db1 *gorm.DB, s *gin.Engine) {
 	s.POST("/add_features_to_item/:id_item/:id_features", AddFeaturesToItem())
 
 	s.POST("/createnewprod", CreateProduct())
-	s.POST("/editproduct/:id", EditProduct())
+
+	s.POST("/editproductname/:id", EditProductName())
+	s.POST("/editproductdescription/:id", EditProductDescription())
+	s.POST("/editproductprice/:id", EditProductPrice())
+	s.POST("/editproductcategory/:id", EditProductCategory())
+	s.POST("/editproductquantity/:id", EditProductQuantity())
+	s.POST("/editproductstockquantity/:id", EditProductStockQuantity())
+
 	s.POST("/deleteproduct/:id", DeleteProduct())
 	s.POST("/updateimageforproduct/:id", UpdateImageForProduct())
 
@@ -96,7 +103,7 @@ func AddFeaturesToItem() gin.HandlerFunc {
 			ctx.JSON(204, gin.H{"message": "Bad data for edit"})
 			return
 		}
-		result := db.Exec("insert into itam_store.added_features (id_item	, value, id_feature) values (?, ?,?)", id_item, value_struct.Message, id_features)
+		result := db.Exec("insert into itam_store.added_features (id_item, value, id_feature) values (?, ?,?)", id_item, value_struct.Message, id_features)
 		if err != nil {
 			panic(err)
 		}
@@ -148,22 +155,6 @@ func CreateProduct() gin.HandlerFunc {
 	}
 }
 
-func DeleteProductImage(id int) bool {
-	var prod entity.Product
-
-	if err := db.Model(&entity.Product{}).Where("product_id = ?", id).First(&prod).Error; err != nil {
-		return false
-	}
-
-	ImageID := prod.Image
-	query := "DELETE FROM images WHERE image_id = ?"
-	if err := db.Exec(query, ImageID); err != nil {
-		return false
-	}
-
-	return true
-}
-
 func UpdateImageForProduct() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id, err := strconv.Atoi(ctx.Param("id"))
@@ -179,51 +170,12 @@ func UpdateImageForProduct() gin.HandlerFunc {
 			return
 		}
 
-		result := db.Create(&newImage)
-
-		if result.Error != nil {
-			ctx.JSON(400, gin.H{"message": "Ошибка"})
-			return
-		}
-
-		if !DeleteProductImage(id) {
-			ctx.JSON(400, gin.H{"message": "Bad request"})
-			return
-		}
-
-		if err := db.Model(&entity.Product{}).Where("product_id = ?", id).Update("product_image = ?", newImage.ImageID).Error; err != nil {
+		if err := db.Model(&entity.Product{}).Where("product_id = ?", id).Update("product_image = ?", newImage.ImageData).Error; err != nil {
 			ctx.JSON(400, gin.H{"message": "Error"})
 			return
 		}
 
 		ctx.JSON(200, gin.H{"message": "Product image updated"})
-	}
-}
-
-func EditProduct() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		var p entity.Product
-
-		if err := ctx.ShouldBindJSON(&p); err != nil {
-			ctx.JSON(204, gin.H{"message": "Bad data for edit"})
-			return
-		}
-
-		id, err := strconv.Atoi(ctx.Param("id"))
-		if err != nil {
-			log.Print(err)
-			ctx.JSON(404, gin.H{"message": "No such product"})
-			return
-		}
-
-		query := "product_name, product_price, product_description, product_category, product_specifications, product_quantity, product_stock_quantity"
-		if err := db.Model(&entity.Product{}).Where("product_id = ?", id).Update(query, p).Error; err != nil {
-			ctx.JSON(400, gin.H{"message": "Error"})
-			log.Print("Database error: ", err)
-			return
-		}
-
-		ctx.JSON(200, gin.H{"message": "Succesfully edited product"})
 	}
 }
 
@@ -245,5 +197,161 @@ func DeleteProduct() gin.HandlerFunc {
 		}
 
 		ctx.JSON(200, gin.H{"message": "Succesfully deleted"})
+	}
+}
+
+func EditProductName() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var request struct {
+			Name string `json:"product_name"`
+		}
+		if err := ctx.ShouldBindJSON(&request); err != nil {
+			ctx.JSON(400, gin.H{"message": "Invalid request"})
+			return
+		}
+
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			log.Print(err)
+			ctx.JSON(404, gin.H{"message": "No such product"})
+			return
+		}
+
+		if err := db.Model(&entity.Product{}).Where("product_id = ?", id).Update("product_name", request.Name).Error; err != nil {
+			ctx.JSON(400, gin.H{"message": "Error"})
+			return
+		}
+
+		ctx.JSON(200, gin.H{"message": "Product Name updated"})
+	}
+}
+
+func EditProductPrice() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var request struct {
+			Price int `json:"product_price"`
+		}
+		if err := ctx.ShouldBindJSON(&request); err != nil {
+			ctx.JSON(400, gin.H{"message": "Invalid request"})
+			return
+		}
+
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			log.Print(err)
+			ctx.JSON(404, gin.H{"message": "No such product"})
+			return
+		}
+
+		if err := db.Model(&entity.Product{}).Where("product_id = ?", id).Update("product_price", request.Price).Error; err != nil {
+			ctx.JSON(400, gin.H{"message": "Error"})
+			return
+		}
+
+		ctx.JSON(200, gin.H{"message": "Product Price updated"})
+	}
+}
+
+func EditProductDescription() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var request struct {
+			D string `json:"product_description"`
+		}
+		if err := ctx.ShouldBindJSON(&request); err != nil {
+			ctx.JSON(400, gin.H{"message": "Invalid request"})
+			return
+		}
+
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			log.Print(err)
+			ctx.JSON(404, gin.H{"message": "No such product"})
+			return
+		}
+
+		if err := db.Model(&entity.Product{}).Where("product_id = ?", id).Update("product_description", request.D).Error; err != nil {
+			ctx.JSON(400, gin.H{"message": "Error"})
+			return
+		}
+
+		ctx.JSON(200, gin.H{"message": "Product Description updated"})
+	}
+}
+
+func EditProductCategory() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var request struct {
+			Cat string `json:"product_category"`
+		}
+		if err := ctx.ShouldBindJSON(&request); err != nil {
+			ctx.JSON(400, gin.H{"message": "Invalid request"})
+			return
+		}
+
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			log.Print(err)
+			ctx.JSON(404, gin.H{"message": "No such product"})
+			return
+		}
+
+		if err := db.Model(&entity.Product{}).Where("product_id = ?", id).Update("product_category", request.Cat).Error; err != nil {
+			ctx.JSON(400, gin.H{"message": "Error"})
+			return
+		}
+
+		ctx.JSON(200, gin.H{"message": "Product Category updated"})
+	}
+}
+
+func EditProductQuantity() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var request struct {
+			Quantity int `json:"product_quantity"`
+		}
+		if err := ctx.ShouldBindJSON(&request); err != nil {
+			ctx.JSON(400, gin.H{"message": "Invalid request"})
+			return
+		}
+
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			log.Print(err)
+			ctx.JSON(404, gin.H{"message": "No such product"})
+			return
+		}
+
+		if err := db.Model(&entity.Product{}).Where("product_id = ?", id).Update("product_quantity", request.Quantity).Error; err != nil {
+			ctx.JSON(400, gin.H{"message": "Error"})
+			return
+		}
+
+		ctx.JSON(200, gin.H{"message": "Product Quantity updated"})
+	}
+}
+
+func EditProductStockQuantity() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var request struct {
+			Quantity int `json:"product_stock_quantity"`
+		}
+		if err := ctx.ShouldBindJSON(&request); err != nil {
+			ctx.JSON(400, gin.H{"message": "Invalid request"})
+			return
+		}
+
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			log.Print(err)
+			ctx.JSON(404, gin.H{"message": "No such product"})
+			return
+		}
+
+		if err := db.Model(&entity.Product{}).Where("product_id = ?", id).Update("product_stock_quantity", request.Quantity).Error; err != nil {
+			ctx.JSON(400, gin.H{"message": "Error"})
+			return
+		}
+
+		ctx.JSON(200, gin.H{"message": "Product Stock Quantity updated"})
 	}
 }

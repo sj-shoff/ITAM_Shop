@@ -102,7 +102,15 @@ go run .
 Административные функции
 
     POST /createnewproduct - создание нового продукта(без логики администратора) Request -> entity.Product
-    POST /editproduct/:id - редактирование продукта(без логики администратора) Request -> entity.Product
+
+    POST /editproductname/:id - редактирование имени продукта(без логики администратора) Request -> `json:"product_name"`
+    POST /editproductprice/:id - редактирование цены продукта(без логики администратора) Request -> int `json:"product_price"`
+    POST /editproductdescription/:id - редактирование описания продукта(без логики администратора) Request -> `json:"product_description"`
+    POST /editproductcategory/:id - редактирование категории продукта(без логики администратора) Request -> `json:"product_category"`
+    POST /editproductquantity/:id - редактирование колличества продукта(без логики администратора) Request -> int `json:"product_quantity"`
+    POST /editproductstockquantity/:id - редактирование продукта(без логики администратора) Request -> int `json:"product_stock_quantity"`
+
+
     POST /deleteproduct/:id - удаление продукта(без логики администратора)
     POST /add_features_to_item/:id_item/:id_features Добавление определенной фичи (по номеру) к товару. Передать Json с полем message с параметром value 
 	POST /updateimageforproduct/:id Добавление/обновление фото продукта Request -> entity.Images
@@ -119,6 +127,7 @@ go run .
 # User
 ```bash
 type User struct {
+	gorm.Model
 	ID          uint    `json:"user_id" gorm:"column:user_id"`
 	Balance     float64 `json:"user_balance" gorm:"column:user_balance"`
 	UserName    string  `json:"user_name" gorm:"column:user_name"`
@@ -127,7 +136,7 @@ type User struct {
 	Email       string  `json:"user_email" gorm:"column:user_email"`
 	Password    string  `json:"user_password" gorm:"column:user_password"`
 	Admin       bool    `json:"user_admin_rights" gorm:"column:user_admin_rights"`
-	Avatar      uint    `json:"user_avatar" gorm:"column:user_avatar"`
+	Avatar      []byte  `json:"user_avatar" gorm:"column:user_avatar"`
 	//
 }
 ```
@@ -136,7 +145,6 @@ type User struct {
 ```bash
 type Images struct {
 	gorm.Model
-	ImageID   uint   `json:"image_id"`
 	ImageData []byte `json:"image_data"`
 	//
 }
@@ -154,17 +162,17 @@ type FilterParams struct {
 # Product
 ```bash
 type Product struct {
-	gorm.Model
-	Features       []Feature `json:"features"`
-	ProductID      uint      `json:"product_id"`
-	Price          float64   `json:"product_price"`
-	Name           string    `json:"product_name"`
-	Image          uint      `json:"product_image"`
-	Description    string    `json:"product_description"`
-	Category       string    `json:"product_category"`
-	Specifications string    `json:"product_specifications"`
-	Quantity       int       `json:"product_quantity"`
-	StockQuantity  int       `json:"product_stock_quantity"`
+	//gorm.Model
+	//Features       []Feature `json:"features"`
+	ProductID      uint    `json:"product_id" gorm:"column:product_id"`
+	Price          float64 `json:"product_price" gorm:"column:product_price"`
+	Name           string  `json:"product_name" gorm:"column:product_name"`
+	Image          []byte  `json:"product_image" gorm:"column:product_image"`
+	Description    string  `json:"product_description" gorm:"column:product_description"`
+	Category       string  `json:"product_category" gorm:"column:product_category"`
+	Specifications string  `json:"product_specifications" gorm:"column:product_specifications"`
+	Quantity       int     `json:"product_quantity" gorm:"column:product_quantity"`
+	StockQuantity  int     `json:"product_stock_quantity" gorm:"column:product_stock_quantity"`
 	//
 }
 ```
