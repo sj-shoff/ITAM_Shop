@@ -6,6 +6,9 @@ export {
     useAddToCartMutation,
     useGetCartQuery,
     useGetWishlistQuery,
+    useRemoveFromCartMutation,
+    useAddToWishlistMutation,
+    useRemoveFromWishListMutation,
 } from "./api/item-api"
 export type {
     Product,

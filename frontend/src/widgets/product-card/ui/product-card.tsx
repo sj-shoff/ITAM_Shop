@@ -1,4 +1,4 @@
-import { featureDefaultValue, useGetProductQuery } from "@entities/product"
+import { useGetProductQuery } from "@entities/product"
 import { Spinner } from "@nextui-org/react"
 import { useParams } from "react-router-dom"
 import { Image } from "./image/image"

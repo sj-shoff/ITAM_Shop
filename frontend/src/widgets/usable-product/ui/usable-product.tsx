@@ -1,5 +1,5 @@
 import { Product, ProductComponent, ProductId } from "@entities/product"
-import { AddToBusket } from "@features/add-to-basket"
+import { AddToCart } from "@features/add-to-cart"
 import { AddToWishList } from "@features/add-to-wishlist"
 
 type usableProductProps = {
@@ -13,7 +13,7 @@ export function UsableProduct({ id, product }: usableProductProps) {
             product={product}
             headContent={<AddToWishList productId={id} />}
         >
-            <AddToBusket productId={id} />
+            <AddToCart productId={id} />
         </ProductComponent>
     )
 }

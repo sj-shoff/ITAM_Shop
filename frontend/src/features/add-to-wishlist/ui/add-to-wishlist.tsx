@@ -3,6 +3,7 @@ import { WishListIcon } from "@shared/ui/icons"
 import classes from "./add-to-wishlist.module.scss"
 import { ProductId } from "@entities/product"
 import { MouseEventHandler, useState } from "react"
+import { useAddToWishlistMutation } from "@entities/product"
 
 type AddToWishlistProps = {
     productId: ProductId
@@ -11,11 +12,12 @@ type AddToWishlistProps = {
 export function AddToWishList({ productId }: AddToWishlistProps) {
     // const [] = useAddToWishListMutation()
     const [isClicked, setIsClicked] = useState<boolean>(false)
+    const [addToWishlist] = useAddToWishlistMutation()
 
     const clickHandler: MouseEventHandler<HTMLButtonElement> = (e) => {
         e.stopPropagation()
         setIsClicked(!isClicked)
-        console.log(productId)
+        addToWishlist(productId)
     }
 
     return (

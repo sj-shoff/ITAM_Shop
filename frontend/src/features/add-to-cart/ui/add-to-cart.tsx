@@ -6,7 +6,7 @@ type addToBusketProps = {
     productId: ProductId
 }
 
-export function AddToBusket({ productId }: addToBusketProps) {
+export function AddToCart({ productId }: addToBusketProps) {
     const [addToCart] = useAddToCartMutation()
 
     const clickHandler: MouseEventHandler<HTMLButtonElement> = (e) => {
