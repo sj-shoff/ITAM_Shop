@@ -36,14 +36,21 @@ export const productsApi = baseApi.injectEndpoints({
                 productDTOschema.array().parse(responce),
             providesTags: ["Wishlist"],
         }),
-        getWishlistItem: create.query<Product, ProductId>({
-            query: (productId) => `/fav_items/${productId}`,
-            transformResponse: (responce: unknown) =>
-                productDTOschema.parse(responce),
-            providesTags: ["Product"],
-        }),
         addToWishlist: create.mutation<void, ProductId>({
-            query: (id) => ({ method: "Post", url: `fav_items/${id}` }),
+            query: (id) => ({ method: "POST", url: `fav_items/${id}` }),
+            // Обновляем все списки товаров и отображаем новый ui
+            invalidatesTags: ["Cart", "Catalog", "Wishlist"],
+        }),
+        removeFromWishList: create.mutation<void, ProductId>({
+            query: (id) => ({ method: "DELETE", url: `/fav_items/${id}` }),
+            // Перерисовываем все списки и страницу с товаром,
+            // чтобы отобразить ui
+            invalidatesTags: (result, error, productId) => [
+                "Cart",
+                "Catalog",
+                "Wishlist",
+                { type: "Product", id: productId },
+            ],
         }),
 
         // Cart
@@ -56,16 +63,40 @@ export const productsApi = baseApi.injectEndpoints({
         addToCart: create.mutation<void, ProductId>({
             query: (id) => ({ method: "POST", url: `/cart/add/${id}` }),
             // Обновляем во всех списках, что теперь товар в корзине
-            invalidatesTags: ["Cart", "Catalog", "Wishlist"],
+            // В том числе перерисовываем страницу с определенным товаром, чтобы отобразить новый ui
+            invalidatesTags: (result, error, productId) => [
+                "Cart",
+                "Catalog",
+                "Wishlist",
+                { type: "Product", id: productId },
+            ],
+        }),
+        removeFromCart: create.mutation<void, ProductId>({
+            query: (id) => ({ method: "DELETE", url: `/cart/remove/${id}` }),
+            // Обновляем во всех списках, что теперь товар НЕ в корзине
+            invalidatesTags: (result, error, productId) => [
+                "Cart",
+                "Catalog",
+                "Wishlist",
+                { type: "Product", id: productId },
+            ],
         }),
     }),
     overrideExisting: true,
 })
 
 export const {
-    useGetProductsQuery,
     useGetProductQuery,
+    // Catalog
+    useGetProductsQuery,
+
+    // Wishlist
     useGetWishlistQuery,
+    useAddToWishlistMutation,
+    useRemoveFromWishListMutation,
+
+    // Cart
     useGetCartQuery,
     useAddToCartMutation,
+    useRemoveFromCartMutation,
 } = productsApi

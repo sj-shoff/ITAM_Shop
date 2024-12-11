@@ -5,5 +5,14 @@ const baseUrl = "http://localhost:8080"
 export const baseApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl }),
     endpoints: () => ({}),
-    tagTypes: ["Catalog", "Product", "Wishlist", "Cart"],
+    tagTypes: [
+        "Catalog",
+        "Product",
+        "Wishlist",
+        // Продукты внутри вишлиста
+        "WishlistItem",
+        "Cart",
+        // Продукты внутри корзины
+        "CartItem",
+    ],
 })
