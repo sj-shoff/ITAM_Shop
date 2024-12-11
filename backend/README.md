@@ -29,6 +29,15 @@ cd backend/
 go mod tidy
 ```
 
+- Перед запуском проекта настройте брандмауэр
+```bash
+sudo ufw allow 3000/tcp
+sudo ufw allow 8080/tcp
+sudo ufw allow 9090/tcp
+sudo ufw reload
+sudo ufw status
+```
+
 - Для запуска пропишите следущие команды
 ```bash
 cd cmd
