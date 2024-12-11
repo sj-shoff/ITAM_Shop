@@ -1,7 +1,7 @@
 export type ProductId = number
 export type ProductName = string
 export type ProductPrice = number
-export type ProductImage = number
+export type ProductImage = string
 export type ProductDescription = string
 export type ProductCategory = string
 // export type ProductSpecifications = object

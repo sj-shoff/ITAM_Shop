@@ -1,15 +1,14 @@
 import { baseApi } from "@shared/api"
 import { z } from "zod"
-import { FilterOptions, Product, ProductId } from "../model/product-model"
+import { Product, ProductId } from "../model/product-model"
 
 const productDTOschema = z.object({
     product_id: z.number(),
     product_price: z.number(),
     product_name: z.string(),
-    product_image: z.number(),
+    product_image: z.string(),
     product_description: z.string(),
     product_category: z.string(),
-    // product_specifications: z.object({}),
     product_stock_quantity: z.number(),
 })
 
@@ -27,14 +26,6 @@ export const productsApi = baseApi.injectEndpoints({
             transformResponse: (responce: unknown) =>
                 productDTOschema.parse(responce),
             providesTags: ["Product"],
-        }),
-        filterProducts: create.mutation<void, FilterOptions>({
-            query: (options) => ({
-                method: "POST",
-                url: "/filter",
-                body: options,
-            }),
-            invalidatesTags: ["Catalog"],
         }),
 
         // Wishlist
@@ -57,9 +48,5 @@ export const productsApi = baseApi.injectEndpoints({
     overrideExisting: true,
 })
 
-export const {
-    useGetProductsQuery,
-    useGetProductQuery,
-    useGetWishlistQuery,
-    useFilterProductsMutation,
-} = productsApi
+export const { useGetProductsQuery, useGetProductQuery, useGetWishlistQuery } =
+    productsApi

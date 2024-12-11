@@ -1,10 +1,9 @@
 import { Button } from "@nextui-org/react"
 import classes from "./catalog-page.module.scss"
 import { ItemsList } from "@widgets/items-list"
-import { FilterOptions, useFilterProductsMutation } from "@entities/product"
+import { FilterOptions } from "@entities/product"
 
 export function CatalogPage() {
-    const [filterProducts] = useFilterProductsMutation()
 
     function clickHandler() {
         const opt: FilterOptions = {
@@ -13,7 +12,7 @@ export function CatalogPage() {
             maxPrice: 10000000,
         }
 
-        filterProducts(opt)
+        console.log(opt)
     }
 
     return (

@@ -16,7 +16,7 @@ export function Image({ path }: ImageProps) {
     return (
         <Skeleton className={classes.imageContainer} isLoaded={isLoaded}>
             <img
-                className={classes.image}
+                className={`data:image/png;base64,${path}`}
                 src={path}
                 onLoad={onImageLoad}
                 alt='product image'

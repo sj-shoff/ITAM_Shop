@@ -3,7 +3,6 @@ export {
     productsApi,
     useGetProductsQuery,
     useGetProductQuery,
-    useFilterProductsMutation,
 } from "./api/item-api"
 export type {
     Product,
