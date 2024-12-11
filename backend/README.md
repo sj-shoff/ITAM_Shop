@@ -173,14 +173,18 @@ type FilterParams struct {
 # Product
 ```bash
 type Product struct {
+  //Features       []Feature `json:"features"`
   ProductID      uint    `json:"product_id" gorm:"column:product_id"`
-	Price          float64 `json:"product_price" gorm:"column:product_price"`
-	Name           string  `json:"product_name" gorm:"column:product_name"`
-	Image          []byte    `json:"product_image" gorm:"column:product_image"`
-	Description    string  `json:"product_description" gorm:"column:product_description"`
-	Category       string  `json:"product_category" gorm:"column:product_category"`
-	Quantity       int     `json:"product_quantity" gorm:"column:product_quantity"`
-	StockQuantity  int     `json:"product_stock_quantity" gorm:"column:product_stock_quantity"`
+  Price          float64 `json:"product_price" gorm:"column:product_price"`
+  Name           string  `json:"product_name" gorm:"column:product_name"`
+  Image          []byte    `json:"product_image" gorm:"column:product_image"`
+  Description    string  `json:"product_description" gorm:"column:product_description"`
+  Category       string  `json:"product_category" gorm:"column:product_category"`
+//	Specifications string  `json:"product_specifications" gorm:"column:product_specifications"`
+  Quantity       int     `json:"product_quantity" gorm:"column:product_quantity"`
+  StockQuantity  int     `json:"product_stock_quantity" gorm:"column:product_stock_quantity"`
+  Is_in_cart	 	int			 `json:"is_in_cart" gorm:"column:is_in_cart"`
+  Is_in_fav			int			 		`json:"is_in_fav" gorm:"column:is_in_fav"`
 }
 ```
 

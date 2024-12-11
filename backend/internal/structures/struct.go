@@ -39,6 +39,9 @@ type Product struct {
 //	Specifications string  `json:"product_specifications" gorm:"column:product_specifications"`
 	Quantity       int     `json:"product_quantity" gorm:"column:product_quantity"`
 	StockQuantity  int     `json:"product_stock_quantity" gorm:"column:product_stock_quantity"`
+	Is_in_cart	 	int			 `json:"is_in_cart" gorm:"column:is_in_cart"`
+	Is_in_fav			int			 		`json:"is_in_fav" gorm:"column:is_in_fav"`
+
 	//
 }
 
