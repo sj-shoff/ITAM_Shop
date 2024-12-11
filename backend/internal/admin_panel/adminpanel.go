@@ -90,21 +90,21 @@ type Temp struct {
 // tracking
 func AddFeaturesToItem() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		id_item, err := strconv.Atoi(ctx.Param("id_item"))
+		id_item, err := strconv.Atoi(ctx.Param("id_item")) //Предмет к которому добавляем фичу
 		if err != nil {
 			ctx.JSON(400, gin.H{"message": "Bad request"})
 			return
 		}
-		id_features, err := strconv.Atoi(ctx.Param("id_features"))
+		id_features, err := strconv.Atoi(ctx.Param("id_features"))//id фичи которую хотим добавить
 		var value_struct Temp
-		if err := ctx.ShouldBindJSON(&value_struct); err != nil {
+		if err := ctx.ShouldBindJSON(&value_struct); err != nil { // получаем значения для фичи которую добавляем
 			fmt.Println("Error")
 			fmt.Println(err)
 			ctx.JSON(204, gin.H{"message": "Bad data for edit"})
 			return
 		}
 		result := db.Exec("insert into itam_store.added_features (id_item, value, id_feature) values (?, ?,?)", id_item, value_struct.Message, id_features)
-		if err != nil {
+		if err != nil { // Отправляем сведенья в бд
 			panic(err)
 		}
 		fmt.Println(result)

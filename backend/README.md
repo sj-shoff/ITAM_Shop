@@ -29,6 +29,15 @@ cd backend/
 go mod tidy
 ```
 
+- Перед запуском проекта настройте брандмауэр
+```bash
+sudo ufw allow 3000/tcp
+sudo ufw allow 8080/tcp
+sudo ufw allow 9090/tcp
+sudo ufw reload
+sudo ufw status
+```
+
 - Для запуска пропишите следущие команды
 ```bash
 cd cmd
@@ -111,9 +120,10 @@ go run .
     POST /editproductquantity/:id - редактирование колличества продукта(без логики администратора) Request -> int `json:"product_quantity"`
     POST /editproductstockquantity/:id - редактирование продукта(без логики администратора) Request -> int `json:"product_stock_quantity"`
 
+    POST /add_features_to_item/:id_item/:id_features Передается id_item к которому добавляем фичу и id_featurs , id фичи которую хотим добавить. Вместе с этим передаем json строчку с ключем message. В которой пишем значение для поля фичи
 
     POST /deleteproduct/:id - удаление продукта(без логики администратора)
-    POST /add_features_to_item/:id_item/:id_features Добавление определенной фичи (по номеру) к товару. Передать Json с полем message с параметром value 
+    POST /add_features_to_item/:id_item/:id_features Добавление определенной фичи (по номеру) к товару. Передать Json с полем message с параметром value
 	POST /updateimageforproduct/:id Добавление/обновление фото продукта Request -> entity.Images
 
     NOT OK
@@ -177,7 +187,13 @@ type Product struct {
 	//
 }
 ```
-
+# Feature
+```bash
+type Feature struct {
+	Name  string `json:"name_of_feature" gorm:"column:name_of_feature"`
+	Value string `json:"value_for_feature" gorm:"column:value_for_feature"`
+}
+```
 # CartItem
 ```bash
 type CartItem struct {

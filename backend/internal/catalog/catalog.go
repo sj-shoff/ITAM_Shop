@@ -1,12 +1,14 @@
 package controllers
 
 import (
-	"log"
+	"database/sql"
+	"fmt"
 	config "myapp/internal/data_base"
 	entity "myapp/internal/structures"
 	"net/http"
 	"strconv"
-
+	"log"
+//	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"gorm.io/gorm"
@@ -50,17 +52,40 @@ func GetItem(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"Ошибка": "Недействительный ID продукта"})
 		return
 	}
-
-	var product entity.Product
-	query := "SELECT * FROM products WHERE product_id = ?"
-	result := db.Raw(query, id).Scan(&product)
-	if result.Error != nil {
-		log.Print(result.Error)
-		c.JSON(500, gin.H{"message": "failed get product"})
-		return
+	db, err := sql.Open("mysql", "admin_for_itam_store:your_password@tcp(147.45.163.58:3306)/itam_store")
+	if err != nil { // Подклчение к бд для работы с Query
+		panic(err)
 	}
 
-	c.JSON(200, product)
+	defer db.Close()
+	fmt.Printf("Подключено")
+
+	var zapros = fmt.Sprintf("SELECT product_name, product_price, product_description, product_category, product_image FROM `products` WHERE product_id  = '%d'", id)
+	fmt.Println(zapros) // Получение всей информации о продукте по его id
+	res, err := db.Query(zapros)
+	var product entity.Product
+	for res.Next() {
+
+		err = res.Scan(&product.Name, &product.Price, &product.Description, &product.Category, &product.Image)
+
+	}
+
+	var zapros2 = fmt.Sprintf("SELECT id_feature, value FROM `added_features` WHERE id_item  = '%d'", id)
+	fmt.Println(zapros2) // Получение всех id фич и их значений по id продукта
+	res2, err := db.Query(zapros2)
+	var features []entity.Feature
+	for res2.Next() {
+		var tempFeature entity.Feature
+		err = res2.Scan(&tempFeature.Name, &tempFeature.Value)
+		features = append(features, tempFeature)
+
+	}
+	combined := map[string]interface{}{
+        "product":    product,
+        "features": features,
+    } // Формирование json файла. Сам продукт и массив фич к нему
+
+	c.JSON(http.StatusOK, combined)
 }
 
 func GetFavoriteItems(c *gin.Context) {
