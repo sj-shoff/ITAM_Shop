@@ -30,6 +30,8 @@ func InitCatalog(DB *gorm.DB, eng *gin.Engine) {
 	eng.DELETE("/cart/remove/:id", RemoveFromCart)
 	eng.GET("/cart", GetCart)
 	eng.GET("/cart/:id", GetItem)
+
+	eng.POST("/serch_item/name", SerchProductsByName())
 }
 
 func GetCatalogItems(c *gin.Context) {
@@ -244,4 +246,31 @@ func RemoveFromCart(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"Сообщение": "Продукт удален из карзины"})
+}
+
+func SerchProductsByName() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		type request struct {
+			Name string `json:"product_name"`
+		}
+		var r request
+
+		if err := ctx.ShouldBindJSON(&r); err != nil {
+			ctx.JSON(400, gin.H{"message": "Bad request"})
+			return
+		}
+
+		var products []entity.Product
+
+		query := "SELECT * FROM products WHERE product_name LIKE ?"
+		searchPattern := "%" + r.Name + "%"
+
+		result := db.Raw(query, searchPattern).Scan(&products)
+		if result.Error != nil {
+			log.Print(result.Error)
+			ctx.JSON(500, gin.H{"message": "Failed get products"})
+			return
+		}
+		ctx.JSON(200, products)
+	}
 }

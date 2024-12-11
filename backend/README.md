@@ -97,6 +97,8 @@ go run .
 	POST /cart/add/:id - Добавление товара в корзину
 	DELETE /cart/remove/:id - Удаление товара из корзины
 
+	POST /serch_item/name - Request -> json:"product_name" Response -> массив entity.Product
+
 
 Административные функции
 
