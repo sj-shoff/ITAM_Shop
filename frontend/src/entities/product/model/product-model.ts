@@ -53,25 +53,29 @@ export type FilterOptions = {
 // ------------FEATURES---------------------------------------
 export type FeatureType = string
 export type FeatureName = string
+export type FeatureUnit = string
 
 export type Feature = {
     name_of_feature: FeatureType
     value_for_feature: FeatureName
+    Unit_of_measurement: FeatureUnit
 }
 
 export const featureDefaultValue: Feature = {
     name_of_feature: "",
     value_for_feature: "",
+    Unit_of_measurement: "",
 }
 
 export const featureDTOschema = z.object({
     name_of_feature: z.string(),
     value_for_feature: z.string(),
+    Unit_of_measurement: z.string(),
 })
 
 // ------------REQUEST---------------------------------------
 export type RequestType = {
-    features: Feature[]
+    features: Feature[] | null
     product: Product
 }
 
@@ -80,7 +84,7 @@ export const requestTypeDefaultVale: RequestType = {
     product: productDefaultValue,
 }
 
-export const requestDTOschema = z.object({
-    features: featureDTOschema.array(),
+export const requestDTOschema = z.strictObject({
+    features: featureDTOschema.array().nullable(),
     product: productDTOschema,
 })

@@ -19,3 +19,13 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.value {
+    display: flex;
+    flex-direction: row;
+    column-gap: 0.125rem; // 2px
+}
+
+.measurement {
+    color: var(--color-ui-hover);
+}

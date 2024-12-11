@@ -2,7 +2,10 @@ import { Divider } from "@nextui-org/react"
 import classes from "./specifications.module.scss"
 import { Feature } from "@entities/product"
 
-export function Specifications({ features }: { features: Feature[] }) {
+export function Specifications({ features }: { features: Feature[] | null }) {
+    if (!features) {
+        return "Спецификации отсутствуют"
+    }
     return (
         <>
             {features.map((el) => (
@@ -14,9 +17,14 @@ export function Specifications({ features }: { features: Feature[] }) {
                         <span className={classes.name}>
                             {el.name_of_feature}
                         </span>
-                        <span className={classes.value}>
-                            {el.value_for_feature}
-                        </span>
+                        <div className={classes.value}>
+                            <span className={classes.textValue}>
+                                {el.value_for_feature}
+                            </span>
+                            <span className={classes.measurement}>
+                                {el.Unit_of_measurement}{" "}
+                            </span>
+                        </div>
                     </div>
                     <Divider orientation='horizontal' />
                 </li>
