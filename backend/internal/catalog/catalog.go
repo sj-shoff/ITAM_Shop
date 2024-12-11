@@ -45,6 +45,22 @@ func GetCatalogItems(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"Ошибка": err.Error()})
 		return
 	}
+	for i := 0; i < len(products); i++ {
+        product := products[i]
+				UserID := 26
+				query := "SELECT EXISTS(SELECT 1 FROM  favourites WHERE  product_id = ? AND user_id = ?)"
+				var exists int
+				_ = db.Raw(query, product.ProductID ,UserID).Scan(&exists)
+
+				products[i].Is_in_fav = exists
+
+				query = "SELECT EXISTS(SELECT 1 FROM  user_cart WHERE  product_id = ? AND user_id = ?)"
+
+				_ = db.Raw(query, product.ProductID, UserID).Scan(&exists)
+
+				products[i].Is_in_cart = exists
+    }
+
 
 	c.JSON(http.StatusOK, products)
 }
@@ -61,6 +77,22 @@ func GetItem(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"Ошибка": "Недействительный ID продукта"})
 		return
 	}
+
+		var product entity.Product
+		UserID := 26
+		query := "SELECT EXISTS(SELECT 1 FROM  favourites WHERE  product_id = ? AND user_id = ?)"
+		var exists int
+		_ = db.Raw(query, id,UserID).Scan(&exists)
+
+		product.Is_in_fav = exists
+
+		query = "SELECT EXISTS(SELECT 1 FROM  user_cart WHERE  product_id = ? AND user_id = ?)"
+
+		_ = db.Raw(query, id, UserID).Scan(&exists)
+
+		product.Is_in_cart = exists
+
+
 	db, err := sql.Open("mysql", "admin_for_itam_store:your_password@tcp(147.45.163.58:3306)/itam_store")
 	if err != nil { // Подклчение к бд для работы с Query
 		panic(err)
@@ -72,7 +104,7 @@ func GetItem(c *gin.Context) {
 	var zapros = fmt.Sprintf("SELECT product_name, product_price, product_description, product_category, product_image FROM `products` WHERE product_id  = '%d'", id)
 	fmt.Println(zapros) // Получение всей информации о продукте по его id
 	res, err := db.Query(zapros)
-	var product entity.Product
+
 	for res.Next() {
 
 		err = res.Scan(&product.Name, &product.Price, &product.Description, &product.Category, &product.Image)
