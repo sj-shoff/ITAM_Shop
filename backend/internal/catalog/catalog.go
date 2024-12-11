@@ -130,8 +130,27 @@ func AddToFavorites(c *gin.Context) {
 		return
 	}
 
-	query := "INSERT INTO favourites (user_id, product_id) VALUES (?, ?)"
-	result := db.Exec(query, userID, id)
+
+	query := "SELECT EXISTS(SELECT 1 FROM  favourites WHERE user_id = ? AND product_id = ?)"
+	var exists bool
+	result := db.Raw(query, userID, id).Scan(&exists)
+
+	if result.Error != nil {
+	    // Обработка ошибки
+	    fmt.Println("Ошибка при выполнении запроса:", result.Error)
+	} else {
+	    fmt.Println("Существует ли продукт:", exists)
+	}
+
+
+	if(exists){
+		c.JSON(http.StatusOK, gin.H{"Сообщение": "Был ранее добавлен"})
+		return
+	}
+
+
+	query = "INSERT INTO favourites (user_id, product_id) VALUES (?, ?)"
+	result = db.Exec(query, userID, id)
 	if result.Error != nil {
 		log.Print(result.Error)
 		c.JSON(500, gin.H{"message": "Failed add to favourites"})
@@ -235,8 +254,25 @@ func AddToCart(c *gin.Context) {
 		return
 	}
 
-	query := "INSERT INTO user_cart (user_id, product_id) VALUES (?, ?)"
-	result := db.Exec(query, userID, id)
+	query := "SELECT EXISTS(SELECT 1 FROM user_cart WHERE user_id = ? AND product_id = ?)"
+	var exists bool
+	result := db.Raw(query, userID, id).Scan(&exists)
+
+	if result.Error != nil {
+	    // Обработка ошибки
+	    fmt.Println("Ошибка при выполнении запроса:", result.Error)
+	} else {
+	    fmt.Println("Существует ли продукт:", exists)
+	}
+
+	fmt.Println(exists)
+	if(exists){
+		c.JSON(http.StatusOK, gin.H{"Сообщение": "Был ранее добавлен"})
+		return
+	}
+
+	query = "INSERT INTO user_cart (user_id, product_id) VALUES (?, ?)"
+	result = db.Exec(query, userID, id)
 	if result.Error != nil {
 		log.Print(result.Error)
 		c.JSON(500, gin.H{"message": "Failed add to cart"})

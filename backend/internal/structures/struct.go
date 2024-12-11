@@ -33,7 +33,7 @@ type Product struct {
 	ProductID      uint    `json:"product_id" gorm:"column:product_id"`
 	Price          float64 `json:"product_price" gorm:"column:product_price"`
 	Name           string  `json:"product_name" gorm:"column:product_name"`
-	Image          uint    `json:"product_image" gorm:"column:product_image"`
+	Image          []byte    `json:"product_image" gorm:"column:product_image"`
 	Description    string  `json:"product_description" gorm:"column:product_description"`
 	Category       string  `json:"product_category" gorm:"column:product_category"`
 //	Specifications string  `json:"product_specifications" gorm:"column:product_specifications"`
