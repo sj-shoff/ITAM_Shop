@@ -1,12 +1,14 @@
 package controllers
 
 import (
-	"log"
+	"database/sql"
+	"fmt"
 	config "myapp/internal/data_base"
 	entity "myapp/internal/structures"
 	"net/http"
 	"strconv"
-
+	"log"
+//	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"gorm.io/gorm"
@@ -51,16 +53,50 @@ func GetItem(c *gin.Context) {
 		return
 	}
 
-	var product entity.Product
-	query := "SELECT * FROM products WHERE product_id = ?"
-	result := db.Raw(query, id).Scan(&product)
-	if result.Error != nil {
-		log.Print(result.Error)
-		c.JSON(500, gin.H{"message": "failed get product"})
-		return
+	db, err := sql.Open("mysql", "admin_for_itam_store:your_password@tcp(147.45.163.58:3306)/itam_store")
+	if err != nil {
+		panic(err)
 	}
 
-	c.JSON(200, product)
+	defer db.Close()
+	fmt.Printf("Подключено")
+	//Установка данных
+	//insert, err := db.Query(fmt.Sprintf("INSERT INTO test.articles (`title`, `anons`, `full_text`) VALUES ('%s', '%s', '%s')", title, anons, full_text))
+	var zapros = fmt.Sprintf("SELECT product_name, product_price, product_description, product_category FROM `products` WHERE product_id  = '%d'", id)
+	fmt.Println(zapros)
+	res, err := db.Query(zapros)
+	var product entity.Product
+	for res.Next() {
+
+		err = res.Scan(&product.Name, &product.Price, &product.Description, &product.Category)
+
+	}
+
+	var zapros2 = fmt.Sprintf("SELECT id_feature, value FROM `added_features` WHERE id_item  = '%d'", id)
+	fmt.Println(zapros2)
+	res2, err := db.Query(zapros2)
+	var features []entity.Feature
+	for res2.Next() {
+		var tempFeature entity.Feature
+		err = res2.Scan(&tempFeature.Name, &tempFeature.Value)
+		features = append(features, tempFeature)
+
+	}
+	combined := map[string]interface{}{
+        "product":    product,
+        "features": features,
+    }
+	//product.Features = features
+
+	//	if err := config.DB.First(&product, id).Error; err != nil {
+	//		fmt.Println("err")
+	//		panic(err)
+	///		c.JSON(http.StatusInternalServerError, gin.H{"Ошибка": "Продукт не найден3"})
+
+	//	return
+	//}
+	//fmt.Println(product)
+	c.JSON(http.StatusOK, combined)
 }
 
 func GetFavoriteItems(c *gin.Context) {
