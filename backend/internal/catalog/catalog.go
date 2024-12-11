@@ -62,13 +62,13 @@ func GetItem(c *gin.Context) {
 	fmt.Printf("Подключено")
 	//Установка данных
 	//insert, err := db.Query(fmt.Sprintf("INSERT INTO test.articles (`title`, `anons`, `full_text`) VALUES ('%s', '%s', '%s')", title, anons, full_text))
-	var zapros = fmt.Sprintf("SELECT product_name, product_price, product_description, product_category FROM `products` WHERE product_id  = '%d'", id)
+	var zapros = fmt.Sprintf("SELECT product_name, product_price, product_description, product_category, product_image FROM `products` WHERE product_id  = '%d'", id)
 	fmt.Println(zapros)
 	res, err := db.Query(zapros)
 	var product entity.Product
 	for res.Next() {
 
-		err = res.Scan(&product.Name, &product.Price, &product.Description, &product.Category)
+		err = res.Scan(&product.Name, &product.Price, &product.Description, &product.Category, &product.Image)
 
 	}
 
