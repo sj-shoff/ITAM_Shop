@@ -52,7 +52,7 @@ export function ProductComponent({
                     </span>
                 </div>
                 {/* Здесь будут все фичи */}
-                {children}
+                <div className={classes.features}>{children}</div>
             </div>
         </article>
     )

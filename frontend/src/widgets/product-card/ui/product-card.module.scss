@@ -3,9 +3,8 @@
     flex-direction: row;
     align-items: start;
     justify-content: space-between;
-    column-gap: 1.25rem; // 20px
+    column-gap: 3.5rem; // 64px
     width: 100%;
-    max-width: 68.75rem; // 1100px
 }
 
 .info {
@@ -14,4 +13,29 @@
     justify-content: start;
     align-items: start;
     row-gap: 2.5rem; // 40px
+}
+
+.specifications {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 0.25rem;
+    width: 100%;
+}
+
+.characteristic {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 0.25rem;
+    width: 100%;
+}
+
+.specificationItem {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.25rem; // 4px
+    width: 100%;
 }

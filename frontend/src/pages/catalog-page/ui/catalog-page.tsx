@@ -7,10 +7,10 @@ import { useSelector } from "react-redux"
 
 export function CatalogPage() {
     // При применении фильтра компонент будет перерисовываться
-    const [isFiltered, setIsFiltered] = useState<boolean>(false)
+    // const [isFiltered, setIsFiltered] = useState<boolean>(false)
     const { data } = useGetProductsQuery()
-    const filteredList = useSelector(getList)
-
+    // const filteredList = useSelector(getList)
+    
     function clickHandler() {
         const opt: FilterOptions = {
             category: "Категория 4",
@@ -26,7 +26,7 @@ export function CatalogPage() {
             <div className={classes.homepageBg}></div>
             <section className={classes.content}>
                 <Button onClick={clickHandler}>Filter</Button>
-                <ItemsList data={isFiltered ? filteredList : data} />
+                <ItemsList data={data} />
             </section>
         </>
     )

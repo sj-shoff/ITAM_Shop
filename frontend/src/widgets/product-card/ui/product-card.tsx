@@ -1,5 +1,5 @@
 import { useGetProductQuery } from "@entities/product"
-import { Spinner } from "@nextui-org/react"
+import { Divider, Spinner } from "@nextui-org/react"
 import { useParams } from "react-router-dom"
 import { Image } from "./image/image"
 import classes from "./product-card.module.scss"
@@ -37,10 +37,15 @@ export function ProductCard() {
                     price={data.product_price}
                     quantity={data.product_stock_quantity}
                 />
-                <div className={classes.specifications}>
-                    {/* {data.product_specifications} */}
-                    спецификации
-                </div>
+                <ul className={classes.specifications}>
+                    <li className={classes.specificationItem}>
+                        <div className={classes.characteristic}>
+                            <span>Спецификации:</span>
+                            <span>{data.product_specifications}</span>
+                        </div>
+                        <Divider orientation='horizontal' />
+                    </li>
+                </ul>
             </div>
         </div>
     )

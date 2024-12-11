@@ -16,12 +16,12 @@ export function Image({ path }: ImageProps) {
     return (
         <Skeleton className={classes.imageContainer} isLoaded={isLoaded}>
             <img
-                className={`data:image/png;base64,${path}`}
-                src={path}
+                className={classes.image}
+                src={`data:image/png;base64,${path}`}
                 onLoad={onImageLoad}
                 alt='product image'
-                width='670'
-                height='650'
+                width='550'
+                height='530'
                 loading='lazy'
             />
         </Skeleton>

@@ -8,6 +8,7 @@ const productDTOschema = z.object({
     product_name: z.string(),
     product_image: z.string(),
     product_description: z.string(),
+    product_specifications: z.string(),
     product_category: z.string(),
     product_stock_quantity: z.number(),
 })
@@ -22,7 +23,7 @@ export const productsApi = baseApi.injectEndpoints({
             providesTags: ["Catalog"],
         }),
         getProduct: create.query<Product, ProductId>({
-            query: (productId) => `/fav_items/${productId}`,
+            query: (productId) => `/get_item_page/${productId}`,
             transformResponse: (responce: unknown) =>
                 productDTOschema.parse(responce),
             providesTags: ["Product"],

@@ -16,7 +16,7 @@ const initStateValue: ProductState = {
             product_price: 0,
             product_stock_quantity: 0,
         },
-    ]
+    ],
 }
 
 export const productSlice = createSlice({

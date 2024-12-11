@@ -1,7 +1,7 @@
 .button {
     padding: 10px 110px;
     border-radius: 10px 10px 2px 2px;
-    @include font-ui(400);
+    font-weight: bold;
     transition-duration: var(--transition-duration);
     background-color: var(--color-ui-default);
     color: var(--color-text-alt);

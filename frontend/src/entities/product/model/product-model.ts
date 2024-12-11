@@ -4,7 +4,7 @@ export type ProductPrice = number
 export type ProductImage = string
 export type ProductDescription = string
 export type ProductCategory = string
-// export type ProductSpecifications = object
+export type ProductSpecifications = string
 export type ProductStockQuantity = number
 
 export type Product = {
@@ -14,7 +14,7 @@ export type Product = {
     product_image: ProductImage
     product_description: ProductDescription
     product_category: ProductCategory
-    // product_specifications: ProductSpecifications
+    product_specifications: ProductSpecifications
     product_stock_quantity: ProductStockQuantity
 }
 
