@@ -37,7 +37,7 @@ export function ProductComponent({
                 >
                     <img
                         className={classes.image}
-                        src={`data:image/png;base64,${product_image}`}
+                        src={`data:image/jpeg;base64,${product_image}`}
                         alt='product image'
                         width='410'
                         height='460'

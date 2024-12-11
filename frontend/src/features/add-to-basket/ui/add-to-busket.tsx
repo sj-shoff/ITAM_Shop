@@ -1,4 +1,4 @@
-import { ProductId } from "@entities/product"
+import { ProductId, useAddToCartMutation } from "@entities/product"
 import { Button } from "@shared/ui/button"
 import { MouseEventHandler } from "react"
 
@@ -7,9 +7,12 @@ type addToBusketProps = {
 }
 
 export function AddToBusket({ productId }: addToBusketProps) {
+    const [addToCart] = useAddToCartMutation()
+
     const clickHandler: MouseEventHandler<HTMLButtonElement> = (e) => {
         e.stopPropagation()
-        console.log(productId)
+        addToCart(productId)
+        console.log(`id:${productId} added to the buset`)
     }
 
     return <Button onClick={clickHandler}>Добавить в корзину</Button>

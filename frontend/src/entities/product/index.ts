@@ -3,6 +3,9 @@ export {
     productsApi,
     useGetProductsQuery,
     useGetProductQuery,
+    useAddToCartMutation,
+    useGetCartQuery,
+    useGetWishlistQuery,
 } from "./api/item-api"
 export type {
     Product,

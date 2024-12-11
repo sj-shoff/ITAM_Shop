@@ -4,6 +4,8 @@ import { CatalogPage } from "@pages/catalog-page"
 import { Homepage } from "@pages/home-page"
 import { createBrowserRouter } from "react-router-dom"
 import { ProductPage } from "@pages/product-page"
+import { WishlistPage } from "@pages/wishlist-page"
+import { CartPage } from "@pages/cart-page"
 
 export const router = createBrowserRouter([
     {
@@ -45,6 +47,18 @@ export const router = createBrowserRouter([
             {
                 path: "catalog/:product_id",
                 element: <ProductPage />,
+            },
+            {
+                path: "fav_items",
+                element: <WishlistPage />,
+            },
+            {
+                path: "fav_items/:product_id",
+                element: <ProductPage />,
+            },
+            {
+                path: "cart",
+                element: <CartPage />,
             },
         ],
     },

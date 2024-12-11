@@ -45,9 +45,27 @@ export const productsApi = baseApi.injectEndpoints({
         addToWishlist: create.mutation<void, ProductId>({
             query: (id) => ({ method: "Post", url: `fav_items/${id}` }),
         }),
+
+        // Cart
+        getCart: create.query<Product[], void>({
+            query: () => "/cart",
+            transformResponse: (responce: unknown) =>
+                productDTOschema.array().parse(responce),
+            providesTags: ["Cart"],
+        }),
+        addToCart: create.mutation<void, ProductId>({
+            query: (id) => ({ method: "POST", url: `/cart/add/${id}` }),
+            // Обновляем во всех списках, что теперь товар в корзине
+            invalidatesTags: ["Cart", "Catalog", "Wishlist"],
+        }),
     }),
     overrideExisting: true,
 })
 
-export const { useGetProductsQuery, useGetProductQuery, useGetWishlistQuery } =
-    productsApi
+export const {
+    useGetProductsQuery,
+    useGetProductQuery,
+    useGetWishlistQuery,
+    useGetCartQuery,
+    useAddToCartMutation,
+} = productsApi
