@@ -1,0 +1,21 @@
+.characteristic {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 0.5rem; // 8px
+    width: 100%;
+}
+
+.specificationItem {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.25rem; // 4px
+    width: 100%;
+}
+
+.name,
+.value {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

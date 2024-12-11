@@ -17,25 +17,10 @@
 
 .specifications {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    column-gap: 0.25rem;
-    width: 100%;
-}
-
-.characteristic {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    column-gap: 0.25rem;
-    width: 100%;
-}
-
-.specificationItem {
-    display: flex;
     flex-direction: column;
-    row-gap: 0.25rem; // 4px
+    justify-content: space-between;
+    align-items: center;
+    row-gap: 0.5rem; // 8px
     width: 100%;
+    max-width: 12.5rem; // 200px
 }

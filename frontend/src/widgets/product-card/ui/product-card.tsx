@@ -1,16 +1,21 @@
 import { useGetProductQuery } from "@entities/product"
-import { Divider, Spinner } from "@nextui-org/react"
+import { Spinner } from "@nextui-org/react"
 import { useParams } from "react-router-dom"
 import { Image } from "./image/image"
 import classes from "./product-card.module.scss"
 import { Payment } from "./payment/payment"
 import { TextInfo } from "./text-info/text-info"
+import { requestTypeDefaultVale } from "@entities/product"
+import { Specifications } from "./specifications/specifications"
 
 export function ProductCard() {
     // Получение id товара из роутинга
     const params = useParams<{ product_id: string }>()
     // Получение товара из стора или из запроса
-    const { data } = useGetProductQuery(Number(params.product_id))
+    const { data = requestTypeDefaultVale } = useGetProductQuery(
+        Number(params.product_id)
+    )
+    const { product, features } = data
 
     // Если данных нет, или они грузятся - отображается спинер
     if (!data) {
@@ -26,25 +31,19 @@ export function ProductCard() {
 
     return (
         <div className={classes.productCard}>
-            <Image path={data.product_image} />
+            <Image path={product.product_image} />
             <div className={classes.info}>
                 <TextInfo
-                    name={data.product_name}
-                    category={data.product_category}
-                    description={data.product_description}
+                    name={product.product_name}
+                    category={product.product_category}
+                    description={product.product_description}
                 />
                 <Payment
-                    price={data.product_price}
-                    quantity={data.product_stock_quantity}
+                    price={product.product_price}
+                    quantity={product.product_stock_quantity}
                 />
                 <ul className={classes.specifications}>
-                    <li className={classes.specificationItem}>
-                        <div className={classes.characteristic}>
-                            <span>Спецификации:</span>
-                            <span>{data.product_specifications}</span>
-                        </div>
-                        <Divider orientation='horizontal' />
-                    </li>
+                    <Specifications features={features} />
                 </ul>
             </div>
         </div>

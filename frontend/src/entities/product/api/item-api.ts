@@ -1,32 +1,28 @@
 import { baseApi } from "@shared/api"
-import { z } from "zod"
-import { Product, ProductId } from "../model/product-model"
-
-const productDTOschema = z.object({
-    product_id: z.number(),
-    product_price: z.number(),
-    product_name: z.string(),
-    product_image: z.string(),
-    product_description: z.string(),
-    product_specifications: z.string(),
-    product_category: z.string(),
-    product_stock_quantity: z.number(),
-})
+import {
+    requestDTOschema,
+    Product,
+    productDTOschema,
+    ProductId,
+    RequestType,
+} from "../model/product-model"
 
 export const productsApi = baseApi.injectEndpoints({
     endpoints: (create) => ({
+        // Product
+        getProduct: create.query<RequestType, ProductId>({
+            query: (productId) => `/get_item_page/${productId}`,
+            transformResponse: (responce: unknown) =>
+                requestDTOschema.parse(responce),
+            providesTags: ["Product"],
+        }),
+
         // Сatalog
         getProducts: create.query<Product[], void>({
             query: () => "/catalog",
             transformResponse: (responce: unknown) =>
                 productDTOschema.array().parse(responce),
             providesTags: ["Catalog"],
-        }),
-        getProduct: create.query<Product, ProductId>({
-            query: (productId) => `/get_item_page/${productId}`,
-            transformResponse: (responce: unknown) =>
-                productDTOschema.parse(responce),
-            providesTags: ["Product"],
         }),
 
         // Wishlist
@@ -39,7 +35,12 @@ export const productsApi = baseApi.injectEndpoints({
         addToWishlist: create.mutation<void, ProductId>({
             query: (id) => ({ method: "POST", url: `fav_items/${id}` }),
             // Обновляем все списки товаров и отображаем новый ui
-            invalidatesTags: ["Cart", "Catalog", "Wishlist"],
+            invalidatesTags: (result, error, productId) => [
+                "Cart",
+                "Catalog",
+                "Wishlist",
+                { type: "Product", id: productId },
+            ],
         }),
         removeFromWishList: create.mutation<void, ProductId>({
             query: (id) => ({ method: "DELETE", url: `/fav_items/${id}` }),

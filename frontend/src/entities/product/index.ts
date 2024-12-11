@@ -19,5 +19,13 @@ export type {
     FilterCategory,
     FilterMaxPrice,
     FilterMinPrice,
+    Feature,
+    FeatureName,
+    FeatureType,
+} from "./model/product-model"
+export {
+    featureDefaultValue,
+    productDefaultValue,
+    requestTypeDefaultVale,
 } from "./model/product-model"
 export { productSlice, getList } from "./model/product-slice"

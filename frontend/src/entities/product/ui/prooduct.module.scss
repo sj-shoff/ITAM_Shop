@@ -34,7 +34,7 @@
 
 .imageContainer {
     border-radius: 10px;
-    overflow: hidden !important; 
+    overflow: hidden !important;
 
     .image {
         background: transparent;
@@ -43,4 +43,8 @@
 
 .features {
     justify-self: end;
+}
+
+.price {
+    font-weight: black;
 }

@@ -24,7 +24,7 @@ export function ProductComponent({
     }
 
     function cardClickHandler() {
-        navigate(`${product.product_id}`)
+        navigate(`/catalog/${product.product_id}`)
     }
 
     return (
