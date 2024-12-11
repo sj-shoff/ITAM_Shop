@@ -52,6 +52,7 @@ type Images struct {
 type Feature struct {
 	Name  string `json:"name_of_feature" gorm:"column:name_of_feature"`
 	Value string `json:"value_for_feature" gorm:"column:value_for_feature"`
+	Unit_of_measurement string `json:"Unit_of_measurement" gorm:"column:Unit_of_measurement"`
 }
 
 
