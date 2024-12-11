@@ -9,3 +9,9 @@
     background-repeat: no-repeat;
     background-position: center;
 }
+
+.content {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem; // 16px
+}

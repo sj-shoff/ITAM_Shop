@@ -1,10 +1,14 @@
 import classes from "./items-list.module.scss"
 import { productsMaper } from "../lib/maper"
-import { useGetProductsQuery } from "@entities/product"
+import { Product } from "@entities/product"
 import { Spinner } from "@nextui-org/react"
 
-export function ItemsList() {
-    const { data } = useGetProductsQuery()
+type ItemsListProps = {
+    data: Product[] | undefined
+}
+
+export function ItemsList({ data }: ItemsListProps) {
+    // const { data } = useGetProductsQuery()
 
     return (
         <div className={classes.list}>

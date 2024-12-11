@@ -17,4 +17,4 @@ export type {
     FilterMaxPrice,
     FilterMinPrice,
 } from "./model/product-model"
-export { productSlice } from "./model/product-slice"
+export { productSlice, getList } from "./model/product-slice"

@@ -11,7 +11,7 @@ export function Button({
     isIconOnly = false,
     className = "",
     ...rest
-}: ButtonProps & HTMLAttributes<HTMLButtonElement>) {
+}: ButtonProps) {
     return (
         <>
             {!isIconOnly ? (

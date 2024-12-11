@@ -1,9 +1,15 @@
 import { Button } from "@nextui-org/react"
 import classes from "./catalog-page.module.scss"
 import { ItemsList } from "@widgets/items-list"
-import { FilterOptions } from "@entities/product"
+import { FilterOptions, getList, useGetProductsQuery } from "@entities/product"
+import { useState } from "react"
+import { useSelector } from "react-redux"
 
 export function CatalogPage() {
+    // При применении фильтра компонент будет перерисовываться
+    const [isFiltered, setIsFiltered] = useState<boolean>(false)
+    const { data } = useGetProductsQuery()
+    const filteredList = useSelector(getList)
 
     function clickHandler() {
         const opt: FilterOptions = {
@@ -18,9 +24,9 @@ export function CatalogPage() {
     return (
         <>
             <div className={classes.homepageBg}></div>
-            <section>
+            <section className={classes.content}>
                 <Button onClick={clickHandler}>Filter</Button>
-                <ItemsList />
+                <ItemsList data={isFiltered ? filteredList : data} />
             </section>
         </>
     )

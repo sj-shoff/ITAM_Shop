@@ -1,31 +1,40 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { Product, productId, productName, productPrice } from "./product-model"
+import { FilterOptions, Product } from "./product-model"
 
-type ProductState = Product
+type ProductState = {
+    filteredList: Product[]
+}
 
 const initStateValue: ProductState = {
-    id: 1,
-    name: "Кожанка",
-    price: 1000,
+    filteredList: [
+        {
+            product_id: 0,
+            product_category: "",
+            product_image: "",
+            product_description: "",
+            product_name: "",
+            product_price: 0,
+            product_stock_quantity: 0,
+        },
+    ]
 }
 
 export const productSlice = createSlice({
-    name: "product",
+    name: "products",
     initialState: initStateValue,
     reducers: {
-        changeId(state, action: PayloadAction<productId>) {
-            state.id = action.payload
+        // Обновление стейта
+        insertProducts(state, action: PayloadAction<Product[]>) {
+            state.filteredList = action.payload
         },
-        changePrice(state, action: PayloadAction<productPrice>) {
-            state.price = action.payload
-        },
-        changeName(state, action: PayloadAction<productName>) {
-            state.name = action.payload
+        // Фильтрация
+        filterProducts(state, action: PayloadAction<FilterOptions>) {
+            state.filteredList = []
         },
     },
     selectors: {
-        getPrice: (state) => state.price,
-        getName: (state) => state.name,
-        getId: (state) => state.id,
+        getList: (state) => state.filteredList,
     },
 })
+
+export const { getList } = productSlice.selectors
