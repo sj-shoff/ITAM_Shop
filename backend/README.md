@@ -97,15 +97,16 @@ go run .
 	GET /catalog - Получение списка товаров из каталога
 	POST /filter - Применение фильтра к товарам в каталоге
 
-	GET /fav_items - Получение списка товаров, добавленных в избранное
-	GET /fav_items/:id - Получение страницы товара по его id
+	GET /fav_items - Получение списка товаров, добавленных в избранное в виде массива entity.Product
+	GET /get_item_page/:id - Получение параметров товара по его id в виде entity.Product
 	POST /fav_items/:id - Добавление товара в избранное
 	DELETE /fav_items/:id - Удаление товара из избранного
 
-	GET /cart - Получение списка товаров в корзине
-    GET /cart/:id - Получение страницы товара в корзине по его id
+	GET /cart - Получение списка товаров в корзине в виде массива entity.Product
 	POST /cart/add/:id - Добавление товара в корзину
 	DELETE /cart/remove/:id - Удаление товара из корзины
+
+	POST /serch_item/name - Request -> json:"product_name" Response -> массив entity.Product
 
 
 Административные функции
