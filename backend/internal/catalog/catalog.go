@@ -1,14 +1,12 @@
 package controllers
 
 import (
-	"database/sql"
-	"fmt"
+	"log"
 	config "myapp/internal/data_base"
 	entity "myapp/internal/structures"
 	"net/http"
 	"strconv"
 
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"gorm.io/gorm"
@@ -25,7 +23,7 @@ func InitCatalog(DB *gorm.DB, eng *gin.Engine) {
 
 	eng.POST("/filter", ProductFilter)
 	eng.GET("/fav_items", GetFavoriteItems)
-	eng.GET("/fav_items/:id", GetItem)
+	eng.GET("/get_item_page/:id", GetItem)
 	eng.POST("/fav_items/:id", AddToFavorites)
 	eng.DELETE("/fav_items/:id", RemoveFromFavorites)
 	eng.POST("/cart/add/:id", AddToCart)
@@ -51,111 +49,78 @@ func GetItem(c *gin.Context) {
 		return
 	}
 
-	db, err := sql.Open("mysql", "admin_for_itam_store:your_password@tcp(147.45.163.58:3306)/itam_store")
-	if err != nil {
-		panic(err)
-	}
-
-	defer db.Close()
-	fmt.Printf("Подключено")
-	//Установка данных
-	//insert, err := db.Query(fmt.Sprintf("INSERT INTO test.articles (`title`, `anons`, `full_text`) VALUES ('%s', '%s', '%s')", title, anons, full_text))
-	var zapros = fmt.Sprintf("SELECT product_name, product_price, product_description, product_category FROM `products` WHERE product_id  = '%d'", id)
-	fmt.Println(zapros)
-	res, err := db.Query(zapros)
 	var product entity.Product
-	for res.Next() {
-		err = res.Scan(&product.Name, &product.Price, &product.Description, &product.Category)
+	query := "SELECT * FROM products WHERE product_id = ?"
+	result := db.Raw(query, id).Scan(&product)
+	if result.Error != nil {
+		log.Print(result.Error)
+		c.JSON(500, gin.H{"message": "failed get product"})
+		return
 	}
 
-	var zapros2 = fmt.Sprintf("SELECT id_feature, value FROM `added_features` WHERE id_item  = '%d'", id)
-	fmt.Println(zapros2)
-	res2, err := db.Query(zapros2)
-	var features []entity.Feature
-	for res2.Next() {
-		var tempFeature entity.Feature
-		err = res2.Scan(&tempFeature.Name, &tempFeature.Value)
-		features = append(features, tempFeature)
-
-	}
-	combined := map[string]interface{}{
-        "product":    product,
-        "features": features,
-    }
-	//product.Features = features
-
-	//	if err := config.DB.First(&product, id).Error; err != nil {
-	//		fmt.Println("err")
-	//		panic(err)
-	///		c.JSON(http.StatusInternalServerError, gin.H{"Ошибка": "Продукт не найден3"})
-
-	//	return
-	//}
-	//fmt.Println(product)
-	c.JSON(http.StatusOK, combined)
+	c.JSON(200, product)
 }
 
 func GetFavoriteItems(c *gin.Context) {
-	session := sessions.Default(c)
-	userID := session.Get("id")
-	if userID == nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"Ошибка": "Пользователь не авторизован"})
+	//session := sessions.Default(c)
+	userID := 26 //session.Get("id")
+	//if userID == nil {
+	//	c.JSON(http.StatusUnauthorized, gin.H{"Ошибка": "Пользователь не авторизован"})
+	//	return
+	//}
+
+	var favorites_ids []int
+	query := "SELECT product_id FROM favourites WHERE user_id = ?"
+	result := db.Raw(query, userID).Scan(&favorites_ids)
+	if result.Error != nil {
+		log.Print(result.Error)
+		c.JSON(500, gin.H{"message": "failed get favourities"})
 		return
 	}
 
-	var favorites []entity.Favorite
-	if err := config.DB.Where("user_id = ?", userID).Find(&favorites).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"Ошибка": err.Error()})
+	var favorites []entity.Product
+	query = "SELECT * FROM products WHERE product_id IN (?)"
+	result = db.Raw(query, favorites_ids).Scan(&favorites)
+	if result.Error != nil {
+		log.Print(result.Error)
+		c.JSON(500, gin.H{"message": "failed get favourities"})
 		return
 	}
 
-	var favoriteProductIDs []uint
-	for _, fav := range favorites {
-		favoriteProductIDs = append(favoriteProductIDs, fav.ProductID)
-	}
-
-	var favoriteProducts []entity.Product
-	if len(favoriteProductIDs) > 0 {
-		if err := config.DB.Where("id IN ?", favoriteProductIDs).Find(&favoriteProducts).Error; err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"Ошибка": err.Error()})
-			return
-		}
-	}
-
-	c.JSON(http.StatusOK, favoriteProducts)
+	c.JSON(http.StatusOK, favorites)
 }
 
 func AddToFavorites(c *gin.Context) {
-
-	session := sessions.Default(c)
-	userID := session.Get("id")
-	if userID == nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"Ошибка": "Пользователь не авторизован"})
+	//session := sessions.Default(c)
+	userID := 26 //session.Get("id")
+	//if userID == nil {
+	//	c.JSON(http.StatusUnauthorized, gin.H{"Ошибка": "Пользователь не авторизован"})
+	//	return
+	//}
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"Ошибка": "Недействительный ID продукта"})
 		return
 	}
 
-	var favorite entity.Favorite
-	if err := c.ShouldBindJSON(&favorite); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Ошибка": err.Error()})
-		return
-	}
-	if err := config.DB.Create(&favorite).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"Ошибка": err.Error()})
+	query := "INSERT INTO favourites (user_id, product_id) VALUES (?, ?)"
+	result := db.Exec(query, userID, id)
+	if result.Error != nil {
+		log.Print(result.Error)
+		c.JSON(500, gin.H{"message": "Failed add to favourites"})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"Сообщение": "Продукт добавлен в избранное"})
-
 }
 
 func RemoveFromFavorites(c *gin.Context) {
-
-	session := sessions.Default(c)
-	userID := session.Get("id")
-	if userID == nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"Ошибка": "Пользователь не авторизован"})
-		return
-	}
+	//session := sessions.Default(c)
+	userID := 26 //session.Get("id")
+	//if userID == nil {
+	//	c.JSON(http.StatusUnauthorized, gin.H{"Ошибка": "Пользователь не авторизован"})
+	//	return
+	//}
 
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -163,8 +128,12 @@ func RemoveFromFavorites(c *gin.Context) {
 		return
 
 	}
-	if err := config.DB.Where("id = ?", id).Delete(&entity.Favorite{}, id).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"Ошибка": err.Error()})
+
+	query := "DELETE FROM favourites WHERE user_id = ? AND product_id = ?"
+	result := db.Exec(query, userID, id)
+	if result.Error != nil {
+		log.Print(result.Error)
+		c.JSON(500, gin.H{"message": "Failed remove"})
 		return
 	}
 
@@ -172,7 +141,6 @@ func RemoveFromFavorites(c *gin.Context) {
 }
 
 func ProductFilter(c *gin.Context) {
-
 	var filterParams entity.FilterParams
 	if err := c.ShouldBindJSON(&filterParams); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Ошибка": err.Error()})
@@ -189,26 +157,37 @@ func ProductFilter(c *gin.Context) {
 	query = query.Where("product_price >= ? AND product_price <= ?", filterParams.MinPrice, filterParams.MaxPrice)
 
 	if err := query.Find(&products).Error; err != nil {
+		log.Print(err)
 		c.JSON(http.StatusInternalServerError, gin.H{"Ошибка": err.Error()})
 		return
-
 	}
 
 	c.JSON(http.StatusOK, products)
-
 }
-func GetCart(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Ошибка": "Недействительный ID пользователя"})
 
+func GetCart(c *gin.Context) {
+	//session := sessions.Default(c)
+	userID := 26 //session.Get("id")
+	//if userID == nil {
+	//	c.JSON(http.StatusUnauthorized, gin.H{"Ошибка": "Пользователь не авторизован"})
+	//	return
+	//}
+
+	var cart_ids []int
+	query := "SELECT product_id FROM user_cart WHERE user_id = ?"
+	result := db.Raw(query, userID).Scan(&cart_ids)
+	if result.Error != nil {
+		log.Print(result.Error)
+		c.JSON(500, gin.H{"message": "failed get cart"})
 		return
 	}
 
-	var cart []entity.Cart
-	if err := config.DB.Where("user_id = ?", id).Find(&cart).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"Ошибка": err.Error()})
-
+	var cart []entity.Product
+	query = "SELECT * FROM products WHERE product_id IN (?)"
+	result = db.Raw(query, cart_ids).Scan(&cart)
+	if result.Error != nil {
+		log.Print(result.Error)
+		c.JSON(500, gin.H{"message": "failed get cart"})
 		return
 	}
 
@@ -216,24 +195,24 @@ func GetCart(c *gin.Context) {
 }
 
 func AddToCart(c *gin.Context) {
+	//sessions := sessions.Default(c)
+	userID := 26 //sessions.Get("id")
+	//if id == nil {
+	//	c.JSON(http.StatusBadRequest, gin.H{"Ошибка": "Недействительный ID пользователя"})
+	//	return
+	//}
 
-	sessions := sessions.Default(c)
-	id := sessions.Get("id")
-	if id == nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Ошибка": "Недействительный ID пользователя"})
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"Ошибка": "Недействительный ID продукта"})
 		return
 	}
 
-	var cartItem entity.CartItem
-	if err := c.ShouldBindJSON(&cartItem); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Ошибка": err.Error()})
-
-		return
-	}
-
-	if err := config.DB.Create(&cartItem).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"Ошибка": err.Error()})
-
+	query := "INSERT INTO user_cart (user_id, product_id) VALUES (?, ?)"
+	result := db.Exec(query, userID, id)
+	if result.Error != nil {
+		log.Print(result.Error)
+		c.JSON(500, gin.H{"message": "Failed add to cart"})
 		return
 	}
 
@@ -241,24 +220,26 @@ func AddToCart(c *gin.Context) {
 }
 
 func RemoveFromCart(c *gin.Context) {
-
-	session := sessions.Default(c)
-	userID := session.Get("id")
-	if userID == nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"Ошибка": "Пользователь не авторизован"})
-		return
-	}
+	//session := sessions.Default(c)
+	userID := 26 //session.Get("id")
+	//if userID == nil {
+	//	c.JSON(http.StatusUnauthorized, gin.H{"Ошибка": "Пользователь не авторизован"})
+	//	return
+	//}
 
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
+		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{"Ошибка": "Недействительный ID продукта"})
-
 		return
+
 	}
 
-	if err := config.DB.Where("id = ?", id).Delete(&entity.CartItem{}).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"Ошибка": err.Error()})
-
+	query := "DELETE FROM user_cart WHERE user_id = ? AND product_id = ?"
+	result := db.Exec(query, userID, id)
+	if result.Error != nil {
+		log.Print(result.Error)
+		c.JSON(500, gin.H{"message": "Failed remove"})
 		return
 	}
 
