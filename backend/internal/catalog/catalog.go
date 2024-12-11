@@ -45,6 +45,22 @@ func GetCatalogItems(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"Ошибка": err.Error()})
 		return
 	}
+	for i := 0; i < len(products); i++ {
+        product := products[i]
+				UserID := 26
+				query := "SELECT EXISTS(SELECT 1 FROM  favourites WHERE  product_id = ? AND user_id = ?)"
+				var exists int
+				_ = db.Raw(query, product.ProductID ,UserID).Scan(&exists)
+
+				products[i].Is_in_fav = exists
+
+				query = "SELECT EXISTS(SELECT 1 FROM  user_cart WHERE  product_id = ? AND user_id = ?)"
+
+				_ = db.Raw(query, product.ProductID, UserID).Scan(&exists)
+
+				products[i].Is_in_cart = exists
+    }
+
 
 	c.JSON(http.StatusOK, products)
 }
