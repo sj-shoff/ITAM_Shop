@@ -52,18 +52,16 @@ func GetItem(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"Ошибка": "Недействительный ID продукта"})
 		return
 	}
-
 	db, err := sql.Open("mysql", "admin_for_itam_store:your_password@tcp(147.45.163.58:3306)/itam_store")
-	if err != nil {
+	if err != nil { // Подклчение к бд для работы с Query
 		panic(err)
 	}
 
 	defer db.Close()
 	fmt.Printf("Подключено")
-	//Установка данных
-	//insert, err := db.Query(fmt.Sprintf("INSERT INTO test.articles (`title`, `anons`, `full_text`) VALUES ('%s', '%s', '%s')", title, anons, full_text))
+
 	var zapros = fmt.Sprintf("SELECT product_name, product_price, product_description, product_category, product_image FROM `products` WHERE product_id  = '%d'", id)
-	fmt.Println(zapros)
+	fmt.Println(zapros) // Получение всей информации о продукте по его id
 	res, err := db.Query(zapros)
 	var product entity.Product
 	for res.Next() {
@@ -73,7 +71,7 @@ func GetItem(c *gin.Context) {
 	}
 
 	var zapros2 = fmt.Sprintf("SELECT id_feature, value FROM `added_features` WHERE id_item  = '%d'", id)
-	fmt.Println(zapros2)
+	fmt.Println(zapros2) // Получение всех id фич и их значений по id продукта
 	res2, err := db.Query(zapros2)
 	var features []entity.Feature
 	for res2.Next() {
@@ -85,17 +83,8 @@ func GetItem(c *gin.Context) {
 	combined := map[string]interface{}{
         "product":    product,
         "features": features,
-    }
-	//product.Features = features
+    } // Формирование json файла. Сам продукт и массив фич к нему
 
-	//	if err := config.DB.First(&product, id).Error; err != nil {
-	//		fmt.Println("err")
-	//		panic(err)
-	///		c.JSON(http.StatusInternalServerError, gin.H{"Ошибка": "Продукт не найден3"})
-
-	//	return
-	//}
-	//fmt.Println(product)
 	c.JSON(http.StatusOK, combined)
 }
 
