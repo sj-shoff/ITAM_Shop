@@ -5,10 +5,16 @@ export const wishListApi = baseApi.injectEndpoints({
     endpoints: (create) => ({
         // Wishlist
         // GET
-        getWishlist: create.query<Product[], void>({
+        getWishlist: create.query<Product[] | null | undefined, void>({
             query: () => "/fav_items",
-            transformResponse: (responce: unknown) =>
-                productDTOschema.array().parse(responce),
+            transformResponse: (response: unknown) => {
+                try {
+                    return productDTOschema.array().parse(response)
+                } catch (error) {
+                    console.log("Error parsing wishlist response:", error)
+                    return null
+                }
+            },
             providesTags: ["Wishlist"],
         }),
 

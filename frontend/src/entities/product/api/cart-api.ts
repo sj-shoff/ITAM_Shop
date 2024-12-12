@@ -5,10 +5,16 @@ export const cartApi = baseApi.injectEndpoints({
     endpoints: (create) => ({
         // Cart
         // GET
-        getCart: create.query<Product[], void>({
+        getCart: create.query<Product[] | null, void>({
             query: () => "/cart",
-            transformResponse: (responce: unknown) =>
-                productDTOschema.array().parse(responce),
+            transformResponse: (responce: unknown) => {
+                try {
+                    return productDTOschema.array().parse(responce)
+                } catch (error) {
+                    console.log("Error parsing wishlist response:", error)
+                    return null
+                }
+            },
             providesTags: ["Cart"],
         }),
 
