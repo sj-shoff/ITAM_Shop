@@ -3,16 +3,15 @@ import classes from "./specifications.module.scss"
 import { Feature } from "@entities/product"
 
 export function Specifications({ features }: { features: Feature[] | null }) {
+    let id = 1
+
     if (!features) {
         return "Спецификации отсутствуют"
     }
     return (
         <>
             {features.map((el) => (
-                <li
-                    key={el.name_of_feature}
-                    className={classes.specificationItem}
-                >
+                <li key={id++} className={classes.specificationItem}>
                     <div className={classes.characteristic}>
                         <span className={classes.name}>
                             {el.name_of_feature}

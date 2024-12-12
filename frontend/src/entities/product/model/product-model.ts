@@ -8,6 +8,8 @@ export type ProductImage = string
 export type ProductDescription = string
 export type ProductCategory = string
 export type ProductStockQuantity = number
+export type ProductIsInCart = number
+export type ProductIsInFav = number
 
 export type Product = {
     product_id: ProductId
@@ -17,6 +19,8 @@ export type Product = {
     product_description: ProductDescription
     product_category: ProductCategory
     product_stock_quantity: ProductStockQuantity
+    is_in_cart: ProductIsInCart
+    is_in_fav: ProductIsInFav
 }
 
 export const productDefaultValue: Product = {
@@ -27,6 +31,8 @@ export const productDefaultValue: Product = {
     product_description: "",
     product_category: "",
     product_stock_quantity: 0,
+    is_in_cart: 0,
+    is_in_fav: 0,
 }
 
 export const productDTOschema = z.object({
@@ -37,6 +43,8 @@ export const productDTOschema = z.object({
     product_description: z.string(),
     product_category: z.string(),
     product_stock_quantity: z.number(),
+    is_in_cart: z.number(),
+    is_in_fav: z.number(),
 })
 
 // ------------FILTER---------------------------------------
