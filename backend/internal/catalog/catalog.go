@@ -36,9 +36,6 @@ func InitCatalog(DB *gorm.DB, eng *gin.Engine) {
 	eng.POST("/serch_item/name", SerchProductsByName())
 }
 
-
-
-
 func GetCatalogItems(c *gin.Context) {
 	var products []entity.Product
 	if err := db.Model(&entity.Product{}).Find(&products).Error; err != nil {
@@ -64,12 +61,6 @@ func GetCatalogItems(c *gin.Context) {
 
 	c.JSON(http.StatusOK, products)
 }
-
-
-
-
-
-
 
 func GetItem(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))

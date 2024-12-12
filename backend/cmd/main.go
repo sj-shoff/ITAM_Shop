@@ -11,6 +11,8 @@ import (
 	transactions "myapp/internal/transactions"
 	"net/http"
 
+	"github.com/gin-contrib/cors"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
@@ -23,19 +25,22 @@ func main() {
 	config.DB.AutoMigrate(&entity.User{}, &entity.Order{}, &entity.Favorite{})
 
 	r := gin.Default()
-	r.Use(func(c *gin.Context) {
-		c.Header("Access-Control-Allow-Origin", "*")                   // Разрешаем все домены
-		c.Header("Access-Control-Allow-Methods", "GET, POST,DELETE OPTIONS") // Разрешаем методы
-		c.Header("Access-Control-Allow-Headers", "Content-Type")       // Разрешаем заголовки
+	r.Use(cors.Default())
+	/*
+		r.Use(func(c *gin.Context) {
+			c.Header("Access-Control-Allow-Origin", "*")                   // Разрешаем все домены
+			c.Header("Access-Control-Allow-Methods", "GET, POST, DELETE OPTIONS") // Разрешаем методы
+			c.Header("Access-Control-Allow-Headers", "Content-Type")       // Разрешаем заголовки
 
-		// Если это preflight-запрос, просто возвращаем 200 OK
-		if c.Request.Method == http.MethodOptions {
-			c.AbortWithStatus(http.StatusOK)
-			return
-		}
+			// Если это preflight-запрос, просто возвращаем 200 OK
+			if c.Request.Method == http.MethodOptions {
+				c.AbortWithStatus(http.StatusOK)
+				return
+			}
 
-		c.Next()
-	})
+			c.Next()
+		})
+	*/
 	// Health
 	r.GET("/health", func(ctx *gin.Context) {
 		ctx.AbortWithStatus(http.StatusOK)
