@@ -9,7 +9,7 @@ export function App() {
     return (
         <div className='dark text-foreground w-full h-full flex justify-center'>
             <Provider store={store}>
-                <NextUIProvider>
+                <NextUIProvider className='w-full h-full dark flex flex-col items-center'>
                     <RouterProvider router={router} />
                 </NextUIProvider>
             </Provider>
