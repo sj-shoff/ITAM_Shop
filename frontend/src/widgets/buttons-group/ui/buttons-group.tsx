@@ -7,17 +7,21 @@ export function ButtonsGroup() {
     return (
         <ul className={classes.buttonsGroup}>
             <li>
-                <Button className={classes.button} isIconOnly>
-                    <BasketIcon />
-                </Button>
+                <Link className='contents' to='/fav_items'>
+                    <Button className={classes.button} isIconOnly>
+                        <BasketIcon />
+                    </Button>
+                </Link>
             </li>
             <li>
-                <Button className={classes.button} isIconOnly>
-                    <UserIcon />
-                </Button>
+                <Link className='contents' to='/catalog'>
+                    <Button className={classes.button} isIconOnly>
+                        <UserIcon />
+                    </Button>
+                </Link>
             </li>
             <li>
-                <Link to='cart'>
+                <Link className='contents' to='/cart'>
                     <Button className={classes.button} isIconOnly>
                         <PacketIcon />
                     </Button>
