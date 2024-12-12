@@ -3,13 +3,19 @@ export {
     productsApi,
     useGetProductsQuery,
     useGetProductQuery,
+} from "./api/item-api"
+export {
+    cartApi,
     useAddToCartMutation,
     useGetCartQuery,
-    useGetWishlistQuery,
     useRemoveFromCartMutation,
+} from "./api/cart-api"
+export {
+    wishListApi,
     useAddToWishlistMutation,
+    useGetWishlistQuery,
     useRemoveFromWishListMutation,
-} from "./api/item-api"
+} from "./api/wishlist-api"
 export type {
     Product,
     ProductId,
