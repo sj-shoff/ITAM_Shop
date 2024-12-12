@@ -21,8 +21,13 @@
 .body {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    row-gap: 0.875rem; // 14px
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        row-gap: 0.875rem; // 14px
+    }
 }
 
 .productInfo {
@@ -43,6 +48,7 @@
 
 .features {
     width: 100%;
+    justify-self: end;
 }
 
 .price {

@@ -31,25 +31,27 @@ export function ProductComponent({
         <article className={classes.card} onClick={cardClickHandler}>
             <div className={classes.headContent}>{headContent}</div>
             <div className={classes.body}>
-                <Skeleton
-                    className={classes.imageContainer}
-                    isLoaded={isImageLoaded}
-                >
-                    <img
-                        className={classes.image}
-                        src={`data:image/jpeg;base64,${product_image}`}
-                        alt='product image'
-                        width='410'
-                        height='460'
-                        loading='lazy'
-                        onLoad={imageLoadHandler}
-                    />
-                </Skeleton>
-                <div className={classes.productInfo}>
-                    <span className={classes.name}>{product_name}</span>
-                    <span className={classes.price}>
-                        <b>({product_price}₽)</b>
-                    </span>
+                <div className={classes.content}>
+                    <Skeleton
+                        className={classes.imageContainer}
+                        isLoaded={isImageLoaded}
+                    >
+                        <img
+                            className={classes.image}
+                            src={`data:image/jpeg;base64,${product_image}`}
+                            alt='product image'
+                            width='410'
+                            height='460'
+                            loading='lazy'
+                            onLoad={imageLoadHandler}
+                        />
+                    </Skeleton>
+                    <div className={classes.productInfo}>
+                        <span className={classes.name}>{product_name}</span>
+                        <span className={classes.price}>
+                            <b>({product_price}₽)</b>
+                        </span>
+                    </div>
                 </div>
                 {/* Здесь будут все фичи */}
                 <div className={classes.features}>{children}</div>
