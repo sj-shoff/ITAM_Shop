@@ -7,7 +7,7 @@ import (
 )
 
 type User struct {
-	gorm.Model
+	//gorm.Model
 	ID          uint    `json:"user_id" gorm:"column:user_id"`
 	Balance     float64 `json:"user_balance" gorm:"column:user_balance"`
 	UserName    string  `json:"user_name" gorm:"column:user_name"`
@@ -30,17 +30,17 @@ type FilterParams struct {
 type Product struct {
 	//gorm.Model
 	//Features       []Feature `json:"features"`
-	ProductID      uint    `json:"product_id" gorm:"column:product_id"`
-	Price          float64 `json:"product_price" gorm:"column:product_price"`
-	Name           string  `json:"product_name" gorm:"column:product_name"`
-	Image          []byte    `json:"product_image" gorm:"column:product_image"`
-	Description    string  `json:"product_description" gorm:"column:product_description"`
-	Category       string  `json:"product_category" gorm:"column:product_category"`
-//	Specifications string  `json:"product_specifications" gorm:"column:product_specifications"`
-	Quantity       int     `json:"product_quantity" gorm:"column:product_quantity"`
-	StockQuantity  int     `json:"product_stock_quantity" gorm:"column:product_stock_quantity"`
-	Is_in_cart	 	int			 `json:"is_in_cart" gorm:"column:is_in_cart"`
-	Is_in_fav			int			 		`json:"is_in_fav" gorm:"column:is_in_fav"`
+	ProductID   uint    `json:"product_id" gorm:"column:product_id"`
+	Price       float64 `json:"product_price" gorm:"column:product_price"`
+	Name        string  `json:"product_name" gorm:"column:product_name"`
+	Image       []byte  `json:"product_image" gorm:"column:product_image"`
+	Description string  `json:"product_description" gorm:"column:product_description"`
+	Category    string  `json:"product_category" gorm:"column:product_category"`
+	//	Specifications string  `json:"product_specifications" gorm:"column:product_specifications"`
+	Quantity      int `json:"product_quantity" gorm:"column:product_quantity"`
+	StockQuantity int `json:"product_stock_quantity" gorm:"column:product_stock_quantity"`
+	Is_in_cart    int `json:"is_in_cart" gorm:"column:is_in_cart"`
+	Is_in_fav     int `json:"is_in_fav" gorm:"column:is_in_fav"`
 
 	//
 }
@@ -53,11 +53,10 @@ type Images struct {
 }
 
 type Feature struct {
-	Name  string `json:"name_of_feature" gorm:"column:name_of_feature"`
-	Value string `json:"value_for_feature" gorm:"column:value_for_feature"`
+	Name                string `json:"name_of_feature" gorm:"column:name_of_feature"`
+	Value               string `json:"value_for_feature" gorm:"column:value_for_feature"`
 	Unit_of_measurement string `json:"Unit_of_measurement" gorm:"column:Unit_of_measurement"`
 }
-
 
 type CartItem struct {
 	ProductID_cart uint    `json:"product_id" gorm:"column:product_id"`
