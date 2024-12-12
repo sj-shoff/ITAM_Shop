@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  project:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.prj
+    image: shop_itam:0.0.2
+    container_name: shop-itam
+    environment:
+      - BASIC_SERVER_PORT=8080
+    ports:
+      - "8080:8080"
