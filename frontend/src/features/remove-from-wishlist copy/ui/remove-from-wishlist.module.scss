@@ -1,0 +1,7 @@
+.removeFromWishlist {
+    color: var(--color-main);
+
+    @include hover {
+        color: var(--color-main-alt);
+    }
+}

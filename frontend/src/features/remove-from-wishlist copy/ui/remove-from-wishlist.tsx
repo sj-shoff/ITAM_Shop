@@ -2,6 +2,7 @@ import { ProductId, useRemoveFromWishListMutation } from "@entities/product"
 import { Button } from "@shared/ui/button"
 import { RemoveIcon } from "@shared/ui/icons"
 import { MouseEventHandler } from "react"
+import classes from "./remove-from-wishlist.module.scss"
 
 type addToBusketProps = {
     productId: ProductId
@@ -17,7 +18,11 @@ export function RemoveFromWishlist({ productId }: addToBusketProps) {
     }
 
     return (
-        <Button isIconOnly onClick={clickHandler}>
+        <Button
+            className={classes.removeFromWishlist}
+            isIconOnly
+            onClick={clickHandler}
+        >
             <RemoveIcon />
         </Button>
     )

@@ -93,10 +93,10 @@ export function BackIcon({ width, height, size = 20, ...rest }: iconProps) {
     )
 }
 
-export function RemoveIcon({ width, height, size = 20, ...rest }: iconProps) {
+export function RemoveIcon({ width, height, size = 38, ...rest }: iconProps) {
     return (
         <svg
-            width={width || size}
+            width={width || size + 1}
             height={height || size}
             viewBox='0 0 24 24'
             fill='none'

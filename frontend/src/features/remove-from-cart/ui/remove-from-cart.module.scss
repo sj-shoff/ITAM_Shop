@@ -1,0 +1,18 @@
+.removeFromCart {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    column-gap: 0.25rem; // 4px
+    color: var(--color-light);
+    background-color: var(--color-main);
+
+    @include hover {
+        background-color: var(--color-main-alt);
+    }
+}
+
+.small {
+    width: 20px;
+    height: 20px;
+}
