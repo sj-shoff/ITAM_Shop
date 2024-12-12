@@ -1,18 +1,19 @@
-import { ProductPrice } from "@entities/product"
+import { ProductId, ProductPrice } from "@entities/product"
 import { ProductStockQuantity } from "@entities/product"
 import { Button } from "@nextui-org/react"
 import classes from "./payment.module.scss"
-import { BasketIcon, PacketIcon } from "@shared/ui/icons"
+import { AddToCart } from "@features/add-to-cart"
+import { AddToWishList } from "@features/add-to-wishlist"
 
-type PaymentProps = ProductStockQuantity
-
-export function Payment({
-    price,
-    quantity,
-}: {
+type PaymentProps = {
+    productId: ProductId | undefined
     price: ProductPrice
-    quantity: PaymentProps
-}) {
+    quantity: ProductStockQuantity
+}
+
+export function Payment({ productId = 0, price, quantity }: PaymentProps) {
+    console.log(productId)
+
     return (
         <div className={classes.payment}>
             <h2 className={classes.price}>Цена: {price} ₽</h2>
@@ -25,12 +26,8 @@ export function Payment({
                     <Button fullWidth color='primary'>
                         Купить
                     </Button>
-                    <Button isIconOnly>
-                        <BasketIcon />
-                    </Button>
-                    <Button isIconOnly>
-                        <PacketIcon />
-                    </Button>
+                    <AddToCart isIconOnly productId={productId} />
+                    <AddToWishList isIconOnly productId={productId} />
                 </div>
             </div>
         </div>

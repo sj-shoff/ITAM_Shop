@@ -2,7 +2,7 @@ export function Logo() {
     return (
         <img
             className='class-for-img'
-            src='public/logo.png'
+            src='logo.png'
             alt='logo'
             width='300'
             height='100'

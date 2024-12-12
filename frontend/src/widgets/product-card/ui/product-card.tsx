@@ -39,6 +39,7 @@ export function ProductCard() {
                     description={product.product_description}
                 />
                 <Payment
+                    productId={Number(params.product_id)}
                     price={product.product_price}
                     quantity={product.product_stock_quantity}
                 />
