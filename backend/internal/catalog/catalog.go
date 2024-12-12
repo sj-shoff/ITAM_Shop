@@ -3,12 +3,13 @@ package controllers
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	config "myapp/internal/data_base"
 	entity "myapp/internal/structures"
 	"net/http"
 	"strconv"
-	"log"
-//	"github.com/gin-contrib/sessions"
+
+	//	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"gorm.io/gorm"
@@ -43,21 +44,20 @@ func GetCatalogItems(c *gin.Context) {
 		return
 	}
 	for i := 0; i < len(products); i++ {
-        product := products[i]
-				UserID := 26
-				query := "SELECT EXISTS(SELECT 1 FROM  favourites WHERE  product_id = ? AND user_id = ?)"
-				var exists int
-				_ = db.Raw(query, product.ProductID ,UserID).Scan(&exists)
+		product := products[i]
+		UserID := 26
+		query := "SELECT EXISTS(SELECT 1 FROM  favourites WHERE  product_id = ? AND user_id = ?)"
+		var exists int
+		_ = db.Raw(query, product.ProductID, UserID).Scan(&exists)
 
-				products[i].Is_in_fav = exists
+		products[i].Is_in_fav = exists
 
-				query = "SELECT EXISTS(SELECT 1 FROM  user_cart WHERE  product_id = ? AND user_id = ?)"
+		query = "SELECT EXISTS(SELECT 1 FROM  user_cart WHERE  product_id = ? AND user_id = ?)"
 
-				_ = db.Raw(query, product.ProductID, UserID).Scan(&exists)
+		_ = db.Raw(query, product.ProductID, UserID).Scan(&exists)
 
-				products[i].Is_in_cart = exists
-    }
-
+		products[i].Is_in_cart = exists
+	}
 
 	c.JSON(http.StatusOK, products)
 }
@@ -69,20 +69,19 @@ func GetItem(c *gin.Context) {
 		return
 	}
 
-		var product entity.Product
-		UserID := 26
-		query := "SELECT EXISTS(SELECT 1 FROM  favourites WHERE  product_id = ? AND user_id = ?)"
-		var exists int
-		_ = db.Raw(query, id,UserID).Scan(&exists)
+	var product entity.Product
+	UserID := 26
+	query := "SELECT EXISTS(SELECT 1 FROM  favourites WHERE  product_id = ? AND user_id = ?)"
+	var exists int
+	_ = db.Raw(query, id, UserID).Scan(&exists)
 
-		product.Is_in_fav = exists
+	product.Is_in_fav = exists
 
-		query = "SELECT EXISTS(SELECT 1 FROM  user_cart WHERE  product_id = ? AND user_id = ?)"
+	query = "SELECT EXISTS(SELECT 1 FROM  user_cart WHERE  product_id = ? AND user_id = ?)"
 
-		_ = db.Raw(query, id, UserID).Scan(&exists)
+	_ = db.Raw(query, id, UserID).Scan(&exists)
 
-		product.Is_in_cart = exists
-
+	product.Is_in_cart = exists
 
 	db, err := sql.Open("mysql", "admin_for_itam_store:your_password@tcp(147.45.163.58:3306)/itam_store")
 	if err != nil { // Подклчение к бд для работы с Query
@@ -117,16 +116,16 @@ func GetItem(c *gin.Context) {
 		fmt.Println(tempFeature)
 		for res3.Next() {
 
-				err = res3.Scan(&tempFeature.Name, &tempFeature.Unit_of_measurement)
+			err = res3.Scan(&tempFeature.Name, &tempFeature.Unit_of_measurement)
 		}
 		fmt.Println(tempFeature)
 		features = append(features, tempFeature)
 
 	}
 	combined := map[string]interface{}{
-        "product":    product,
-        "features": features,
-    } // Формирование json файла. Сам продукт и массив фич к нему
+		"product":  product,
+		"features": features,
+	} // Формирование json файла. Сам продукт и массив фич к нему
 
 	c.JSON(http.StatusOK, combined)
 }
@@ -173,30 +172,34 @@ func AddToFavorites(c *gin.Context) {
 		return
 	}
 
-
 	query := "SELECT EXISTS(SELECT 1 FROM  favourites WHERE user_id = ? AND product_id = ?)"
 	var exists bool
 	result := db.Raw(query, userID, id).Scan(&exists)
 
 	if result.Error != nil {
-	    // Обработка ошибки
-	    fmt.Println("Ошибка при выполнении запроса:", result.Error)
+		// Обработка ошибки
+		fmt.Println("Ошибка при выполнении запроса:", result.Error)
 	} else {
-	    fmt.Println("Существует ли продукт:", exists)
+		fmt.Println("Существует ли продукт:", exists)
 	}
 
-
-	if(exists){
+	if exists {
 		c.JSON(http.StatusOK, gin.H{"Сообщение": "Был ранее добавлен"})
 		return
 	}
-
 
 	query = "INSERT INTO favourites (user_id, product_id) VALUES (?, ?)"
 	result = db.Exec(query, userID, id)
 	if result.Error != nil {
 		log.Print(result.Error)
 		c.JSON(500, gin.H{"message": "Failed add to favourites"})
+		return
+	}
+
+	query = "UPDATE products SET is_in_fav = ? WHERE product_id = ?"
+	result = db.Exec(query, true, id)
+	if result.Error != nil {
+		c.JSON(500, gin.H{"message": "cant add"})
 		return
 	}
 
@@ -215,7 +218,6 @@ func RemoveFromFavorites(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Ошибка": "Недействительный ID продукта"})
 		return
-
 	}
 
 	query := "DELETE FROM favourites WHERE user_id = ? AND product_id = ?"
@@ -223,6 +225,13 @@ func RemoveFromFavorites(c *gin.Context) {
 	if result.Error != nil {
 		log.Print(result.Error)
 		c.JSON(500, gin.H{"message": "Failed remove"})
+		return
+	}
+
+	query = "UPDATE products SET is_in_fav = ? WHERE product_id = ?"
+	result = db.Exec(query, false, id)
+	if result.Error != nil {
+		c.JSON(500, gin.H{"message": "cant add"})
 		return
 	}
 
@@ -302,14 +311,21 @@ func AddToCart(c *gin.Context) {
 	result := db.Raw(query, userID, id).Scan(&exists)
 
 	if result.Error != nil {
-	    // Обработка ошибки
-	    fmt.Println("Ошибка при выполнении запроса:", result.Error)
+		// Обработка ошибки
+		fmt.Println("Ошибка при выполнении запроса:", result.Error)
 	} else {
-	    fmt.Println("Существует ли продукт:", exists)
+		fmt.Println("Существует ли продукт:", exists)
+	}
+
+	query = "UPDATE products SET is_in_cart = ? WHERE product_id = ?"
+	result = db.Exec(query, true, id)
+	if result.Error != nil {
+		c.JSON(500, gin.H{"message": "cant add"})
+		return
 	}
 
 	fmt.Println(exists)
-	if(exists){
+	if exists {
 		c.JSON(http.StatusOK, gin.H{"Сообщение": "Был ранее добавлен"})
 		return
 	}
@@ -338,7 +354,6 @@ func RemoveFromCart(c *gin.Context) {
 		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{"Ошибка": "Недействительный ID продукта"})
 		return
-
 	}
 
 	query := "DELETE FROM user_cart WHERE user_id = ? AND product_id = ?"
@@ -346,6 +361,13 @@ func RemoveFromCart(c *gin.Context) {
 	if result.Error != nil {
 		log.Print(result.Error)
 		c.JSON(500, gin.H{"message": "Failed remove"})
+		return
+	}
+
+	query = "UPDATE products SET is_in_cart = ? WHERE product_id = ?"
+	result = db.Exec(query, false, id)
+	if result.Error != nil {
+		c.JSON(500, gin.H{"message": "cant add"})
 		return
 	}
 
